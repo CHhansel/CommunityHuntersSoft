@@ -1,7 +1,8 @@
 const express = require('express');
 const connection = require('./config/db');
 
-const { createUser, loginUserController } = require('./controllers/auth');
+const authenticateToken = require('./middlewares/authenticateToken');
+const { createUser, login, updateUser } = require('./controllers/auth');
 
 const app = express();
 const port = 3000;
@@ -23,8 +24,12 @@ app.get('/api/users', (req, res) => {
 // Ruta para crear un nuevo usuario
 app.post('/api/create-user', createUser);
 
+
+// Ruta para actualizar usuario, requiere autenticacion
+app.put('/api/users/:id', authenticateToken, updateUser);
+
 // Ruta para iniciar sesión
-app.post('/api/login', loginUserController.login);
+app.post('/api/login', login);
 
 // Resto de tus rutas y lógica de la API
 
