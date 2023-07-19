@@ -7,7 +7,6 @@ const connection = require('../config/db'); // Ajusta la ruta según la ubicaci�
 const saltRounds = 10; // Número de rondas de sal utilizadas para el hash de la contraseña
 const secretKey = process.env.BCRIPT_KEY; // Clave secreta para el hash de la contraseña y los tokens de autenticación
 
-
 const createUser = (req, res) => {
     const { companyName, username, email, rol, password, name, lastname, phoneNumber, faxNumber, accountState, province, canton, district, exactAddress, commercialActivity, registrationDate } = req.body;
 
