@@ -9,7 +9,7 @@ router.post('/create-user', createUser);
 
 
 // Ruta para actualizar usuario, requiere autenticacion
-router.PATCH ('/user-update', verifyPermissions, updateUser);
+router.patch ('/user-update', verifyPermissions, updateUser);
 
 // Ruta para iniciar sesión
 router.post('/login', login);

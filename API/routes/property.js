@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const verifyPermissions = require('../middlewares/authenticateToken');
-const { createProperty, updateProperty, deleteProperty  } = require('../controllers/Property');
+const { createProperty, updateProperty, deleteProperty, updatePropertyState  } = require('../controllers/Property');
 
 const router = Router();
 
@@ -9,7 +9,9 @@ router.post('/create-property', createProperty);
 
 
 // Ruta para actualizar propiedad, requiere autenticacion
-router.PATCH('/update-property/:id', verifyPermissions, updateProperty);
+router.patch('/update-property/:id', verifyPermissions, updateProperty);
+
+router.patch('/update-property-state/:id', verifyPermissions, updatePropertyState);
 
 router.delete('/delete-property/:id', verifyPermissions, deleteProperty);
 

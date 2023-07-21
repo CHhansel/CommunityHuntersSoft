@@ -12,7 +12,7 @@ app.use(express.json());
 
 //rutas
 app.use("/api/user", require("./routes/user"));
-app.use("/api/property", require("./routes/propierties"));
+app.use("/api/property", require("./routes/property"));
 
 // Resto de tus rutas y lógica de la API
 

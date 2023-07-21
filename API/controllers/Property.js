@@ -139,9 +139,33 @@ const createProperty = (req, res) => {
       res.json({ properties, totalProperties });
     });
   };
+
+  const updatePropertyState = (req, res) => {
+    const { id } = req.params; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
+    const { state } = req.body; // Obtiene el nuevo estado desde el cuerpo de la solicitud
+  
+    // Crear la consulta SQL para actualizar únicamente el campo "state" de la propiedad en la base de datos
+    const updateQuery = 'UPDATE property SET state = ? WHERE id = ?';
+    const updateValues = [state, id];
+  
+    // Ejecutar la consulta en la base de datos
+    connection.query(updateQuery, updateValues, (err, result) => {
+      if (err) {
+        console.error('Error al actualizar el estado de la propiedad:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Propiedad no encontrada' });
+      }
+  
+      res.json({ message: 'Estado de la propiedad actualizado exitosamente' });
+    });
+  };
   module.exports = {
     createProperty,
     updateProperty,
     deleteProperty,
-    getPropertiesByUserId
+    getPropertiesByUserId,
+    updatePropertyState
   };
