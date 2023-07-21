@@ -9,7 +9,7 @@ router.post('/create-user', createUser);
 
 
 // Ruta para actualizar usuario, requiere autenticacion
-router.put('/user-update/:id', authenticateToken, updateUser);
+router.put('/user-update', authenticateToken, updateUser);
 
 // Ruta para iniciar sesión
 router.post('/login', login);
