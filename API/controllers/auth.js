@@ -108,39 +108,39 @@ const login = (req, res) => {
 const updateUser = (req, res) => {
     const { userId } = req;
     const {
-      name,
-      lastname,
-      phone_number,
-      fax_number,
-      province,
-      canton,
-      district,
-      exact_address,
-      commercial_activity,
+        name,
+        lastname,
+        phone_number,
+        fax_number,
+        province,
+        canton,
+        district,
+        exact_address,
+        commercial_activity,
     } = req.body;
-  
+
     // Actualizar la información del usuario en la base de datos
     const query = `CALL update_user_procedure(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [
-      userId,
-      name,
-      lastname,
-      phone_number,
-      fax_number,
-      province,
-      canton,
-      district,
-      exact_address,
-      commercial_activity,
+        userId,
+        name,
+        lastname,
+        phone_number,
+        fax_number,
+        province,
+        canton,
+        district,
+        exact_address,
+        commercial_activity,
     ];
-  
+
     connection.query(query, values, (err, result) => {
-      if (err) {
-        console.error('Error al actualizar la información del usuario:', err);
-        return res.status(500).json({ error: 'Error interno del servidor' });
-      }
-  
-      res.json({ message: 'Información de usuario actualizada exitosamente' });
+        if (err) {
+            console.error('Error al actualizar la información del usuario:', err);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+
+        res.json({ message: 'Información de usuario actualizada exitosamente' });
     });
-  };
+};
 module.exports = { login, createUser, updateUser };
