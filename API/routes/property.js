@@ -1,9 +1,12 @@
 const { Router } = require("express");
 
+
+
 const verifyPermissions = require('../middlewares/authenticateToken');
-const { createProperty, updateProperty, deleteProperty, updatePropertyState  } = require('../controllers/Property');
+const { createProperty, updateProperty, deleteProperty, updatePropertyState, getPropertiesByUserId } = require('../controllers/Property');
 
 const router = Router();
+router.groupName = 'Properties';  // Para swagger
 
 router.post('/create-property', createProperty);
 
@@ -15,6 +18,6 @@ router.patch('/update-property-state/:id', verifyPermissions, updatePropertyStat
 
 router.delete('/delete-property/:id', verifyPermissions, deleteProperty);
 
-router.get('/get-properties/:id', verifyPermissions, deleteProperty);
+router.get('/get-properties/:id', verifyPermissions, getPropertiesByUserId);
 
 module.exports = router;
