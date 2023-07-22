@@ -3,7 +3,7 @@
 const swaggerAutogen = require('swagger-autogen')();
 
 const outputFile = './swagger-output.json';
-const endpointsFiles = ['./routes/user.js', './routes/property.js']; // Ruta hacia tus archivos de rutas
+const endpointsFiles = ['./routes/user.js', './routes/property.js','./routes/customer.js']; // Ruta hacia tus archivos de rutas
 
 const doc = {
   info: {
