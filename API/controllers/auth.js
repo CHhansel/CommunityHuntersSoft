@@ -143,4 +143,34 @@ const updateUser = (req, res) => {
         res.json({ message: 'Información de usuario actualizada exitosamente' });
     });
 };
-module.exports = { login, createUser, updateUser };
+const getUsersPaged = (req, res) => {
+    const { page, itemsPerPage } = req.query;
+  
+    // Valida que los parámetros necesarios estén presentes
+    if (!page || !itemsPerPage) {
+      return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+    }
+  
+    // Llama al procedimiento almacenado para obtener los datos paginados
+    const query = 'CALL sp_get_users_paged(?, ?)';
+    const values = [page, itemsPerPage];
+  
+    connection.query(query, values, (err, result) => {
+      if (err) {
+        console.error('Error al obtener los datos:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      // Los datos paginados se encuentran en la primera posición del resultado
+      const users = result[0];
+  
+      // Verifica si se obtuvieron datos
+      if (users.length === 0) {
+        return res.status(404).json({ error: 'No se encontraron datos' });
+      }
+  
+      // Devuelve los datos paginados
+      res.json({ users });
+    });
+  };
+module.exports = { login, createUser, updateUser,getUsersPaged };
