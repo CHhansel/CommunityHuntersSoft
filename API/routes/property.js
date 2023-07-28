@@ -6,7 +6,6 @@ const verifyPermissions = require('../middlewares/authenticateToken');
 const { createProperty, updateProperty, deleteProperty, updatePropertyState, getPropertiesByUserId } = require('../controllers/Property');
 
 const router = Router();
-router.groupName = 'Properties';  // Para swagger
 
 router.post('/create-property', createProperty);
 

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 
-const { updateAddress } = require('../controllers/address_info');
+const { updateAddress,deleteCustomer } = require('../controllers/address_info');
 
 const router = Router();
 

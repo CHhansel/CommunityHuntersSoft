@@ -13,6 +13,8 @@ app.use(express.json());
 //rutas
 app.use("/api/user", require("./routes/user"));
 app.use("/api/property", require("./routes/property"));
+app.use("/api/customer", require("./routes/customer"));
+app.use("/api/address", require("./routes/address_info"));
 
 // Resto de tus rutas y lógica de la API
 

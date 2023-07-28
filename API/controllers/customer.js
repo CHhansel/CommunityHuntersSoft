@@ -103,7 +103,57 @@ const createCustomer = (req, res) => {
       res.json({ message: 'Datos del cliente actualizados exitosamente' });
     });
   };
+  const deleteCustomer = (req, res) => {
+    const { id } = req.params; // Obtiene el ID del cliente a borrar desde los parámetros de la URL
   
-module.exports = {createCustomer,updateCustomer,getCustomersByUserId};
+    // Crear la consulta SQL para obtener el address_info_id del cliente
+    const getAddressInfoIdQuery = 'SELECT address_info_id FROM customer WHERE id = ?';
+    const getAddressInfoIdValues = [id];
+  
+    // Ejecutar la consulta para obtener el address_info_id
+    connection.query(getAddressInfoIdQuery, getAddressInfoIdValues, (err, result) => {
+      if (err) {
+        console.error('Error al obtener el address_info_id del cliente:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      if (result.length === 0) {
+        return res.status(404).json({ error: 'Cliente no encontrado' });
+      }
+  
+      const addressInfoId = result[0].address_info_id;
+  
+      // Crear la consulta SQL para borrar el cliente de la tabla `customer`
+      const deleteCustomerQuery = 'DELETE FROM customer WHERE id = ?';
+      const deleteCustomerValues = [id];
+  
+      // Ejecutar la consulta para borrar el cliente
+      connection.query(deleteCustomerQuery, deleteCustomerValues, (err, result) => {
+        if (err) {
+          console.error('Error al borrar el cliente:', err);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+  
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+  
+        // Crear la consulta SQL para borrar la dirección de la tabla `address_info`
+        const deleteAddressInfoQuery = 'DELETE FROM address_info WHERE id = ?';
+        const deleteAddressInfoValues = [addressInfoId];
+  
+        // Ejecutar la consulta para borrar la dirección
+        connection.query(deleteAddressInfoQuery, deleteAddressInfoValues, (err, result) => {
+          if (err) {
+            console.error('Error al borrar la dirección:', err);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+          }
+  
+          res.json({ message: 'Cliente y dirección borrados exitosamente' });
+        });
+      });
+    });
+  };
+module.exports = {createCustomer,updateCustomer,getCustomersByUserId,deleteCustomer};
   
   
