@@ -6,7 +6,7 @@ implementar validaciones (express-validator)
 suida de archivos, (multer) 
 
 
-
+validar token get-users, 
 
 
 superusuario crear cliente, puede ver TODOS los modulos y le asigna a el cliente
