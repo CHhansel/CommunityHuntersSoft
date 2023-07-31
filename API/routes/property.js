@@ -17,6 +17,8 @@ router.patch('/update-property-state/:id', verifyPermissions, updatePropertyStat
 
 router.delete('/delete-property/:id', verifyPermissions, deleteProperty);
 
-router.get('/get-properties/:id', verifyPermissions, getPropertiesByUserId);
+router.get('/get-properties/', verifyPermissions, getPropertiesByUserId);
+
+
 
 module.exports = router;

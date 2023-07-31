@@ -4,14 +4,14 @@ const createProperty = (req, res) => {
     const { name, description, state, province, canton, district, exact_address, user_info_id } = req.body;
   
     // Realiza las validaciones necesarias en el cuerpo de la solicitud
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(422).json({ errors: errors.array() });
+    // }
   
     // Crear la consulta SQL para llamar al procedimiento almacenado CreateProperty
-    const query = 'CALL CreateProperty(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const values = [name, description, state, province, canton, district, exact_address, user_info_id, null]; // Pasamos 'null' para address_info_id ya que será generado automáticamente por el procedimiento almacenado
+    const query = 'CALL sp_create_property(?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [name, description, state, province, canton, district, exact_address, user_info_id]; 
   
     // Ejecutar la consulta en la base de datos
     connection.query(query, values, (err, result) => {
@@ -21,7 +21,7 @@ const createProperty = (req, res) => {
       }
   
       // La propiedad se creó correctamente
-      res.json({ message: 'Propiedad creada exitosamente', propertyId: result[0][0].id });
+      res.json({ message: 'Propiedad creada exitosamente'});
     });
   };
   const updateProperty = (req, res) => {
@@ -107,16 +107,16 @@ const createProperty = (req, res) => {
     });
   };
   const getPropertiesByUserId = (req, res) => {
-    const { user_info_id, page, itemsPerPage } = req.query;
+    const { id, page, itemsPerPage } = req.query;
   
     // Valida que los parámetros necesarios estén presentes
-    if (!user_info_id || !page || !itemsPerPage) {
+    if (!id || !page || !itemsPerPage) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });
     }
   
     // Llama al procedimiento almacenado para obtener las propiedades paginadas
     const query = 'CALL sp_get_properties_by_user_id(?, ?, ?)';
-    const values = [user_info_id, page, itemsPerPage];
+    const values = [id, page, itemsPerPage];
   
     connection.query(query, values, (err, result) => {
       if (err) {

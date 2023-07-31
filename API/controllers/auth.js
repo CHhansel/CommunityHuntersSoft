@@ -32,7 +32,7 @@ const createUser = (req, res) => {
             }
 
             // Crear la consulta SQL para llamar al procedimiento almacenado `create_user_procedure`
-            const procedureQuery = `CALL create_user_procedure(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
+            const procedureQuery = `CALL sp_create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
             const procedureValues = [companyName, username, email, rol, hashedPassword, name,
                 lastname, phoneNumber, faxNumber, accountState, province, canton, district,
                 exactAddress, commercialActivity, registrationDate];
