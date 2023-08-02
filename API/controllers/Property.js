@@ -25,18 +25,18 @@ const createProperty = (req, res) => {
     });
   };
   const updateProperty = (req, res) => {
-    const { id } = req.params; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
-    const { name, description, state, province, canton, district, exact_address } = req.body; // Obtiene los datos actualizados desde el cuerpo de la solicitud
+    const { id } = req.query; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
+    const { name, description, province, canton, district, exact_address } = req.body; // Obtiene los datos actualizados desde el cuerpo de la solicitud
   
     // Realiza las validaciones necesarias en el cuerpo de la solicitud
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(422).json({ errors: errors.array() });
+    // }
   
     // Crear la consulta SQL para actualizar la propiedad en la base de datos
-    const updateQuery = 'CALL UpdatePropertyAndAddress(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    const updateValues = [id, name, description, state, province, canton, district, exact_address, null]; // Pasamos 'null' para user_info_id ya que no será actualizado en esta operación
+    const updateQuery = 'CALL UpdatePropertyAndAddress(?, ?, ?, ?, ?, ?, ?)';
+    const updateValues = [id, name, description, province, canton, district, exact_address]; // Pasamos 'null' para user_info_id ya que no será actualizado en esta operación
   
     // Ejecutar la consulta en la base de datos
     connection.query(updateQuery, updateValues, (err, result) => {
@@ -141,7 +141,7 @@ const createProperty = (req, res) => {
   };
 
   const updatePropertyState = (req, res) => {
-    const { id } = req.params; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
+    const { id } = req.query; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
     const { state } = req.body; // Obtiene el nuevo estado desde el cuerpo de la solicitud
   
     // Crear la consulta SQL para actualizar únicamente el campo "state" de la propiedad en la base de datos
