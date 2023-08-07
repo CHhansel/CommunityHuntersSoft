@@ -7,15 +7,10 @@ const { createCustomer, updateCustomer, getCustomersByUserId, deleteCustomer} = 
 
 const router = Router();
 
+
 router.post('/create-customer', createCustomer);
-
-
-// Ruta para actualizar propiedad, requiere autenticacion
 router.patch('/update-customer/:id', verifyPermissions, updateCustomer);
-
-
 router.get('/get-customer/:id', verifyPermissions, getCustomersByUserId);
-
 router.delete('/delete-customer/:id', verifyPermissions, deleteCustomer);
 
 module.exports = router;

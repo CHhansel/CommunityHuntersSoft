@@ -49,10 +49,6 @@ const createContract = (req, res) => {
   });
 };
 
-module.exports = {
-  createContract,
-};
-
 // Controlador para actualizar un contrato existente
 const updateContract = (req, res) => {
     const contractId = req.params.id; // Obtiene el ID del contrato a actualizar desde los parámetros de la URL

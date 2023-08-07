@@ -1,21 +1,16 @@
 const { Router } = require("express");
 
 const verifyPermissions = require('../middlewares/authenticateToken');
-const { createUser, login, updateUser, getUsersPaged } = require('../controllers/auth');
+const { createUser, login, updateUser, getUsersPaged,getDniTypes,createDniType } = require('../controllers/auth');
 
 const router = Router();
 
+
 router.post('/create-user', createUser);
-
-
-// Ruta para actualizar usuario, requiere autenticacion
 router.patch ('/user-update', verifyPermissions, updateUser);
-
-// Ruta para iniciar sesión
 router.post('/login', login);
-
-
-// Ruta para traer usuarios paginados
 router.get('/get-users', getUsersPaged);
 
+router.get('/get-dni-type', getDniTypes);
+router.post('/create-dni-type', createDniType);
 module.exports = router;

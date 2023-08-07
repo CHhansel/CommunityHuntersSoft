@@ -173,4 +173,49 @@ const getUsersPaged = (req, res) => {
       res.json({ users });
     });
   };
-module.exports = { login, createUser, updateUser,getUsersPaged };
+
+  const createDniType = (req, res) => {
+    const { name } = req.body; // Obtiene el nombre del tipo de DNI desde el cuerpo de la solicitud
+  
+    // Validar que el nombre del tipo de DNI esté presente
+    if (!name) {
+      return res.status(400).json({ error: 'Falta el nombre del tipo de DNI' });
+    }
+  
+    // Crear la consulta SQL para insertar un nuevo tipo de DNI en la tabla `dni_type`
+    const insertQuery = 'INSERT INTO dni_type (name) VALUES (?)';
+    const insertValues = [name];
+  
+    // Ejecutar la consulta en la base de datos
+    connection.query(insertQuery, insertValues, (err, result) => {
+      if (err) {
+        console.error('Error al crear el tipo de DNI:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      // El tipo de DNI se creó correctamente
+      res.json({ message: 'Tipo de DNI creado exitosamente', dniTypeId: result.insertId });
+    });
+  };
+  const getDniTypes = (req, res) => {
+    // Crear la consulta SQL para obtener todos los tipos de DNI de la tabla `dni_type`
+    const selectQuery = 'SELECT * FROM dni_type';
+  
+    // Ejecutar la consulta en la base de datos
+    connection.query(selectQuery, (err, result) => {
+      if (err) {
+        console.error('Error al obtener los tipos de DNI:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      // Verifica si se obtuvieron tipos de DNI
+      if (result.length === 0) {
+        return res.status(404).json({ error: 'No se encontraron tipos de DNI' });
+      }
+  
+      // Devuelve los tipos de DNI
+      res.json({ dniTypes: result });
+    });
+  };
+  
+module.exports = { login, createUser, updateUser,getUsersPaged,createDniType,getDniTypes };
