@@ -1,17 +1,23 @@
 
 
-pruebas rutas
-cambiar gets para que consulte vistas
+
 implementar validaciones (express-validator)
 suida de archivos, (multer) 
 
 
 validar token get-users, 
 
+membresias
+rutas empleados, roles rutas,
+facturas 
 
-superusuario crear cliente, puede ver TODOS los modulos y le asigna a el cliente
 
 
-
-cliente puede ver todos los modulos de el y de esos le puede asignar a sus empleados
-
+{
+    asociadaasd
+    datos
+    create_user_proceduredas
+    asdad
+    asdad
+    idcliente
+}
