@@ -1,9 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import gpiAPI from '../../api/connection-api';
 
 // Ejemplo de función de inicio de sesión (deberías reemplazar esto con tu propia lógica)
-async function loginAPI(credentials) {
+async function loginAPI({email, password}) {
   // Lógica de llamada a la API
-  return { id: '123', name: 'Usuario', roles: ['admin'] };
+  const { data } = await gpiAPI.post("/auth/login", { email, password });
+
+  return data;
 }
 
 export const loginUser = createAsyncThunk(
@@ -33,6 +36,11 @@ export const authSlice = createSlice({
       state.user = {};
       state.errorMessage = undefined;
     },
+    onLogin: (state, { payload} ) => {
+      state.status = 'authenticated';
+      state.user = payload;
+      state.errorMessage = undefined;
+  },
     onLogout: (state, { payload }) => {
       state.status = 'not-authenticated';
       state.user = {};

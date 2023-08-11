@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, selectStatus } from '../../store/authSlice/authSlice';
 
-function LoginComponent() {
+export const Login = () => {
   const dispatch = useDispatch();
   const status = useSelector(selectStatus);
 
@@ -32,5 +32,3 @@ function LoginComponent() {
     </div>
   );
 }
-
-export default LoginComponent;

@@ -1,39 +1,18 @@
 import React from "react";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuthStore } from "../../hooks/useAuthStore";
+//import { useAuthStore } from "../../hooks/useAuthStore";
 import { Login } from "../../Views/login";
 
 
 export const AppRouter = () => {
-  const { status, checkAuthToken } = useAuthStore();
-  useEffect(() => {
-    checkAuthToken();
-  }, []);
 
-  if (status === "checking") {
-    //return <LoadingComponent />;
-  }
 
   return (
     <div className="">
       <Routes>
-        {status === "not-authenticated" ? (
-          <>
-            {/* <Route path="/*" element={<Welcome />} /> */}
             <Route path="login" element={<Login />} />
-{/* 
-            <Route path="password-recovery" element={<PasswordRecovery />} />
-            <Route path="password-change" element={<PasswordChange />} /> */}
-          </>
-        ) : (
-          <>
-            {/* <Route path="/*" element={<DashboardRoutes />} /> */}
-            <Route path="/login" element={<Navigate to="/" />} />
-            
-          </>
-        )}
-        {/* <Route path="*" element={<NotFound />} />  */}
+            <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </div>
   );

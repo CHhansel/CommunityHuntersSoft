@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 
 const gpiAPI = axios.create({
     baseURL: 'http://localhost:7500/api',
@@ -22,8 +21,7 @@ gpiAPI.interceptors.response.use(
     response => response,
     error => {
         if (error.response && error.response.status === 401) {
-            const history = useHistory();
-            history.push('/login');
+            window.location.href = '/login'; // Redirige al usuario a la página de inicio de sesión
         }
 
         return Promise.reject(error);
@@ -31,3 +29,4 @@ gpiAPI.interceptors.response.use(
 );
 
 export default gpiAPI;
+
