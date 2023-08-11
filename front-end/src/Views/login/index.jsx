@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, selectStatus } from './store/authSlice.js/authSlice';
+import { loginUser, selectStatus } from '../../store/authSlice/authSlice';
 
 function LoginComponent() {
   const dispatch = useDispatch();
