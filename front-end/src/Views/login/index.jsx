@@ -1,53 +1,36 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from './AuthContext'; // Importar el contexto de autenticación
-import { useHistory } from 'react-router-dom'; // Para redirigir después del inicio de sesión
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, selectStatus } from './store/authSlice.js/authSlice';
 
-const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext); // Utilizar el método de inicio de sesión del contexto de autenticación
-  const history = useHistory(); // Para redirigir después del inicio de sesión
+function LoginComponent() {
+  const dispatch = useDispatch();
+  const status = useSelector(selectStatus);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
 
-    // Aquí puedes verificar las credenciales del usuario, por ejemplo, haciendo una petición HTTP a tu servidor
-    // Si las credenciales son correctas, entonces puedes llamar a la función de inicio de sesión
-
-    login(); // Esto puede ser más complejo, dependiendo de cómo esté implementado tu inicio de sesión
-
-    // Redirigir al usuario a la página principal (o cualquier otra página) después del inicio de sesión
-    history.push('/');
+  const handleLogin = () => {
+    // Llama a la acción de inicio de sesión con las credenciales
+    dispatch(loginUser(credentials));
   };
 
   return (
-    <div className="login-container">
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label htmlFor="username">Nombre de usuario:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Iniciar sesión</button>
-      </form>
+    <div>
+      <input
+        type="text"
+        placeholder="Username"
+        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+      />
+      <button onClick={handleLogin}>Login</button>
+      {status === 'checking' && <p>Logging in...</p>}
+      {status === 'authenticated' && <p>Logged in successfully!</p>}
+      {status === 'not-authenticated' && <p>Failed to log in.</p>}
     </div>
   );
-};
+}
 
-export default Login;
+export default LoginComponent;
