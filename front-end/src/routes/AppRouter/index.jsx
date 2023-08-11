@@ -1,13 +1,9 @@
 import React from "react";
 import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuthStore } from "../../hooks";
-import { Login } from "../../Pages/Login";
-//import { Welcome } from "../../Pages/Welcome";
-//import { PasswordRecovery } from "../../Pages/PasswordRecovery";
-//import { PasswordChange } from "../../Pages/PasswordChange";
+import { useAuthStore } from "../../hooks/useAuthStore";
+import { Login } from "../../Views/login";
 
-//import { DashboardRoutes } from "../DashboardRoutes";
 
 export const AppRouter = () => {
   const { status, checkAuthToken } = useAuthStore();
