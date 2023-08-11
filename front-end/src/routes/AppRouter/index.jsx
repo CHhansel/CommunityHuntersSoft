@@ -1,5 +1,3 @@
-import React from "react";
-import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 //import { useAuthStore } from "../../hooks/useAuthStore";
 import { Login } from "../../Views/login";
