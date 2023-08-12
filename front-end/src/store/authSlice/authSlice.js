@@ -4,16 +4,17 @@ import gpiAPI from '../../api/connection-api';
 // Ejemplo de función de inicio de sesión (deberías reemplazar esto con tu propia lógica)
 async function loginAPI({email, password}) {
   // Lógica de llamada a la API
-  const { data } = await gpiAPI.post("/auth/login", { email, password });
-
+  const { data } = await gpiAPI.post("/user/login", { email, password });
+  console.log(data);
   return data;
 }
 
 export const loginUser = createAsyncThunk(
-  'auth/loginUser',
+  'user/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const user = await loginAPI(credentials);
+      console.log(user);
       return user;
     } catch (error) {
       return rejectWithValue(error.message);

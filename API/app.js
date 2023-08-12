@@ -9,6 +9,17 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
+const cors = require('cors');
+
+// Configura CORS para permitir solicitudes desde tu dominio frontend
+const corsOptions = {
+  origin: 'http://localhost:5173', // Reemplaza con la URL de tu frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 //rutas
 app.use("/api/user", require("./routes/user"));

@@ -21,3 +21,14 @@ facturas
     asdad
     idcliente
 }
+
+login     recover password 
+dashboard
+propiedadades
+
+
+clientes
+contratos
+
+
+integracion API Hacienda
