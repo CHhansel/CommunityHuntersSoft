@@ -17,16 +17,16 @@ gpiAPI.interceptors.request.use(config => {
 });
 
 // Interceptor de Respuesta para Manejar Errores Globales
-gpiAPI.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && error.response.status === 401) {
-            window.location.href = '/user/login'; // Redirige al usuario a la página de inicio de sesión
-        }
+// gpiAPI.interceptors.response.use(
+//     response => response,
+//     error => {
+//         if (error.response && error.response.status === 401) {
+//            // window.location.href = '/user/login'; // Redirige al usuario a la página de inicio de sesión
+//         }
 
-        return Promise.reject(error);
-    }
-);
+//         return Promise.reject(error);
+//     }
+// );
 
 export default gpiAPI;
 

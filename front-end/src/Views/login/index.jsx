@@ -11,6 +11,7 @@ export const Login = () => {
   const handleLogin = () => {
     // Llama a la acción de inicio de sesión con las credenciales
     dispatch(loginUser(credentials));
+     console.log(status);
   };
 
   return (

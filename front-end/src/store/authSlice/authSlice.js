@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import gpiAPI from '../../api/connection-api';
 
 // Ejemplo de función de inicio de sesión (deberías reemplazar esto con tu propia lógica)
-async function loginAPI({email, password}) {
+async function loginAPI({username, password}) {
   // Lógica de llamada a la API
-  const { data } = await gpiAPI.post("/user/login", { email, password });
+  const { data } = await gpiAPI.post("/user/login", { username, password });
   console.log(data);
   return data;
 }
@@ -14,13 +14,17 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const user = await loginAPI(credentials);
-      console.log(user);
       return user;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        // Devuelve el mensaje de error como parte del valor rechazado
+        return rejectWithValue(error.response.data.error);
+      }
       return rejectWithValue(error.message);
     }
   }
 );
+
 
 const initialState = {
   status: 'checking',
