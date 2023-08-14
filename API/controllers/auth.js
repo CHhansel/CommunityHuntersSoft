@@ -55,55 +55,68 @@ module.exports = createUser;
 
 
 const login = (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    // Consulta SQL para obtener el usuario por el nombre de usuario
-    const query = 'SELECT * FROM user WHERE user_name = ?';
-    const values = [username];
+  // Consulta SQL para obtener el usuario por el nombre de usuario
+  const userQuery = 'SELECT * FROM user WHERE user_name = ?';
+  const userValues = [username];
 
-    // Ejecutar la consulta en la base de datos
-    connection.query(query, values, (err, results) => {
-        if (err) {
-            console.error('Error al obtener el usuario:', err);
-            return res.status(500).json({ error: 'Error interno del servidor' });
-        }
+  // Ejecutar la consulta en la base de datos
+  connection.query(userQuery, userValues, (userErr, userResults) => {
+      if (userErr) {
+          console.error('Error al obtener el usuario:', userErr);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+      }
 
-        // Verificar si se encontró el usuario
-        if (results.length === 0) {
-            return res.status(401).json({ error: 'Credenciales inválidas' });
-        }
+      // Verificar si se encontró el usuario
+      if (userResults.length === 0) {
+          return res.status(401).json({ error: 'Credenciales inválidas' });
+      }
 
-        const user = results[0]; // Obtener el primer usuario de los resultados
+      const user = userResults[0]; // Obtener el primer usuario de los resultados
 
-        // Verificar la contraseña
-        bcrypt.compare(password, user.password, (compareErr, isMatch) => {
-            if (compareErr) {
-                console.error('Error al verificar la contraseña:', compareErr);
-                return res.status(500).json({ error: 'Error interno del servidor' });
-            }
+      // Verificar la contraseña
+      bcrypt.compare(password, user.password, (compareErr, isMatch) => {
+          if (compareErr) {
+              console.error('Error al verificar la contraseña:', compareErr);
+              return res.status(500).json({ error: 'Error interno del servidor' });
+          }
 
-            if (!isMatch) {
-                return res.status(401).json({ error: 'Credenciales inválidas' });
-            }
+          if (!isMatch) {
+              return res.status(401).json({ error: 'Credenciales inválidas' });
+          }
 
-            // Actualizar el campo last_login con la fecha y hora actual
-            const lastLoginQuery = 'UPDATE user SET last_login = NOW() WHERE id = ?';
-            const lastLoginValues = [user.id];
-            connection.query(lastLoginQuery, lastLoginValues, (updateErr, updateResult) => {
-                if (updateErr) {
-                    console.error('Error al actualizar el last_login:', updateErr);
-                    return res.status(500).json({ error: 'Error interno del servidor' });
-                }
+          // Actualizar el campo last_login con la fecha y hora actual
+          const lastLoginQuery = 'UPDATE user SET last_login = NOW() WHERE id = ?';
+          const lastLoginValues = [user.id];
+          connection.query(lastLoginQuery, lastLoginValues, (updateErr, updateResult) => {
+              if (updateErr) {
+                  console.error('Error al actualizar el last_login:', updateErr);
+                  return res.status(500).json({ error: 'Error interno del servidor' });
+              }
 
-                // Generar el token de autenticación (Duracion 12 horas)
-                const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '12h' });
+              // Consulta SQL para obtener los datos del usuario desde la vista user_view
+              const userInfoQuery = 'SELECT * FROM user_view WHERE id = ?';
+              const userInfoValues = [user.id];
+              connection.query(userInfoQuery, userInfoValues, (userInfoErr, userInfoResults) => {
+                  if (userInfoErr) {
+                      console.error('Error al obtener los datos del usuario:', userInfoErr);
+                      return res.status(500).json({ error: 'Error interno del servidor' });
+                  }
 
+                  const userInfo = userInfoResults[0]; // Obtener los datos del usuario de los resultados
 
-                res.json({ token });
-            });
-        });
-    });
+                  // Generar el token de autenticación (Duracion 12 horas)
+                  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '12h' });
+
+                  res.json({ user: userInfo, token });
+              });
+          });
+      });
+  });
 };
+
+module.exports = { login };
 
 const updateUser = (req, res) => {
     const { userId } = req;
