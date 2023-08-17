@@ -26,7 +26,7 @@ app.use("/api/user", require("./routes/user"));
 app.use("/api/property", require("./routes/property"));
 app.use("/api/customer", require("./routes/customer"));
 app.use("/api/address", require("./routes/address_info"));
-
+app.use("/api/roles", require("./routes/role"));
 // Resto de tus rutas y lógica de la API
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

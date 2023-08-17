@@ -8,7 +8,7 @@ const saltRounds = 10; // Número de rondas de sal utilizadas para el hash de la
 const secretKey = process.env.BCRIPT_KEY; // Clave secreta para el hash de la contraseña y los tokens de autenticación
 
 const createUser = (req, res) => {
-    const { companyName, username, email, rol, password, name, lastname, phoneNumber, faxNumber, accountState, province, canton, district, exactAddress, commercialActivity, registrationDate } = req.body;
+    const { companyName, username, email, role, password, name, lastname, phoneNumber, faxNumber, accountState, province, canton, district, exactAddress, commercialActivity, registrationDate } = req.body;
 
     // Verificar si el username o el email ya existen en la base de datos
     const checkQuery = 'SELECT * FROM user WHERE user_name = ? OR email = ?';
@@ -33,7 +33,7 @@ const createUser = (req, res) => {
 
             // Crear la consulta SQL para llamar al procedimiento almacenado `create_user_procedure`
             const procedureQuery = `CALL sp_create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
-            const procedureValues = [companyName, username, email, rol, hashedPassword, name,
+            const procedureValues = [companyName, username, email, role, hashedPassword, name,
                 lastname, phoneNumber, faxNumber, accountState, province, canton, district,
                 exactAddress, commercialActivity, registrationDate];
 
