@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Dashboard from '../dashboardRoutes'
+import Dashboard from '../../views/Dashboard'
 
 
 export const DashboardRoutes = () => {
@@ -9,6 +9,7 @@ export const DashboardRoutes = () => {
       <div className="h-full">
         <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
+              
         </Routes>
       </div>
     );

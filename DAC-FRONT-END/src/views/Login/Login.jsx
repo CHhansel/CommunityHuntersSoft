@@ -8,14 +8,13 @@ import { loginUser, selectStatus } from "../../store/authSlice";
 
 import MainButton from "../../components/buttons/MainButton";
 import MainInputString from "../../components/inputs/MainInput";
-import logo from '../../assets/CH-icon-bg-transparent.png'
+import logo from '../../assets/DAC-icon-bg-transparent.png'
 
 
 
 export const Login = () => {
   const dispatch = useDispatch();
   const status = useSelector(selectStatus);
-
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -34,7 +33,7 @@ export const Login = () => {
 
   return (
     <div className="w-96 m-auto h-fit flex-column-center gap-10 p-4">
-      <img className="w-[150px] mx-auto mb-24" src={logo} alt="Logo Community Hunters" />
+      <img className="w-[250px] mx-auto mb-24" src={logo} alt="Logo Community Hunters" />
       <MainInputString
         type={'text'}
         name={'username'}
