@@ -7,7 +7,7 @@ const { getAccessModulesByUserRole } = require('../controllers/module');
 
 const router = Router();
 
-router.get('/get-access-modules/:id', verifyPermissions, getAccessModulesByUserRole);
+router.get('/get-access-modules/', verifyPermissions, getAccessModulesByUserRole);
 
 
 module.exports = router;

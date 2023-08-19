@@ -22,13 +22,60 @@ facturas
     idcliente
 }
 
-login     recover password 
-dashboard
+
+login    -  recover password ()
+dashboard -
 propiedadades
 
 
+
+producto 
 clientes
-contratos
+
+modulo configuracion y perfil
 
 
+contrato 
+facturacion
+punto de venta
+
+
+modulo ingresar facturas
 integracion API Hacienda
+
+
+
+
+modulo declaracion
+
+roles user  admin client employee
+
+
+
+
+
+admin crea 2 roles
+admin client
+
+
+
+cliente crea roles(departamentos) 
+los roles estan conectados a un user para saber a quien pertenece (que cada cliente pueda ver sus roles )
+
+
+
+los modulos se manejan por rol 
+el rol esta ligado a la tabla user
+
+
+Table user_rol  {
+  id int [pk, increment, not null, unique]
+  user_id int [ref: > user.id, not null]
+  name varchar(50)
+}
+
+front end toma user_rol
+
+
+
+depsues del logeo

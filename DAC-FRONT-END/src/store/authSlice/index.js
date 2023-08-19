@@ -5,7 +5,6 @@ import gpiAPI from '../../api/db-connection';
 async function loginAPI({username, password}) {
   // Lógica de llamada a la API
   const { data } = await gpiAPI.post("/user/login", { username, password });
-  console.log("la data es ",data);
   return data;
 }
 

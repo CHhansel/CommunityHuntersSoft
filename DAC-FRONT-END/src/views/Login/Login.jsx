@@ -9,6 +9,7 @@ import { loginUser, selectStatus } from "../../store/authSlice";
 import MainButton from "../../components/buttons/MainButton";
 import MainInputString from "../../components/inputs/MainInput";
 import logo from '../../assets/DAC-icon-bg-transparent.png'
+import { fetchAccessibleModules } from "../../store/modulesSlice";
 
 
 
@@ -27,8 +28,16 @@ export const Login = () => {
 
   const handleLogin = () => {
     // Llama a la acción de inicio de sesión con las credenciales
-    dispatch(loginUser(credentials));
-    console.log(status);
+    dispatch(loginUser(credentials)).then( (response)=>{
+      const token = response.payload.token;
+      const id = response.payload.user.id;
+      const user_role_id = response.payload.user.role_id;
+      dispatch(fetchAccessibleModules({id, user_role_id, token }));
+
+    });
+
+    
+    //console.log(status);
   };
 
   return (
@@ -53,7 +62,7 @@ export const Login = () => {
         label={"Iniciar Sesión"}
       />
       {status === "checking" && <p></p>}
-      {status === "authenticated" &&   <Navigate to="/dashboard" replace={true} />}
+      {/* {status === "authenticated" &&   <Navigate to="/dashboard" replace={true} />} */}
       {status === "not-authenticated" && <p>Credenciales incorrectas.</p>}
     </div>
   );

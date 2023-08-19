@@ -1,16 +1,16 @@
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-const withProtectedAccess = (WrappedComponent, moduleUrl) => {
+const withProtectedAccess = (WrappedComponent, module_id) => {
   const WithProtectedAccess = (props) => {
-    const accessibleModules = useSelector((state) => state.accessibleModules);
-
-    const hasAccess = accessibleModules.some((module) => module.url === moduleUrl);
+    const accessibleModules = useSelector((state) => state.modules.accessibleModules);
+      // Si ha ocurrido un error, muestra un mensaje de error
+    const hasAccess = accessibleModules.accessModules.some((module) => module.module_id === module_id);
 
     if (hasAccess) {
       return <WrappedComponent {...props} />;
     } else {
-      return <Redirect to="/error" />;
+      return <Navigate to="/dashboard" replace={true} />
     }
   };
 
@@ -24,4 +24,6 @@ function getDisplayName(WrappedComponent) {
 }
 
 export default withProtectedAccess;
+
+
 
