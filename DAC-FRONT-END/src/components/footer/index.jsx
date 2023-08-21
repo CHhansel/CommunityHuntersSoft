@@ -1,11 +1,15 @@
-
 const Footer = () => {
   return (
-    <div className="m-auto py-4">
-      DAC - Powered by{" "}
-      <a href="https://www.communityhunters.com/" className="text-main-yellow">
-        CommunityHunters
-      </a>
+    <div className="flex justify-center py-4 w-100 bg-black text-white">
+      <p>
+        DAC - Powered by{" "}
+        <a
+          href="https://www.communityhunters.com/"
+          className="text-main-yellow"
+        >
+          CommunityHunters
+        </a>
+      </p>
     </div>
   );
 };

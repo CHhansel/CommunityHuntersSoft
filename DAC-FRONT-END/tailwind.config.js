@@ -9,7 +9,7 @@ export default {
         'main-yellow':'#FBBC04'
       },
       fontFamily: {
-        'sans': ['Bodoni Moda', 'serif'],
+        'sans': ['Verdana', 'serif'],
         // otras fuentes aquí
       },
     },

@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "../views/Login/Login";
-import Footer from "../components/footer/index.jsX";
+
 import { useSelector } from "react-redux";
 import { selectStatus } from "../store/authSlice";
 
@@ -28,7 +28,6 @@ export const AppRouter = () => {
           )}
         </Routes>
       </div>
-      <Footer />
     </div>
   );
 };
