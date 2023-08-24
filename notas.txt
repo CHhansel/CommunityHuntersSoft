@@ -79,3 +79,7 @@ front end toma user_rol
 
 
 depsues del logeo
+
+
+
+agregar fecha registro de customer
