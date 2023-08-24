@@ -8,6 +8,7 @@ import { selectUser } from "../../store/authSlice"; // Ajusta la ruta según tu 
 import Footer from "../../components/footer/index.jsX";
 import TopBar from "../../components/TopMenu";
 import Breadcrumb from "../../components/breadcrumbs";
+import Customer from "../../views/Customer";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -35,13 +36,13 @@ export const DashboardRoutes = () => {
       <div className="flex flex-col min-h-screen justify-between ml-[200px] w-[calc(100%-200px)]"> 
         <div className="w-100 h-[50px]"> 
          <TopBar/>
-         <Breadcrumb />
         </div>
-        <div className="">
+         <Breadcrumb />
+        <div className="grow ">
           <Routes>
             <Route index element={<Dashboard />} />
             <Route path="/properties" element={<Property />} />
-            <Route path="/clients" element={<Property />} />
+            <Route path="/clients" element={<Customer />} />
           </Routes>
         </div>
         <div className="">

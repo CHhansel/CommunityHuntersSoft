@@ -2,6 +2,9 @@ import { useSelector } from "react-redux";
 import Property from "../../views/Property";
 import { Link, useResolvedPath } from "react-router-dom";
 import SideBarLogo from "./Logo/index";
+import exit_icon from '../../assets/logout_icon_white.svg'
+
+
 
 const SideMenu = () => {
   const url = useResolvedPath("").pathname;
@@ -37,7 +40,9 @@ const SideMenu = () => {
           );
         })}
       </div>
-      <button className="text-white">Salir</button>
+      <div className="w-[200px] h-14 bg-red-900 flex items-center justify-center pointer">
+        <button className="text-white w-48 h-10 text-lg "> <span> <img src={exit_icon} alt="exit_icon" className="inline w-10"/> </span> Salir</button>
+      </div>
     </div>
   );
 };
