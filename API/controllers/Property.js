@@ -1,8 +1,7 @@
 const connection = require('../config/db'); // Ajusta la ruta según la ubicación de tu archivo de conexión
 
 const createProperty = (req, res) => {
-    const { name, description, state, province, canton, district, exact_address, user_info_id } = req.body;
-  
+    const { name, description, state, province, canton, district, exact_address, user_id } = req.body;
     // Realiza las validaciones necesarias en el cuerpo de la solicitud
     // const errors = validationResult(req);
     // if (!errors.isEmpty()) {
@@ -11,7 +10,7 @@ const createProperty = (req, res) => {
   
     // Crear la consulta SQL para llamar al procedimiento almacenado CreateProperty
     const query = 'CALL sp_create_property(?, ?, ?, ?, ?, ?, ?, ?)';
-    const values = [name, description, state, province, canton, district, exact_address, user_info_id]; 
+    const values = [name, description, state, province, canton, district, exact_address, user_id]; 
   
     // Ejecutar la consulta en la base de datos
     connection.query(query, values, (err, result) => {
@@ -134,7 +133,12 @@ const createProperty = (req, res) => {
       if (properties.length === 0) {
         return res.status(404).json({ error: 'No se encontraron propiedades para el usuario dado' });
       }
-  
+      properties.map(property => {
+        delete property.user_id;
+        return property;
+      });
+     propertiesFormatDate = formatCreationDateInArray(properties);
+
       // Devuelve las propiedades paginadas y el total de propiedades sin paginación
       res.json({ properties, totalProperties });
     });
@@ -162,6 +166,17 @@ const createProperty = (req, res) => {
       res.json({ message: 'Estado de la propiedad actualizado exitosamente' });
     });
   };
+
+  function formatCreationDateInArray(properties) {
+    return properties.map(property => {
+        if (property.creation_date) {
+            const rawDate = property.creation_date;
+            const formattedDate = new Date(rawDate).toLocaleDateString();
+            property.creation_date = formattedDate;
+        }
+        return property;
+    });
+}
   module.exports = {
     createProperty,
     updateProperty,

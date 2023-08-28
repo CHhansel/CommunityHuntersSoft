@@ -3,7 +3,6 @@ import gpiAPI from '../api/db-connection';
 
 // Función para obtener propiedades
 async function getPropertiesByUserId({ id, page, itemsPerPage,token }) {
-    console.log("esto llega",id,token);
   const response = await gpiAPI.get(`/property/get-properties`, {
     params: { id, page, itemsPerPage },
     headers: { 'Authorization': token }
@@ -28,6 +27,30 @@ export const fetchProperties = createAsyncThunk(
     }
   }
 );
+// Función para crear una propiedad
+async function createProperty(data, token) {
+  const response = await gpiAPI.post('/property/create-property', data, {
+    headers: { 'Authorization': token,  'Content-Type': 'application/json' }
+  });
+  return response.data;
+}
+
+// Acción asíncrona para crear propiedad
+export const createPropertyAction = createAsyncThunk(
+  'properties/createProperty',
+  async (params, { rejectWithValue }) => {
+    try {
+      const data = await createProperty(params.data, params.token);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.status >= 400) {
+        return rejectWithValue(error.response.data.error);
+      }
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 // Slice
 export const propertiesSlice = createSlice({
@@ -50,6 +73,18 @@ export const propertiesSlice = createSlice({
         state.totalProperties = action.payload.totalProperties;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(createPropertyAction.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(createPropertyAction.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Añade la nueva propiedad al array de propiedades
+        state.properties.push(action.payload);
+      })
+      .addCase(createPropertyAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

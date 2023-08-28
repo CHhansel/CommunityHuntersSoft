@@ -25,9 +25,24 @@ facturas
 
 login    -  recover password ()
 dashboard -
+
+
 propiedadades
+clientes
+contratos
 
+login - recover password ()
 
+100
+  propiedadades
+  clientes
+  contratos
+
+administracion roles
+empleados
+facturacion
+
+sesion.
 
 producto 
 clientes
@@ -83,3 +98,25 @@ depsues del logeo
 
 
 agregar fecha registro de customer
+
+function parseProperties(properties) {
+    return properties.map(property => {
+        const rawDate = property.creation_date;
+        const formattedDate = new Date(rawDate).toLocaleDateString();
+
+        return {
+            Id: property.Id,
+            Nombre: property.name,
+            Descripción: property.description,
+            "ID de Usuario": property.user_id,
+            Estado: property.state,
+            "Fecha de Creación": formattedDate,
+            "Nombre de Usuario": property.user_info_name,
+            Cantón: property.canton,
+            Distrito: property.district,
+            "Dirección Exacta": property.exact_address
+        };
+    });
+}
+
+const parsedProperties = parseProperties(yourArrayFromAPI);

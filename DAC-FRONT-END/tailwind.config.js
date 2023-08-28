@@ -6,10 +6,15 @@ export default {
       colors: {
         'main-color': '#000000',
         'secondary-color':'#FFFFFF',
-        'main-yellow':'#FBBC04'
+        'main-yellow':'#FBBC04',
+        'main-blue': '#0066CC',
+        'even-row-table': '#E8E8E8',
+        'main-red': '#FF0000',
+        'input':'#FAFAFA'
+
       },
       fontFamily: {
-        'sans': ['Verdana', 'serif'],
+        'sans': ['Montserrat', 'serif'],
         // otras fuentes aquí
       },
     },

@@ -47,16 +47,16 @@ const createCustomer = (req, res) => {
   };
 
   const getCustomersByUserId = (req, res) => {
-    const { user_info_id, page, itemsPerPage } = req.query;
+    const { id, page, itemsPerPage } = req.query;
   
     // Valida que los parámetros necesarios estén presentes
-    if (!user_info_id || !page || !itemsPerPage) {
+    if (!id || !page || !itemsPerPage) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });
     }
   
     // Llama al procedimiento almacenado para obtener los clientes paginados
     const query = 'CALL sp_get_customers_by_user_id(?, ?, ?)';
-    const values = [user_info_id, page, itemsPerPage];
+    const values = [id, page, itemsPerPage];
   
     connection.query(query, values, (err, result) => {
       if (err) {
@@ -74,7 +74,11 @@ const createCustomer = (req, res) => {
       if (customers.length === 0) {
         return res.status(404).json({ error: 'No se encontraron clientes para el usuario dado' });
       }
-  
+      customers.map(customers => {
+        delete customers.user_id;
+        return customers;
+      });
+      customersFormatDate = formatCreationDateInArray(customers);
       // Devuelve los clientes paginados y el total de clientes sin paginación
       res.json({ customers, totalCustomers });
     });
@@ -119,11 +123,22 @@ const createCustomer = (req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: 'Cliente no encontrado' });
       }
-  
+
+
+
       res.json({ message: 'Cliente y dirección asociada borrados exitosamente' });
     });
   };
-  
+  function formatCreationDateInArray(data) {
+    return data.map(property => {
+        if (property.creation_date) {
+            const rawDate = data.creation_date;
+            const formattedDate = new Date(rawDate).toLocaleDateString();
+            data.creation_date = formattedDate;
+        }
+        return data;
+    });
+}
 module.exports = {createCustomer,updateCustomer,getCustomersByUserId,deleteCustomer};
   
   

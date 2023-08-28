@@ -6,7 +6,6 @@ import SideMenu from "../../components/SideMenu";
 import { fetchAccessibleModules } from "../../store/modulesSlice";
 import { selectUser } from "../../store/authSlice"; // Ajusta la ruta según tu estructura
 import Footer from "../../components/footer/index.jsX";
-import TopBar from "../../components/TopMenu";
 import Breadcrumb from "../../components/breadcrumbs";
 import Customer from "../../views/Customer";
 //import { useSelector } from 'react-redux';
@@ -34,9 +33,9 @@ export const DashboardRoutes = () => {
         <SideMenu></SideMenu>
       </div>
       <div className="flex flex-col min-h-screen justify-between ml-[200px] w-[calc(100%-200px)]"> 
-        <div className="w-100 h-[50px]"> 
+        {/* <div className="w-100 h-[50px]"> 
          <TopBar/>
-        </div>
+        </div> */}
          <Breadcrumb />
         <div className="grow ">
           <Routes>
@@ -45,7 +44,7 @@ export const DashboardRoutes = () => {
             <Route path="/clients" element={<Customer />} />
           </Routes>
         </div>
-        <div className="">
+        <div className="mt-28">
           <Footer />
         </div>
       </div>

@@ -30,8 +30,6 @@ export const Login = () => {
       const user_role_id = response.payload.user.role_id;
       dispatch(fetchAccessibleModules({ id, user_role_id, token }));
     });
-
-    //console.log(status);
   };
 
   return (

@@ -10,7 +10,7 @@ const router = Router();
 
 router.post('/create-customer', createCustomer);
 router.patch('/update-customer/:id', verifyPermissions, updateCustomer);
-router.get('/get-customer/:id', verifyPermissions, getCustomersByUserId);
+router.get('/get-customers/', verifyPermissions, getCustomersByUserId);
 router.delete('/delete-customer/:id', verifyPermissions, deleteCustomer);
 
 module.exports = router;

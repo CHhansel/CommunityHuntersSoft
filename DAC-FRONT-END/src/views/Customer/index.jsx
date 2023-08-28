@@ -1,10 +1,38 @@
-import { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from 'react';
 import {TablaDinamica} from '../../components/Table/index'
-import { PropiedadDetalle } from '../Property/PropertyDetails/index';
+import { PropertyDetail } from '../Property/PropertyDetails/index';
+import { selectUser } from "../../store/authSlice";
+
+import { fetchCustomers } from "../../actions/customer";
 
 const Customer = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
+  const [createPropertyActive, setCreatePropertyActive] = useState(false);
+  const { user, token } = useSelector(selectUser);
+  const loading = useSelector((state) => state.customers.loading);
+  const error = useSelector((state) => state.customers.error);
+  const dispatch = useDispatch();
 
+  const customers = useSelector((state) => state.customers.customers);
+  console.log("customerss ",customers);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalCustomers = useSelector(
+    (state) => state.customers.totalCustomers
+  );
+  useEffect(() => {
+    dispatch(
+      fetchCustomers({
+        id: user.id,
+        page: currentPage,
+        itemsPerPage: 10,
+        token,
+      })
+    );
+  }, [dispatch, currentPage, user.id, token]);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const datos = [
     {
       "nombre": "Juan",
@@ -72,12 +100,18 @@ const Customer = () => {
       "nota": "Cliente ocasional"
     }
   ]
-  
+  const status = useSelector((state) => state.customers.status);
+
+  if (status === "loading" || status === "idle") {
+    return <div>Loading dashboards ...</div>;
+  }
   return (
-    <div className='w-full px-16 flex flex-col justify-start h-full'> 
+    <div className="w-full px-16 flex flex-col justify-start h-full">
+            {loading && <p>Cargando...</p>}
+      {error && <p>Error: {error}</p>}
       <p>Clientes</p> 
-      <TablaDinamica datos={datos} setFilaSeleccionada={setFilaSeleccionada} />
-      {filaSeleccionada && <PropiedadDetalle fila={filaSeleccionada} />}
+      <TablaDinamica datos={customers} setFilaSeleccionada={setFilaSeleccionada} dataType='Customers'/>
+      {filaSeleccionada && <PropertyDetail fila={filaSeleccionada} />}
     </div>
   )
 }
