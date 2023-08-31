@@ -130,8 +130,8 @@ const createCustomer = (req, res) => {
     });
   };
   function formatCreationDateInArray(data) {
-    return data.map(property => {
-        if (property.creation_date) {
+    return data.map(data => {
+        if (data.creation_date) {
             const rawDate = data.creation_date;
             const formattedDate = new Date(rawDate).toLocaleDateString();
             data.creation_date = formattedDate;

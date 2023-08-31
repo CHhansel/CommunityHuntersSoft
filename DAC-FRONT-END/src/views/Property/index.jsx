@@ -7,12 +7,13 @@ import { PropertyCreate } from "./PropertyCreate";
 import { fetchProperties } from "../../actions/properties";
 import { selectUser } from "../../store/authSlice";
 import Pagination from "../../components/pagination/pagination";
+import { ContractDetail } from "./ContractDetails";
 
 const Property = () => {
-  const [filaSeleccionada, setFilaSeleccionada] = useState(null);
+  const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
   const { user, token } = useSelector(selectUser);
-
+  const [contratoViewActive, setcontratoViewActive] = useState(false)
   const loading = useSelector((state) => state.properties.loading);
   const error = useSelector((state) => state.properties.error);
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const Property = () => {
     );
   }, [dispatch, currentPage, user.id, token]);
 
+ 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -41,16 +43,32 @@ const Property = () => {
   if (status === "loading" || status === "idle") {
     return <div>Loading dashboards ...</div>;
   }
+  const propertiesResume = JSON.parse(JSON.stringify(properties));
+  propertiesResume.forEach(property => {
+    delete property.customer_id;
+    delete property.start_date;
+    delete property.start_date;
+    delete property.end_date;
+    delete property.start_date;
+    delete property.deposit_amount;
+    delete property.rent_amount;
+    delete property.tax_amount;
+    delete property.total_amount;
+    delete property.payment_method;
+    delete property.payment_date;
+    delete property.contract_file;
+    delete property.payment_method;
+    delete property.creation_date;
+});
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
       {loading && <p>Cargando...</p>}
       {error && <p>Error: {error}</p>}
-      <p>Propiedades</p>
       <div className="w-100 flex justify-end px-8">
-        <button onClick={ ()=> {setCreatePropertyActive(true); setFilaSeleccionada(null)}} className="bg-main-blue px-6 py-2 border text-white rounded-full">AGREGAR</button>
+        <button onClick={ ()=> {setFilaSeleccionada(-1), setCreatePropertyActive(true)}} className="bg-main-blue px-6 py-2 border text-white rounded-full">AGREGAR</button>
       </div>
       <TablaDinamica
-        datos={properties}
+        datos={propertiesResume}
         setFilaSeleccionada={setFilaSeleccionada}
         dataType='Properties'
       />
@@ -59,11 +77,12 @@ const Property = () => {
         itemsPerPage={10}
         currentPage={currentPage}
         onPageChange={handlePageChange}
-      />{" "}
-      {filaSeleccionada && (
-        <PropertyDetail key={filaSeleccionada.id} fila={filaSeleccionada} />
+      />
+      {filaSeleccionada >= 0 &&  (
+        <PropertyDetail key={properties[filaSeleccionada].id} fila={properties[filaSeleccionada]} setcontratoViewActive = {setcontratoViewActive} />
       )}
-      {createPropertyActive && filaSeleccionada == null && <PropertyCreate />}
+      {createPropertyActive && (filaSeleccionada < 0 )&& <PropertyCreate />}
+      { contratoViewActive && filaSeleccionada >= 0 &&  <ContractDetail propiedad={properties[filaSeleccionada]}/>}
     </div>
   );
 };

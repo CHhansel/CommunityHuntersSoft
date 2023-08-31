@@ -1,7 +1,7 @@
 
 
 
-const connection = require('../database/connection');
+const connection = require('../config/db'); // Ajusta la ruta según la ubicación de tu archivo de conexión
 
 const createContract = (req, res) => {
   const { customer_id, properties_id, user_info_id, start_date, end_date, rent_amount, tax_amount, payment_method, deposit_amount, payment_date, active, terms_and_conditions, contract_file } = req.body;
@@ -156,7 +156,64 @@ const updateContract = (req, res) => {
       res.json({ message: 'Contrato borrado exitosamente' });
     });
   };
+  const getContractsByUserId = (req, res) => {
+    const { id, page, itemsPerPage } = req.query;
+  
+    // Valida que los parámetros necesarios estén presentes
+    if (!id || !page || !itemsPerPage) {
+      return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+    }
+  
+    // Llama al procedimiento almacenado para obtener los contratos paginados
+    const query = 'CALL sp_get_contracts_by_user_id(?, ?, ?)';
+    const values = [id, page, itemsPerPage];
+  
+    connection.query(query, values, (err, result) => {
+      if (err) {
+        console.error('Error al obtener los contratos:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  
+      // El procedimiento devuelve un conjunto de resultados, accedemos a la primera posición para obtener los contratos
+      const contracts = result[0];
+  
+      // También podemos obtener el total de contratos sin paginación
+      const totalContracts = result[1][0].total_contracts;
+  
+      // Verifica si se obtuvieron contratos
+      if (contracts.length === 0) {
+        return res.status(404).json({ error: 'No se encontraron contratos para el usuario dado' });
+      }
+      contracts.map(contract => {
+        delete contract.user_id;
+        return contract;
+      });
+      contractsFormatDate = formatCreationDateInArray(contracts);
 
+      // Devuelve los contratos paginados y el total de contratos sin paginación
+      res.json({ contracts, totalContracts });
+    });
+};
+function formatCreationDateInArray(contracts) {
+  return contracts.map(contract => {
+      if (contract.created_at) {
+          const rawDate = contract.created_at;
+          const formattedDate = new Date(rawDate).toLocaleDateString();
+          contract.created_at = formattedDate;
+      }
+      if (contract.end_date) {
+        const rawDate = contract.end_date;
+        const formattedDate = new Date(rawDate).toLocaleDateString();
+        contract.end_date = formattedDate;
+    }
+    if (contract.start_date) {
+      const rawDate = contract.start_date;
+      const formattedDate = new Date(rawDate).toLocaleDateString();
+      contract.start_date = formattedDate;
+  }
+      return contract;
+  });
+}
 module.exports = {
-  createContract, updateContract, updateContractState, deleteContract
+  createContract, updateContract, updateContractState, deleteContract,getContractsByUserId
 };

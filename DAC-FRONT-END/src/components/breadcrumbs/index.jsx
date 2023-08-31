@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import arrow from '../../assets/arrow-forward.svg'
 import home from '../../assets/home-icon.svg'
+import { translateRoutes } from '../../utils/breadcrumsTranslate';
 const Breadcrumb = () => {
   const location = useLocation();
 
@@ -12,7 +13,8 @@ const Breadcrumb = () => {
       name: part,
     }));
   };
-  const breadcrumbs = getBreadcrumbs(location.pathname);
+  const bread = getBreadcrumbs(location.pathname);
+  const breadcrumbs = translateRoutes(bread)
   return (
     <nav className='flex px-14 py-3'>
       <img src={home} className='w-6 mx-2'></img>

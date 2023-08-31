@@ -33,7 +33,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="m-auto w-100">
+    <div className="m-auto w-100 h-screen flex flex-col justify-between">
       <div className="w-96 m-auto h-fit flex-column-center gap-10 p-4">
         <img
           className="w-[250px] mx-auto mb-24"

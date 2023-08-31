@@ -120,3 +120,7 @@ function parseProperties(properties) {
 }
 
 const parsedProperties = parseProperties(yourArrayFromAPI);
+
+
+
+flags para enviar notificaciones

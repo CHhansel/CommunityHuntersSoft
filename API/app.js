@@ -25,6 +25,7 @@ app.use(cors(corsOptions));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/property", require("./routes/property"));
 app.use("/api/customer", require("./routes/customer"));
+app.use("/api/contract", require("./routes/contract"));
 app.use("/api/address", require("./routes/address_info"));
 app.use("/api/roles", require("./routes/role"));
 app.use("/api/module", require("./routes/module"));

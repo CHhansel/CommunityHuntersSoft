@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
-import { createPropertyAction } from "../../../actions/properties";
+import { createCustomerAction } from "../../../actions/customer"; // Asegúrate de importar la acción correcta
 
-export const PropertyCreate = () => {
+export const CustomerCreate = () => {
   const { user, token } = useSelector(selectUser);
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
-    state: "Disponible",
-    province: "San José",
+    lastname: "",
+    dni: "",
+    email: "",
+    company_name: "",
+    note: "",
+    province: "",
     canton: "",
     district: "",
-    exact_address: "",
-    user_id: user.id
+    exactAddress: "",
+    user_id: user.id,
   });
   const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -23,36 +27,33 @@ export const PropertyCreate = () => {
       [name]: value,
     }));
   };
-  formData.province;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
-      dispatch(createPropertyAction({ data: formData, token }));
-      alert("Propiedad creada con éxito!");
+      dispatch(createCustomerAction({ data: formData, token }));
+      alert("Cliente creado con éxito!");
     } catch (error) {
-      console.error("Hubo un error al crear la propiedad:", error);
-      alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
+      console.error("Hubo un error al crear el cliente:", error);
+      alert("Error al crear cliente. Por favor, inténtalo de nuevo.");
     }
   };
 
   return (
-    <div className="border p-5 my-5">
-      <h2 className="text-2xl text-main-blue mb-8">Crear Propiedad</h2>
-
+    <div className="create-customer-form">
       <form
         onSubmit={handleSubmit}
         className="m-5 flex justify-evenly flex-wrap items-start gap-y-5"
       >
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="name">
+          <label className="text-xl" htmlFor="name">
             Nombre
           </label>
           <input
             className="border p-2 rounded-lg w-full"
             type="text"
             name="name"
-            placeholder="Nombre de la propiedad"
+            placeholder="Nombre"
             value={formData.name}
             onChange={handleChange}
             required
@@ -60,46 +61,89 @@ export const PropertyCreate = () => {
         </div>
 
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="description">
-            Descripción
+          <label className="text-xl" htmlFor="lastname">
+            Apellido
+          </label>
+          <input
+            className="border p-2 rounded-lg w-full"
+            type="text"
+            name="lastname"
+            placeholder="Apellido"
+            value={formData.lastname}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-3 w-[400px]">
+          <label className="text-xl" htmlFor="dni">
+            DNI
+          </label>
+          <input
+            className="border p-2 rounded-lg w-full"
+            type="text"
+            name="dni"
+            placeholder="DNI"
+            value={formData.dni}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-3 w-[400px]">
+          <label className="text-xl" htmlFor="email">
+            Correo
+          </label>
+          <input
+            className="border p-2 rounded-lg w-full"
+            type="email"
+            name="email"
+            placeholder="Correo"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-3 w-[400px]">
+          <label className="text-xl" htmlFor="company_name">
+            Nombre de la Empresa
+          </label>
+          <input
+            className="border p-2 rounded-lg w-full"
+            type="text"
+            name="company_name"
+            placeholder="Nombre de la Empresa"
+            value={formData.company_name}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="flex flex-col gap-3 w-[400px]">
+          <label className="text-xl" htmlFor="note">
+            Nota
           </label>
           <textarea
             className="border p-2 rounded-lg w-full"
-            name="description"
-            placeholder="Descripción"
-            value={formData.description}
+            name="note"
+            placeholder="Nota"
+            value={formData.note}
             onChange={handleChange}
-            required
           ></textarea>
         </div>
 
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="state">
-            Estado
-          </label>
-          <select
-            className="border p-2 rounded-lg w-full"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-          >
-            <option value="Disponible">Disponible</option>
-            <option value="Ocupado">Ocupado</option>
-            <option value="Mantenimiento">Mantenimiento</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="province">
+          <label className="text-xl" htmlFor="province">
             Provincia
           </label>
           <select
             className="border p-2 rounded-lg w-full"
             name="province"
             value={formData.province}
-            defaultValue="San José"
             onChange={handleChange}
+            required
           >
+            <option value="">Selecciona una provincia</option>
             <option value="San José">San José</option>
             <option value="Alajuela">Alajuela</option>
             <option value="Cartago">Cartago</option>
@@ -111,7 +155,7 @@ export const PropertyCreate = () => {
         </div>
 
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="canton">
+          <label className="text-xl" htmlFor="canton">
             Cantón
           </label>
           <input
@@ -126,7 +170,7 @@ export const PropertyCreate = () => {
         </div>
 
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="district">
+          <label className="text-xl" htmlFor="district">
             Distrito
           </label>
           <input
@@ -141,27 +185,23 @@ export const PropertyCreate = () => {
         </div>
 
         <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="exact_address">
+          <label className="text-xl" htmlFor="exactAddress">
             Dirección exacta
           </label>
           <input
             className="border p-2 rounded-lg w-full"
             type="text"
-            name="exact_address"
+            name="exactAddress"
             placeholder="Dirección exacta"
-            value={formData.exact_address}
+            value={formData.exactAddress}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="w-full flex justify-end">
-          <button
-            className="mt-12 bg-main-blue text-white px-5 py-2 border rounded-full"
-            type="submit"
-          >
-            Crear Propiedad
-          </button>
-        </div>
+
+        <button className="mt-12 w-full" type="submit">
+          Crear Cliente
+        </button>
       </form>
     </div>
   );
