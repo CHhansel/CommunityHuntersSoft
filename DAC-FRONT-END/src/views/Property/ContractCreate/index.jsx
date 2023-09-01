@@ -1,15 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { updatePropertyAction } from "../../../actions/properties";
 import { selectUser } from "../../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
-export const ContractDetail = ({ propiedad }) => {
+export const ContractCreate = () => {
   const { user, token } = useSelector(selectUser);
   const [isEditable, setIsEditable] = useState(false);
-  const [formData, setFormData] = useState({ ...propiedad, user_id: user.id });
+ // const [formData, setFormData] = useState({ ...propiedad, user_id: user.id });
   const dispatch = useDispatch();
-
+const [formData, setFormData] = useState({
+    "antiquity": "2023-05-01",
+    "customer_id": "",
+    "start_date": "",
+    "end_date": "",
+    "deposit_amount": "",
+    "rent_amount": "",
+    "tax_amount": "",
+    "total_amount": "",
+    "payment_method": 1,
+    "payment_date": "",
+    "contract_file": "",
+    "province": "San Jose",
+    "exact_address": ""
+})
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -18,22 +32,8 @@ export const ContractDetail = ({ propiedad }) => {
       [name]: value,
     }));
   };
-  useEffect(() => {
-    setIsEditable(false);
-    setFormData(propiedad);
-  }, [propiedad]);
 
-  const handleEdit = () => {
-    setIsEditable(true);
-  };
-  const handleCancelEdit = () => {
-    setIsEditable(false);
-    setFormData(propiedad);
-  };
-  const handleDelete = () => {
-    setIsEditable(false);
-    setFormData(propiedad);
-  };
+
   const handleSave = () => {
     try {
       dispatch(updatePropertyAction({ data: formData, token }));
@@ -45,10 +45,10 @@ export const ContractDetail = ({ propiedad }) => {
 
     setIsEditable(false);
   };
-  console.log(propiedad);
+  console.log();
   return (
     <div className="border border-black p-5 my-5">
-      <h2 className="text-2xl text-main-blue mb-8">Ver Contrato de Propiedad</h2>
+      <h2 className="text-2xl text-main-blue mb-8">Crear Contrato de Propiedad</h2>
       <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
         <div className="flex flex-col gap-3 w-[300px]">
           <label className="text-xl" htmlFor="customer_id">
@@ -182,35 +182,16 @@ export const ContractDetail = ({ propiedad }) => {
         </div>
       </form>
       <div className="flex justify-end gap-8">
-        {!isEditable ? (
+ 
           <button
             onClick={handleEdit}
             className="bg-main-blue text-white px-5 py-2 border rounded-full"
           >
-            Editar
+            Crear
           </button>
-        ) : (
-          <div className="">
-            <button
-              onClick={handleDelete}
-              className="bg-main-red  text-white px-5 py-2 border rounded-full"
-            >
-              Borrar
-            </button>
-            <button
-              onClick={handleCancelEdit}
-              className="bg-slate-400 mx-5 text-white px-5 py-2 border rounded-full"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleSave}
-              className="bg-main-blue text-white px-5 py-2 border rounded-full"
-            >
-              Guardar
-            </button>
-          </div>
-        )}
+
+
+    
       </div>
     </div>
   );

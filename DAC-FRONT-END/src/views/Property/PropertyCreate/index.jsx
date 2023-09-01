@@ -37,7 +37,7 @@ export const PropertyCreate = () => {
   };
 
   return (
-    <div className="border p-5 my-5">
+    <div className="border border-black p-5 my-5">
       <h2 className="text-2xl text-main-blue mb-8">Crear Propiedad</h2>
 
       <form

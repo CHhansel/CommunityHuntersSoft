@@ -2,15 +2,19 @@ import { useEffect, useState } from "react";
 import { updatePropertyAction } from "../../../actions/properties";
 import { selectUser } from "../../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { ContractDetail } from "../ContractDetails";
+import { ContractCreate } from "../ContractCreate";
 
 
 // eslint-disable-next-line react/prop-types
-export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
+export const PropertyDetail = ({ fila }) => {
   const { user, token } = useSelector(selectUser);
   const [isEditable, setIsEditable] = useState(false);
-
+  // eslint-disable-next-line react/prop-types
+  const existContract = (fila.state == "Ocupado")? true: false;
   const [formData, setFormData] = useState({ ...fila, user_id: user.id });
   const dispatch = useDispatch();
+  const [contratoViewActive, setcontratoViewActive] = useState(false)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -22,7 +26,7 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
   useEffect(() => {
     setIsEditable(false);
     setcontratoViewActive(false);
-    setFormData(fila);
+    setFormData({ ...fila, user_id: user.id });
   }, [fila]);
 
   const handleEdit = () => {
@@ -50,7 +54,7 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
 
   return (
     <div>
-      <div className="border my-5 p-5">
+      <div className="border border-black my-5 p-5">
         <h2 className="text-2xl text-main-blue mb-8">Detalles de Propiedad</h2>
         <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
           <div className="flex flex-col gap-3 w-[400px]">
@@ -82,7 +86,7 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
               disabled={!isEditable}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[400px]">
+          <div className="flex flex-col gap-3 w-[200px]">
             <label className="text-xl" htmlFor="state">
               Estado:
             </label>
@@ -101,6 +105,21 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
               <option value="Ocupado">Ocupado</option>
               <option value="Mantenimiento">Mantenimiento</option>
             </select>
+          </div>
+          <div className="flex flex-col gap-3 w-[200px]">
+            <label className="text-xl" htmlFor="name">
+              Antiguedad:
+            </label>
+            <input
+              type="date"
+              name="name"
+              value={formData.antiquity}
+              onChange={handleInputChange}
+              disabled={!isEditable}
+              className={`border p-2 rounded-lg w-full ${
+                isEditable ? "  border-slate-400" : " "
+              }`}
+            />
           </div>
           <div className="flex flex-col gap-3 w-[400px]">
             <label className="text-xl" htmlFor="province">
@@ -177,7 +196,7 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
             <div>
               <button
                 onClick={()=> setcontratoViewActive(true)}
-                className="bg-main-red  text-white px-5 py-2 border rounded-full mr-5"
+                className="bg-black  text-white px-5 py-2 border rounded-full mr-5"
               >
                 { formData.state == "Activo"? "Ver Contrato" : "Crear Contrato"}
               </button>
@@ -213,7 +232,8 @@ export const PropertyDetail = ({ fila,setcontratoViewActive }) => {
         </div>
       </div>
      
-    
+      { !existContract && contratoViewActive &&  <ContractDetail propiedad={formData}/>}
+      { existContract && contratoViewActive &&  <ContractCreate />}
     </div>
   );
 };

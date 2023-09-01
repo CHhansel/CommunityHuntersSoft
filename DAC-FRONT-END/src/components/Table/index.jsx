@@ -14,12 +14,12 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
   };
 
   return (
-    <div className="w-100 flex flex-col justify-center items-center my-5">
+    <div className="w-100 flex flex-col justify-center items-center my-5 overflow-x-scroll">
       <table className="table-auto w-full radio">
         <thead>
           <tr className="">
             {columnsParseadas.map((col, index) => (
-              <th className="px-5 py-4" key={index}>
+              <th className=" py-4" key={index}>
                 {col}
               </th>
             ))}

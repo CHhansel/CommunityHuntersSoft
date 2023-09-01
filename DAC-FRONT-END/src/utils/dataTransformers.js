@@ -68,6 +68,7 @@ function parseColumnNames(columns) {
     canton: "Cantón",
     district: "Distrito",
     exact_address: "Dirección Exacta",
+    antiquity: "Antiguedad"
   };
 
   return columns.map((column) => translations[column] || column);

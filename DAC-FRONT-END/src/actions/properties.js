@@ -115,10 +115,12 @@ export const propertiesSlice = createSlice({
       .addCase(updatePropertyAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         // Encuentra el índice de la propiedad a actualizar
-        const index = state.properties.findIndex(property => property.id === action.payload.id);
+        const index = state.properties.findIndex(property => property.id === action.payload.updatedProperty.id);
+        console.log(state.properties," ",index,"ess ");
         if (index !== -1) {
           // Reemplaza la propiedad en el array por la actualizada
-          state.properties[index] = action.payload;
+          console.log("payload es ",action.payload);
+          state.properties[index] = action.payload.updatedProperty;
         }
       })
       .addCase(updatePropertyAction.rejected, (state, action) => {

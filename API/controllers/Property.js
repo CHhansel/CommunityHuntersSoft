@@ -55,42 +55,60 @@ const createProperty = (req, res) => {
 };
 
 const updateProperty = (req, res) => {
-  const { id } = req.query; // Obtiene el ID de la propiedad a actualizar desde los parámetros de la URL
-  const { name, description, province, canton, district, exact_address } =
+  const { Id, name, description, state, antiquity, province, canton, district, exact_address } =
     req.body; // Obtiene los datos actualizados desde el cuerpo de la solicitud
 
-  // Realiza las validaciones necesarias en el cuerpo de la solicitud
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(422).json({ errors: errors.array() });
-  // }
-
   // Crear la consulta SQL para actualizar la propiedad en la base de datos
-  const updateQuery = "CALL UpdatePropertyAndAddress(?, ?, ?, ?, ?, ?, ?)";
+  const updateQuery = "CALL sp_update_property(?, ?, ?, ?, ?, ?, ?, ?, ?)";
   const updateValues = [
-    id,
+    Id,
     name,
     description,
+    state,
+    antiquity,
     province,
     canton,
     district,
     exact_address,
-  ]; // Pasamos 'null' para user_info_id ya que no será actualizado en esta operación
+  ];
 
   // Ejecutar la consulta en la base de datos
-  connection.query(updateQuery, updateValues, (err, result) => {
+  connection.query(updateQuery, updateValues, (err) => {
     if (err) {
       console.error("Error al actualizar la propiedad:", err);
       return res.status(500).json({ error: "Error interno del servidor" });
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Propiedad no encontrada" });
-    }
+    // Consulta SQL para obtener la propiedad actualizada
+    const selectQuery = "SELECT * FROM property_view WHERE id = ?";
+    
+    connection.query(selectQuery, [Id], (err, results) => {
+      if (err) {
+        console.error("Error al obtener la propiedad actualizada:", err);
+        return res.status(500).json({ error: "Error interno del servidor" });
+      }
 
-    res.json({ message: "Propiedad actualizada exitosamente" });
+      // Verifica si se obtuvo algún resultado
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Propiedad no encontrada" });
+      }
+      const updatedProperty = results[0];
+      delete updatedProperty.user_id;
+      
+      const rawDate = new Date(updatedProperty.antiquity);
+      updatedProperty.antiquity = `${rawDate.getFullYear()}-${String(
+        rawDate.getMonth() + 1
+      ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
+
+      // Devuelve la propiedad actualizada
+      res.json({
+        message: "Propiedad actualizada exitosamente",
+        updatedProperty
+      });
+    });
   });
 };
+
 
 const deleteProperty = (req, res) => {
   const { id } = req.params; // Obtiene el ID de la propiedad a borrar desde los parámetros de la URL
