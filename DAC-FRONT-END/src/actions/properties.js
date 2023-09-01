@@ -12,10 +12,10 @@ async function getPropertiesByUserId({ id, page, itemsPerPage,token }) {
 
 // Acción asíncrona
 export const fetchProperties = createAsyncThunk(
-   
+
   'properties/fetchProperties',
   async (params, { rejectWithValue }) => {
-
+    console.log("ASD");
     try {
       const data = await getPropertiesByUserId(params);
       return data;
@@ -104,6 +104,7 @@ export const propertiesSlice = createSlice({
         state.status = 'succeeded';
         // Añade la nueva propiedad al array de propiedades
         state.properties.push(action.payload);
+        
       })
       .addCase(createPropertyAction.rejected, (state, action) => {
         state.status = 'failed';
@@ -114,14 +115,14 @@ export const propertiesSlice = createSlice({
       })
       .addCase(updatePropertyAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
+
         // Encuentra el índice de la propiedad a actualizar
-        const index = state.properties.findIndex(property => property.id === action.payload.updatedProperty.id);
-        console.log(state.properties," ",index,"ess ");
+         const index = state.properties.findIndex(property => property.Id === action.payload.updatedProperty.Id);
+         console.log("T ",index);
         if (index !== -1) {
-          // Reemplaza la propiedad en el array por la actualizada
-          console.log("payload es ",action.payload);
-          state.properties[index] = action.payload.updatedProperty;
-        }
+           // Reemplaza la propiedad en el array por la actualizada
+            state.properties[index] = action.payload.updatedProperty;
+         }
       })
       .addCase(updatePropertyAction.rejected, (state, action) => {
         state.status = 'failed';
