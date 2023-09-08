@@ -16,7 +16,7 @@ const SideMenu = () => {
     1: { name: "Propiedades", path: "properties", component: Property },
     2: { name: "Clientes", path: "clients", component: Property },
     3: { name: "Contratos", path: "contracts", component: Property },
-    4: { name: "Administración", path: "bills", component: Property },
+    4: { name: "Administración", path: "admin", component: Property },
     5: { name: "Facturas", path: "bills", component: Property },
     6: { name: "Empleados", path: "bills", component: Property },
     // Agrega más módulos según sea necesario
@@ -30,10 +30,10 @@ const SideMenu = () => {
         {accessibleModules.map((module) => {
           const { name, path: modulePath } = allModules[module.module_id];
           return (
-            <Link
+            <Link 
               key={module.module_id}
               to={`${url}/${modulePath}`}
-              className="text-white my-1 w-full py-3 border-[0.1px] border-zinc-700 text-center hover:bg-gray-900"
+              className="text-white my-1 w-full py-3 border-[0.1px] border-zinc-700 rounded-lg text-center hover:bg-gray-900"
             >
               {name}
             </Link>

@@ -2,7 +2,6 @@ const connection = require("../config/db"); // Ajusta la ruta según la ubicaci�
 
 const createProperty = (req, res) => {
   const {
-    id,
     name,
     description,
     state,
@@ -14,45 +13,38 @@ const createProperty = (req, res) => {
     antiquity,
   } = req.body;
 
-  // Primero, verifica si la propiedad pertenece al usuario
-  const checkQuery = "SELECT id FROM property WHERE id = ? AND user_id = ?";
-  connection.query(checkQuery, [id, user_id], (err, result) => {
+  // Procede con la creación de la propiedad
+  const query = "CALL sp_create_property(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  const values = [
+    province,
+    canton,
+    district,
+    exact_address,
+    name,
+    description,
+    state,
+    antiquity,
+    user_id,
+  ];
+
+  connection.query(query, values, (err, result) => {
     if (err) {
-      console.error("Error al verificar la propiedad:", err);
+      console.error("Error al crear la propiedad:", err);
       return res.status(500).json({ error: "Error interno del servidor" });
     }
 
-    if (result.length === 0) {
-      return res
-        .status(403)
-        .json({ error: "No tienes permiso para actualizar esta propiedad" });
-    }
+    const updatedProperty = result[0];
+    const rawDate = new Date(updatedProperty.antiquity);
 
-    // Si la propiedad pertenece al usuario, procede con la creación
-    const query = "CALL sp_create_property(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [
-      province,
-      canton,
-      district,
-      exact_address,
-      name,
-      description,
-      state,
-      antiquity,
-      user_id,
-    ];
-
-    connection.query(query, values, (err, result) => {
-      if (err) {
-        console.error("Error al crear la propiedad:", err);
-        return res.status(500).json({ error: "Error interno del servidor" });
-      }
-
-      // La propiedad se creó correctamente
-      res.json({ message: "Propiedad creada exitosamente" });
-    });
+    updatedProperty.antiquity = `${rawDate.getFullYear()}-${String(
+      rawDate.getMonth() + 1
+    ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
+    // La propiedad se creó correctamente
+    res.json({ message: "Propiedad creada exitosamente",updatedProperty });
+    
   });
 };
+
 
 const updateProperty = (req, res) => {
   const { Id, name, description, state, antiquity, province, canton, district, exact_address } =
@@ -95,11 +87,7 @@ const updateProperty = (req, res) => {
       const updatedProperty = results[0];
       delete updatedProperty.user_id;
       
-      const rawDate = new Date(updatedProperty.antiquity);
-      updatedProperty.antiquity = `${rawDate.getFullYear()}-${String(
-        rawDate.getMonth() + 1
-      ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
-
+      propertiesFormatDate = formatCreationDateInObject(updatedProperty);
       // Devuelve la propiedad actualizada
       res.json({
         message: "Propiedad actualizada exitosamente",
@@ -267,11 +255,104 @@ function formatCreationDateInArray(properties) {
     return property;
   });
 }
+function formatCreationDateInObject(property) {
+  if (property.creation_date) {
+    const rawDateCreation = new Date(property.creation_date);
+    property.creation_date = `${rawDateCreation.getFullYear()}-${String(
+      rawDateCreation.getMonth() + 1
+    ).padStart(2, "0")}-${String(rawDateCreation.getDate()).padStart(2, "0")}`;
+  }
+  if (property.antiquity) {
+    const rawDateAntiquity = new Date(property.antiquity);
+    property.antiquity = `${rawDateAntiquity.getFullYear()}-${String(
+      rawDateAntiquity.getMonth() + 1
+    ).padStart(2, "0")}-${String(rawDateAntiquity.getDate()).padStart(2, "0")}`;
+  }
+  if (property.start_date) {
+    const rawDateStart = new Date(property.start_date);
+    property.start_date = `${rawDateStart.getFullYear()}-${String(
+      rawDateStart.getMonth() + 1
+    ).padStart(2, "0")}-${String(rawDateStart.getDate()).padStart(2, "0")}`;
+  }
+  if (property.end_date) {
+    const rawDateEnd = new Date(property.end_date);
+    property.end_date = `${rawDateEnd.getFullYear()}-${String(
+      rawDateEnd.getMonth() + 1
+    ).padStart(2, "0")}-${String(rawDateEnd.getDate()).padStart(2, "0")}`;
+  }
+  return property;
+}
 
+const updatePropertyContract = (req, res) => {
+  const {
+    Id,
+    customer_id,
+    start_date,
+    end_date,
+    state,
+    deposit_amount,
+    rent_amount,
+    tax_amount,
+    total_amount,
+    payment_method,
+    payment_date,
+    contract_file
+  } = req.body; // Obtiene los datos del contrato desde el cuerpo de la solicitud
+ console.log("llegando ",req.body);
+  // Crear la consulta SQL para actualizar los campos del contrato en la base de datos
+  const updateQuery = "CALL sp_update_property_contract(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  const updateValues = [
+    Id,
+    customer_id,
+    start_date,
+    end_date,
+    state,
+    deposit_amount,
+    rent_amount,
+    tax_amount,
+    total_amount,
+    payment_method,
+    payment_date,
+    contract_file
+  ];
+
+  // Ejecutar la consulta en la base de datos
+  connection.query(updateQuery, updateValues, (err) => {
+    if (err) {
+      console.error("Error al actualizar el contrato de la propiedad:", err);
+      return res.status(500).json({ error: "Error interno del servidor" });
+    }
+
+    // Consulta SQL para obtener la propiedad con el contrato actualizado
+    const selectQuery = "SELECT * FROM property_view WHERE id = ?";
+    
+    connection.query(selectQuery, [Id], (err, results) => {
+      if (err) {
+        console.error("Error al obtener la propiedad con el contrato actualizado:", err);
+        return res.status(500).json({ error: "Error interno del servidor" });
+      }
+
+      // Verifica si se obtuvo algún resultado
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Propiedad no encontrada" });
+      }
+      const updatedProperty = results[0];
+      delete updatedProperty.user_id;
+      
+      propertiesFormatDate = formatCreationDateInObject(updatedProperty);
+      // Devuelve la propiedad con el contrato actualizado
+      res.json({
+        message: "Contrato de la propiedad actualizado exitosamente",
+        updatedProperty
+      });
+    });
+  });
+};
 module.exports = {
   createProperty,
   updateProperty,
   deleteProperty,
   getPropertiesByUserId,
   updatePropertyState,
+  updatePropertyContract
 };

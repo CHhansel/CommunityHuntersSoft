@@ -14,7 +14,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
   };
 
   return (
-    <div className="w-100 flex flex-col justify-center items-center my-5 overflow-x-scroll">
+    <div className="w-100 flex flex-col justify-center items-center my-5 ">
       <table className="table-auto w-full radio">
         <thead>
           <tr className="">

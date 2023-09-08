@@ -9,4 +9,5 @@ router.patch('/update-membership/:id', verifyPermissions, updateMembership);
 router.delete('/delete-membership/:id', verifyPermissions, deleteMembership);
 router.get('/get-memberships', verifyPermissions, getMemberships);
 
+
 module.exports = router;

@@ -8,6 +8,7 @@ import MainInputString from "../../components/inputs/MainInput";
 import logo from "../../assets/DAC-icon-bg-transparent.png";
 import { fetchAccessibleModules } from "../../store/modulesSlice";
 import Footer from "../../components/footer/index";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export const Login = () => {
     username: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +27,31 @@ export const Login = () => {
   const handleLogin = () => {
     // Llama a la acción de inicio de sesión con las credenciales
     dispatch(loginUser(credentials)).then((response) => {
-      const token = response.payload.token;
-      const id = response.payload.user.id;
-      const user_role_id = response.payload.user.role_id;
-      dispatch(fetchAccessibleModules({ id, user_role_id, token }));
+      if (response && response.payload && response.payload.token) {
+        const token = response.payload.token;
+        const id = response.payload.user.id;
+        const user_role_id = response.payload.user.role_id;
+        dispatch(fetchAccessibleModules({ id, user_role_id, token })).then(
+          (modulesResponse) => {
+            if (modulesResponse && modulesResponse.payload) {
+              // Guarda la información en localStorage
+              localStorage.setItem(
+                "accessibleModules",
+                JSON.stringify(modulesResponse.payload)
+              );
+            }
+          }
+        );
+        const user = response.payload.user;
+        localStorage.setItem("auth", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        // Redirige al usuario al dashboard después de un inicio de sesión exitoso
+        navigate("/dashboard");
+      } else {
+        // Maneja el caso de inicio de sesión fallido si es necesario
+      }
     });
   };
-
   return (
     <div className="m-auto w-100 h-screen flex flex-col justify-between">
       <div className="w-96 m-auto h-fit flex-column-center gap-10 p-4">
@@ -56,12 +76,11 @@ export const Login = () => {
         />
         <MainButton onClickFunction={handleLogin} label={"Iniciar Sesión"} />
         {status === "checking" && <p></p>}
-        {/* {status === "authenticated" &&   <Navigate to="/dashboard" replace={true} />} */}
         {status === "not-authenticated" && <p>Credenciales incorrectas.</p>}
       </div>
       <div className="w-100">
         <Footer />
-      </div> 
+      </div>
     </div>
   );
 };

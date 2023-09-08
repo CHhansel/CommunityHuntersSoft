@@ -12,7 +12,9 @@ export const PropertyDetail = ({ fila }) => {
   const [isEditable, setIsEditable] = useState(false);
   // eslint-disable-next-line react/prop-types
   const existContract = (fila.state == "Ocupado")? true: false;
+
   const [formData, setFormData] = useState({ ...fila, user_id: user.id });
+  
   const dispatch = useDispatch();
   const [contratoViewActive, setcontratoViewActive] = useState(false)
   const handleInputChange = (event) => {
@@ -27,7 +29,7 @@ export const PropertyDetail = ({ fila }) => {
     setIsEditable(false);
     setcontratoViewActive(false);
     setFormData({ ...fila, user_id: user.id });
-  }, [fila]);
+  }, [fila, user.id]);
 
   const handleEdit = () => {
     setIsEditable(true);
@@ -107,12 +109,12 @@ export const PropertyDetail = ({ fila }) => {
             </select>
           </div>
           <div className="flex flex-col gap-3 w-[200px]">
-            <label className="text-xl" htmlFor="name">
+            <label className="text-xl" htmlFor="antiquity">
               Antiguedad:
             </label>
             <input
               type="date"
-              name="name"
+              name="antiquity"
               value={formData.antiquity}
               onChange={handleInputChange}
               disabled={!isEditable}
@@ -126,7 +128,7 @@ export const PropertyDetail = ({ fila }) => {
               Provincia:
             </label>
             <select
-              name="state"
+              name="province"
               value={formData.province}
               onChange={handleInputChange}
               disabled={!isEditable}
@@ -198,7 +200,7 @@ export const PropertyDetail = ({ fila }) => {
                 onClick={()=> setcontratoViewActive(true)}
                 className="bg-black  text-white px-5 py-2 border rounded-full mr-5"
               >
-                { formData.state == "Activo"? "Ver Contrato" : "Crear Contrato"}
+                { formData.state == "Ocupado"? "Ver Contrato" : "Crear Contrato"}
               </button>
               <button
                 onClick={handleEdit}
@@ -232,8 +234,8 @@ export const PropertyDetail = ({ fila }) => {
         </div>
       </div>
      
-      { !existContract && contratoViewActive &&  <ContractDetail propiedad={formData}/>}
-      { existContract && contratoViewActive &&  <ContractCreate />}
+      { existContract && contratoViewActive &&  <ContractDetail propiedad={formData}/>}
+      { !existContract && contratoViewActive &&  <ContractCreate propiedad={formData}/>}
     </div>
   );
 };

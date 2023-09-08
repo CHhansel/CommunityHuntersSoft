@@ -9,11 +9,16 @@ import { selectUser } from "../../store/authSlice";
 import Pagination from "../../components/pagination/pagination";
 
 const Property = () => {
+console.log("asd");
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
+
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
+
   const { user, token } = useSelector(selectUser);
+
   const loading = useSelector((state) => state.properties.loading);
-  const error = useSelector((state) => state.properties.error);
+  
+  //const error = useSelector((state) => state.properties.error);
   const dispatch = useDispatch();
 
   const properties = useSelector((state) => state.properties.properties);
@@ -31,7 +36,7 @@ const Property = () => {
         token,
       })
     );
-  }, [dispatch, currentPage, user.id, token]);
+  }, [dispatch, currentPage, user.id, token,totalProperties]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

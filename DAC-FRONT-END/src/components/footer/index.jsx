@@ -7,10 +7,8 @@ const Footer = () => {
           href="https://www.communityhunters.com/"
           className="text-main-yellow mr-5"
         >
-          CommunityHunters.
+          CommunityHunters.®️
         </a>
-        
-        2023 © Todos los derechos reservados
       </p>
     </div>
   );

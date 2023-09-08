@@ -13,6 +13,7 @@ export const PropertyCreate = () => {
     canton: "",
     district: "",
     exact_address: "",
+    antiquity: "",
     user_id: user.id
   });
   const dispatch = useDispatch();
@@ -26,7 +27,6 @@ export const PropertyCreate = () => {
   formData.province;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
     try {
       dispatch(createPropertyAction({ data: formData, token }));
       alert("Propiedad creada con éxito!");
@@ -73,7 +73,7 @@ export const PropertyCreate = () => {
           ></textarea>
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 w-[200px]">
           <label className="text-xl " htmlFor="state">
             Estado
           </label>
@@ -88,8 +88,20 @@ export const PropertyCreate = () => {
             <option value="Mantenimiento">Mantenimiento</option>
           </select>
         </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 w-[200px]">
+            <label className="text-xl" htmlFor="antiquity">
+              Antiguedad:
+            </label>
+            <input
+              type="date"
+              name="antiquity"
+              value={formData.antiquity}
+              className="border p-2 rounded-lg w-full"
+              onChange={handleChange}
+              required
+            />
+          </div>
+        <div className="flex flex-col gap-3 w-[300px]">
           <label className="text-xl " htmlFor="province">
             Provincia
           </label>
@@ -97,7 +109,6 @@ export const PropertyCreate = () => {
             className="border p-2 rounded-lg w-full"
             name="province"
             value={formData.province}
-            defaultValue="San José"
             onChange={handleChange}
           >
             <option value="San José">San José</option>
@@ -110,7 +121,7 @@ export const PropertyCreate = () => {
           </select>
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 w-[300px]">
           <label className="text-xl " htmlFor="canton">
             Cantón
           </label>
@@ -125,7 +136,7 @@ export const PropertyCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 w-[300px]">
           <label className="text-xl " htmlFor="district">
             Distrito
           </label>
@@ -146,7 +157,7 @@ export const PropertyCreate = () => {
           </label>
           <input
             className="border p-2 rounded-lg w-full"
-            type="text"
+            type="text-area"
             name="exact_address"
             placeholder="Dirección exacta"
             value={formData.exact_address}

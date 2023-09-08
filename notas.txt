@@ -124,3 +124,46 @@ const parsedProperties = parseProperties(yourArrayFromAPI);
 
 
 flags para enviar notificaciones
+
+
+
+
+                                                    HRS
+administracion roles y variables de hacienda 
+ informacion de compañia                            15
+
+empleados                                           6
+
+login 100%                                           8    crear las vistas backend
+
+facturacion                                   
+crear back y front end
+crear factura                                
+integracion con API Hacienda                       15
+
+
+
+
+tabla producto{
+  id
+  nombre
+  precio
+  descripcion
+  cabys_ID
+}
+
+productos                                         12
+ordenes                                           12
+vista cocina (muestra ordenes pendientes)         7     
+
+
+
+punto de venta                                    12   
+
+buscarCLiente crear                               15  
+
+
+vista cliente                                     5
+
+
+

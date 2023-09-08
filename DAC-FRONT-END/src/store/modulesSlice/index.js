@@ -33,7 +33,12 @@ export const modulesSlice = createSlice({
     status: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setAccessibleModulesFromLocalStorage: (state, action) => {
+      state.accessibleModules = action.payload;
+      state.status = 'authenticated';
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAccessibleModules.pending, (state) => {
@@ -50,6 +55,7 @@ export const modulesSlice = createSlice({
       });
   },
 });
+export const { setAccessibleModulesFromLocalStorage } = modulesSlice.actions;
 
 export default modulesSlice.reducer;
 

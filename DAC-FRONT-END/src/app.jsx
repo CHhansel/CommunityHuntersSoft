@@ -6,10 +6,13 @@ import { store } from "./store/store";
 const App = () => {
   return (
     <div className="w-full h-screen flex flex-col justify-between">
+
       <Provider store={store}>
+
         <BrowserRouter>
             <AppRouter />
         </BrowserRouter>
+        
       </Provider>      
     </div>
   );

@@ -24,7 +24,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   status: 'checking',
   user: {},
@@ -53,6 +52,10 @@ export const authSlice = createSlice({
     clearErrorMessage: (state) => {
       state.errorMessage = undefined;
     },
+    setUserFromLocalStorage: (state, action) => {
+      state.user = action.payload;
+      state.status = 'authenticated';
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -71,7 +74,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { onChecking, onLogout, clearErrorMessage } = authSlice.actions;
+export const { onChecking, onLogout, clearErrorMessage,setUserFromLocalStorage } = authSlice.actions;
 
 // Selectores
 export const selectStatus = (state) => state.auth.status;

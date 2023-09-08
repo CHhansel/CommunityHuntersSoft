@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { updatePropertyAction } from "../../../actions/properties";
+import { updatePropertyContractAction } from "../../../actions/properties";
 import { selectUser } from "../../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -35,8 +35,9 @@ export const ContractDetail = ({ propiedad }) => {
     setFormData(propiedad);
   };
   const handleSave = () => {
+  
     try {
-      dispatch(updatePropertyAction({ data: formData, token }));
+      dispatch(updatePropertyContractAction({ data: formData, token }));
       alert("Propiedad creada con éxito!");
     } catch (error) {
       console.error("Hubo un error al crear la propiedad:", error);
@@ -102,12 +103,12 @@ export const ContractDetail = ({ propiedad }) => {
         </div>
         <div className="w-full flex justify-center gap-5">
           <div className="flex flex-col gap-3 w-[200px]">
-            <label className="text-xl" htmlFor="name">
+            <label className="text-xl" htmlFor="start_date">
               Fecha de Inicio:
             </label>
             <input
               type="date"
-              name="name"
+              name="start_date"
               value={formData.start_date}
               onChange={handleInputChange}
               disabled={!isEditable}
@@ -117,12 +118,12 @@ export const ContractDetail = ({ propiedad }) => {
             />
           </div>
           <div className="flex flex-col gap-3 w-[200px]">
-            <label className="text-xl" htmlFor="name">
+            <label className="text-xl" htmlFor="end_date">
               Fecha de Fín:
             </label>
             <input
               type="date"
-              name="name"
+              name="end_date"
               value={formData.end_date}
               onChange={handleInputChange}
               disabled={!isEditable}
@@ -134,6 +135,19 @@ export const ContractDetail = ({ propiedad }) => {
         </div>
 
         <div className="flex gap-5 mt-5">
+        <div className="flex flex-col gap-3 w-[200px]">
+            <label className="text-xl" htmlFor="deposit_amount">
+              Deposito:
+            </label>
+            <input
+              type="number"
+              name="deposit_amount"
+              value={formData.deposit_amount}
+              onChange={handleInputChange}
+              disabled={!isEditable}
+              className={`border p-2 rounded-lg w-full `}
+            />
+          </div>
           <div className="flex flex-col gap-3 w-[200px]">
             <label className="text-xl" htmlFor="rent_amount">
               Monto de renta:

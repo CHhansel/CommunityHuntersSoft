@@ -15,7 +15,6 @@ export const fetchProperties = createAsyncThunk(
 
   'properties/fetchProperties',
   async (params, { rejectWithValue }) => {
-    console.log("ASD");
     try {
       const data = await getPropertiesByUserId(params);
       return data;
@@ -41,6 +40,26 @@ export const createPropertyAction = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const data = await createProperty(params.data, params.token);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.status >= 400) {
+        return rejectWithValue(error.response.data.error);
+      }
+      return rejectWithValue(error.message);
+    }
+  }
+);
+async function updatePropertyContract(data, token) {
+  const response = await gpiAPI.patch(`/property/update-property-contract`, data, {
+    headers: { 'Authorization': token, 'Content-Type': 'application/json' }
+  });
+  return response.data;
+}
+export const updatePropertyContractAction = createAsyncThunk(
+  'properties/updatePropertyContract',
+  async (params, { rejectWithValue }) => {
+    try {
+      const data = await updatePropertyContract(params.data, params.token);
       return data;
     } catch (error) {
       if (error.response && error.response.status >= 400) {
@@ -103,8 +122,8 @@ export const propertiesSlice = createSlice({
       .addCase(createPropertyAction.fulfilled, (state, action) => {
         state.status = 'succeeded';
         // Añade la nueva propiedad al array de propiedades
-        state.properties.push(action.payload);
-        
+        state.properties.push(action.payload.updatedProperty);
+        state.totalProperties++;
       })
       .addCase(createPropertyAction.rejected, (state, action) => {
         state.status = 'failed';
@@ -127,7 +146,25 @@ export const propertiesSlice = createSlice({
       .addCase(updatePropertyAction.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(updatePropertyContractAction.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updatePropertyContractAction.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+      
+        // Encuentra el índice de la propiedad a actualizar
+        const index = state.properties.findIndex(property => property.Id === action.payload.updatedProperty.Id);
+        if (index !== -1) {
+          // Reemplaza la propiedad en el array por la actualizada
+          state.properties[index] = action.payload.updatedProperty;
+        }
+      })
+      .addCase(updatePropertyContractAction.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
+      
   },
 });
 

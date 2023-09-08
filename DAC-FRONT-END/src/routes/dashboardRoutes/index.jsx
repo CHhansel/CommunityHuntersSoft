@@ -8,6 +8,8 @@ import { selectUser } from "../../store/authSlice"; // Ajusta la ruta según tu 
 import Footer from "../../components/footer/index.jsX";
 import Breadcrumb from "../../components/breadcrumbs";
 import Customer from "../../views/Customer";
+import ConfigRouter from "../ConfigRouter";
+import withProtectedAccess from "../../components/HOC/withProtectedAccess";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -15,11 +17,13 @@ export const DashboardRoutes = () => {
 
   // // Si los datos están cargando, muestra un mensaje o un spinner
   const { user, token } = useSelector(selectUser);
+  console.log("dadasdasdasd",user);
   // // Si ha ocurrido un error, muestra un mensaje de error
 
   const id = user.id;
   const user_role_id = user.role_id;
   useDispatch(fetchAccessibleModules({ id, user_role_id, token }));
+  const ProtectedProperty = withProtectedAccess(Property, 1);
 
   const status = useSelector((state) => state.modules.status);
 
@@ -40,8 +44,11 @@ export const DashboardRoutes = () => {
         <div className="grow ">
           <Routes>
             <Route index element={<Dashboard />} />
-            <Route path="/properties" element={<Property />} />
+            {/* <Route path="/properties" element={<Property />} /> */}
+            <Route path="/properties" element={<ProtectedProperty />} />
+
             <Route path="/clients" element={<Customer />} />
+            <Route path="/admin" element={<ConfigRouter />} />
           </Routes>
         </div>
         <div className="mt-28">

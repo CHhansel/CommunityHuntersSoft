@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 const withProtectedAccess = (WrappedComponent, module_id) => {
+  
   const WithProtectedAccess = (props) => {
     const accessibleModules = useSelector((state) => state.modules.accessibleModules);
       // Si ha ocurrido un error, muestra un mensaje de error
@@ -10,7 +11,7 @@ const withProtectedAccess = (WrappedComponent, module_id) => {
     if (hasAccess) {
       return <WrappedComponent {...props} />;
     } else {
-      return <Navigate to="/dashboard" replace={true} />
+      return <Navigate to="/dashboard/"/>
     }
   };
 
