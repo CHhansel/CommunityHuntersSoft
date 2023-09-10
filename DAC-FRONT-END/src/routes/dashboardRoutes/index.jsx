@@ -17,7 +17,6 @@ export const DashboardRoutes = () => {
 
   // // Si los datos están cargando, muestra un mensaje o un spinner
   const { user, token } = useSelector(selectUser);
-  console.log("dadasdasdasd",user);
   // // Si ha ocurrido un error, muestra un mensaje de error
 
   const id = user.id;
@@ -48,7 +47,7 @@ export const DashboardRoutes = () => {
             <Route path="/properties" element={<ProtectedProperty />} />
 
             <Route path="/clients" element={<Customer />} />
-            <Route path="/admin" element={<ConfigRouter />} />
+            <Route path="/admin/*" element={<ConfigRouter />} />
           </Routes>
         </div>
         <div className="mt-28">

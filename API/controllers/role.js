@@ -10,7 +10,7 @@ const createRole = (req, res) => {
     }
 
     // Consulta SQL para insertar un nuevo rol en la tabla user_role
-    const insertQuery = 'INSERT INTO user_role (name, user_id) VALUES (?, ?)';
+    const insertQuery = 'INSERT INTO user_role (name, user__id) VALUES (?, ?)';
     const insertValues = [name, user_id];
 
     // Ejecutar la consulta en la base de datos

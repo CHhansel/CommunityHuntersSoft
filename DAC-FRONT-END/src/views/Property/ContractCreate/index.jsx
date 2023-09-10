@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   updatePropertyContractAction,
 } from "../../../actions/properties";
 import { selectUser } from "../../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCustomers } from "../../../actions/customer";
 import CreateContractFirstStep from "./CreateContractSelectClient";
 
 // eslint-disable-next-line react/prop-types

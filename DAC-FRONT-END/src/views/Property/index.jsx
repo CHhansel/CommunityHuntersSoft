@@ -9,14 +9,12 @@ import { selectUser } from "../../store/authSlice";
 import Pagination from "../../components/pagination/pagination";
 
 const Property = () => {
-console.log("asd");
+
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
 
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
 
   const { user, token } = useSelector(selectUser);
-
-  const loading = useSelector((state) => state.properties.loading);
   
   //const error = useSelector((state) => state.properties.error);
   const dispatch = useDispatch();
@@ -66,7 +64,6 @@ console.log("asd");
   });
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
-      {loading && <p>Cargando...</p>}
       <div className="w-100 flex justify-end px-8">
         <button
           onClick={() => {
