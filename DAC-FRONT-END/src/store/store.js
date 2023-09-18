@@ -5,6 +5,7 @@ import { propertiesSlice } from '../actions/properties'
 import { customersSlice } from '../actions/customer'
 import { contractsSlice } from '../actions/contracts'
 import { rolesSlice } from '../actions/roles'
+import { employeesSlice } from '../actions/employee'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     properties: propertiesSlice.reducer,
     customers: customersSlice.reducer,
     contracts: contractsSlice.reducer,
-    roles: rolesSlice.reducer
+    roles: rolesSlice.reducer,
+    employees: employeesSlice.reducer
   },
 })

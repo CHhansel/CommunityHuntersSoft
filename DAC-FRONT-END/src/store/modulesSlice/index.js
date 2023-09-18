@@ -25,19 +25,24 @@ export const fetchAccessibleModules = createAsyncThunk(
   );
   
   
-  
-export const modulesSlice = createSlice({
-  name: 'modules',
-  initialState: {
+  const initialState = {
     accessibleModules: [],
     status: 'idle',
     error: null,
-  },
+  }; 
+export const modulesSlice = createSlice({
+  name: 'modules',
+  initialState: initialState, 
+
   reducers: {
     setAccessibleModulesFromLocalStorage: (state, action) => {
       state.accessibleModules = action.payload;
       state.status = 'authenticated';
-    }
+    },
+    // eslint-disable-next-line no-unused-vars
+    resetModulesState: (state) => {
+      return initialState; // Esto resetea el estado al valor inicial
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -55,7 +60,7 @@ export const modulesSlice = createSlice({
       });
   },
 });
-export const { setAccessibleModulesFromLocalStorage } = modulesSlice.actions;
+export const { resetModulesState, setAccessibleModulesFromLocalStorage } = modulesSlice.actions;
 
 export default modulesSlice.reducer;
 

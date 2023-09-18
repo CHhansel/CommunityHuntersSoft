@@ -10,6 +10,7 @@ import Breadcrumb from "../../components/breadcrumbs";
 import Customer from "../../views/Customer";
 import ConfigRouter from "../ConfigRouter";
 import withProtectedAccess from "../../components/HOC/withProtectedAccess";
+import Employee from "../../views/Employee";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -48,6 +49,7 @@ export const DashboardRoutes = () => {
 
             <Route path="/clients" element={<Customer />} />
             <Route path="/admin/*" element={<ConfigRouter />} />
+            <Route path="/employees" element={<Employee />} />
           </Routes>
         </div>
         <div className="mt-28">

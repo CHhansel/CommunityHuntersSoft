@@ -4,6 +4,7 @@ import { fetchRoles } from "../../../actions/roles";
 import { selectUser } from "../../../store/authSlice";
 import { TablaDinamica } from "../../../components/Table";
 import { RoleCreate } from "./RoleCreate";
+import { RoleDetails } from "./RoleDetails";
 
 const Roles = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
@@ -30,7 +31,7 @@ const Roles = () => {
   }
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
-      Roles
+
       <div className="w-100 flex justify-end px-8">
         <button
           onClick={() => {
@@ -46,6 +47,12 @@ const Roles = () => {
         setFilaSeleccionada={setFilaSeleccionada}
         dataType="Properties"
       />
+      {filaSeleccionada >= 0 && (
+        <RoleDetails
+          key={roles[filaSeleccionada].id}
+          fila={roles[filaSeleccionada]}
+        />
+      )}
       {createRoleActive &&  <RoleCreate></RoleCreate>}
       
     </div>

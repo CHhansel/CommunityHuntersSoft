@@ -8,7 +8,7 @@ import { fetchCustomers } from "../../actions/customer";
 import Pagination from "../../components/pagination/pagination";
 import { CustomerDetails } from "./CustomerDetails";
 import { CustomerCreate } from "./CustomerCreate";
-import Breadcrumb from "../../components/breadcrumbs";
+
 
 const Customer = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);

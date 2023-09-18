@@ -81,7 +81,6 @@ const updateEmployeeRol = (req, res) => {
         res.json({ message: 'Elemento actualizado exitosamente' });
     });
 };
-const connection = require('../db/connection');
 
 const getEmployeeRolByUserInfoId = (req, res) => {
     const { user_info_id, page, itemsPerPage } = req.query;
@@ -117,5 +116,47 @@ const getEmployeeRolByUserInfoId = (req, res) => {
     });
 };
 
-
-module.exports = { createEmployeeRol, deleteEmployeeRol, updateEmployeeRol, getEmployeeRolByUserInfoId  };
+const getEmployeesByUserId = (req, res) => {
+    const { id, page, itemsPerPage } = req.query;
+  
+    // Valida que los parámetros necesarios estén presentes
+    if (!id || !page || !itemsPerPage) {
+      return res.status(400).json({ error: "Faltan parámetros requeridos" });
+    }
+  
+    // Llama al procedimiento almacenado para obtener los empleados paginados
+    const query = "CALL sp_get_employees_by_user_id(?, ?, ?)";
+    const values = [id, page, itemsPerPage];
+  
+    connection.query(query, values, (err, result) => {
+      if (err) {
+        console.error("Error al obtener los empleados:", err);
+        return res.status(500).json({ error: "Error interno del servidor" });
+      }
+  
+      // El procedimiento devuelve un conjunto de resultados, accedemos a la primera posición para obtener los empleados
+      const employees = result[0];
+  
+      // También podemos obtener el total de empleados sin paginación
+      const totalEmployees = result[1][0].total_employees;
+  
+      // Verifica si se obtuvieron empleados
+      if (employees.length === 0) {
+        return res
+          .status(404)
+          .json({ error: "No se encontraron empleados para el usuario dado" });
+      }
+  
+      // Si deseas realizar alguna transformación adicional a los empleados, puedes hacerlo aquí
+      // Por ejemplo, si deseas eliminar el user_id de cada empleado:
+      employees.map((employee) => {
+        delete employee.id;
+        return employee;
+      });
+  
+      // Devuelve los empleados paginados y el total de empleados sin paginación
+      res.json({ employees, totalEmployees });
+    });
+  };
+   
+module.exports = {getEmployeesByUserId };

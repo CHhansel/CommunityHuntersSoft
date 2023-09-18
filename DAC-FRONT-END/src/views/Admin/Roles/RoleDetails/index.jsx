@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import { selectUser } from "../../../../store/authSlice";
-import { createRoleAction } from "../../../../actions/roles";
+import {
+  fetchAccessibleModulesByRoleId,
+  updateRoleAction,
+} from "../../../../actions/roles";
 
-
-
-export const RoleCreate = () => {
+// eslint-disable-next-line react/prop-types
+export const RoleDetails = ({ fila }) => {
   const { user, token } = useSelector(selectUser);
   const [selectedModules, setSelectedModules] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    moduleIds: selectedModules,
-    user_id: user.id
-  });
-  const roles = useSelector((state) => state.modules.accessibleModules.accessModules);
+
+  //const [isEditable, setIsEditable] = useState(false);
+  const [formData, setFormData] = useState({ ...fila, user_id: user.id});
+  const dispatch = useDispatch();
+  const roles = useSelector(
+    (state) => state.modules.accessibleModules.accessModules
+  );
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await dispatch(
+          fetchAccessibleModulesByRoleId({ role_id: formData.id, token })
+        );
+        if (response.payload) {
+          const moduleIds = response.payload.accessibleModules.map(module => module.id);
+          setSelectedModules(moduleIds);
+          setFormData((prevState) => ({
+            ...prevState,
+            moduleIds: moduleIds,
+          }));
+        }
+      } catch (error) {
+        console.error("Error al obtener módulos accesibles:", error);
+      }
+    };
+
+    fetchModules();
+  }, [dispatch, formData.id, token, fila]);
+
 
   // Manejador para el cambio de los checkboxes
   const handleModuleChange = (e) => {
@@ -31,19 +55,16 @@ export const RoleCreate = () => {
       ...prevState,
       moduleIds: updatedModules,
     }));
-};
+  };
 
-  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-   console.log(formData);
-  };
-  formData.province;
 
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormData((prevState) => ({
@@ -52,17 +73,17 @@ export const RoleCreate = () => {
     }));
     console.log(formData);
     try {
-      dispatch(createRoleAction({ data: formData, token }));
-      alert("Rol creada con éxito!");
+      dispatch(updateRoleAction({ data: formData, token }));
+      alert("Rol actualizado con éxito!");
     } catch (error) {
-      console.error("Hubo un error al crear el rol:", error);
-      alert("Error al crear el rol. Por favor, inténtalo de nuevo.");
+      console.error("Hubo un error al actualizar el rol:", error);
+      alert("Error al actualizar el rol. Por favor, inténtalo de nuevo.");
     }
   };
 
   return (
     <div className="border border-black p-5 my-5">
-      <h2 className="text-2xl text-main-blue mb-8">Crear Rol</h2>
+      <h2 className="text-2xl text-main-blue mb-8">Detalles de Rol</h2>
 
       <form
         onSubmit={handleSubmit}
@@ -85,11 +106,13 @@ export const RoleCreate = () => {
 
         <div className="flex flex-col gap-3 w-[400px]">
           <label className="text-xl">Módulos</label>
+
           {roles.map((role) => (
             <label key={role.module_id}>
               <input
                 type="checkbox"
                 value={role.module_id}
+                checked={selectedModules.includes(role.module_id)}
                 onChange={handleModuleChange}
               />
               {role.module_name}
@@ -98,14 +121,14 @@ export const RoleCreate = () => {
         </div>
       </form>
       <div className="w-full flex justify-end">
-          <button
-           onClick={handleSubmit}
-            className="mt-12 bg-main-blue text-white px-5 py-2 border rounded-full"
-            type="submit"
-          >
-            Crear Rol
-          </button>
-        </div>
+        <button
+          onClick={handleSubmit}
+          className="mt-12 bg-main-blue text-white px-5 py-2 border rounded-full"
+          type="submit"
+        >
+          Editar Rol
+        </button>
+      </div>
     </div>
   );
 };

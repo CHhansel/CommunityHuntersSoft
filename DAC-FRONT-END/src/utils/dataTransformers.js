@@ -48,6 +48,9 @@ export function parseData(data, dataType) {
     case "Contracts":
       data = parseContractColumnNames(data);
       break;
+      case "Employee":
+        data = parseEmployeeColumnNames(data);
+        break;
     default:
       break;
   }
@@ -90,6 +93,26 @@ function parseContractColumnNames(columns) {
     customer_name: "Nombre del Cliente",
     customer_lastname: "Apellido del Cliente",
     property_name: "Nombre de Propiedad",
+  };
+
+  return columns.map((column) => translations[column] || column);
+}
+function parseEmployeeColumnNames(columns) {
+  const translations = {
+    company_name: "Nombre de Empresa",
+    employee_name: "Nombre",
+    employee_lastname: "Apellido",
+    role_name: "Rol",
+    dni: "DNI",
+    dni_type_id: "Tipo de DNI",
+    email: "Correo",
+    phone_number: "Telefono",
+    salary: "Salario",
+    hire_date: "Fecha de Contratación",
+    province: "Provincia",
+    canton: "Cantón",
+    district: "Distrito",
+    exact_address: "Dirección Exacta",
   };
 
   return columns.map((column) => translations[column] || column);

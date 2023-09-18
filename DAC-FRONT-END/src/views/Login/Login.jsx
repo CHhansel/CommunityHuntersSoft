@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loginUser, selectStatus } from "../../store/authSlice";
+import { loginUser, selectStatus, selectUser, setUserFromLocalStorage } from "../../store/authSlice";
 
 import MainButton from "../../components/buttons/MainButton";
 import MainInputString from "../../components/inputs/MainInput";
 import logo from "../../assets/DAC-icon-bg-transparent.png";
-import { fetchAccessibleModules } from "../../store/modulesSlice";
+import { fetchAccessibleModules, setAccessibleModulesFromLocalStorage } from "../../store/modulesSlice";
 import Footer from "../../components/footer/index";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import arrow from '../../assets/arrow-forward.svg'
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,18 @@ export const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('auth'));
+    const token = localStorage.getItem('token');
+
+    if (user && token) {
+      dispatch(setUserFromLocalStorage({ user, token }));
+      const accessibleModules = JSON.parse(localStorage.getItem('accessibleModules'));
+      dispatch(setAccessibleModulesFromLocalStorage(accessibleModules))
+    }
+  }, [dispatch]);
+  const { user } = useSelector(selectUser);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,6 +91,14 @@ export const Login = () => {
         {status === "checking" && <p></p>}
         {status === "not-authenticated" && <p>Credenciales incorrectas.</p>}
       </div>
+      { status === 'authenticated' &&
+      <Link
+          className={` flex justify-center ease-out duration-500 my-1 px-6 py-3  `}
+          to={`/dashboard`}
+        >
+          continuar como {user.name}  <img className="ml-5 w-4" src={arrow} alt="ir" />
+        </Link>
+        }
       <div className="w-100">
         <Footer />
       </div>

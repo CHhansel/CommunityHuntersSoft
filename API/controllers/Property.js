@@ -298,7 +298,6 @@ const updatePropertyContract = (req, res) => {
     payment_date,
     contract_file
   } = req.body; // Obtiene los datos del contrato desde el cuerpo de la solicitud
- console.log("llegando ",req.body);
   // Crear la consulta SQL para actualizar los campos del contrato en la base de datos
   const updateQuery = "CALL sp_update_property_contract(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   const updateValues = [

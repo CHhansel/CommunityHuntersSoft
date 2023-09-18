@@ -25,7 +25,7 @@ export const loginUser = createAsyncThunk(
 );
 
 const initialState = {
-  status: 'checking',
+  status: 'idle',
   user: {},
   errorMessage: undefined,
 };
@@ -55,7 +55,11 @@ export const authSlice = createSlice({
     setUserFromLocalStorage: (state, action) => {
       state.user = action.payload;
       state.status = 'authenticated';
-    }
+    },
+    // eslint-disable-next-line no-unused-vars
+    resetAuthState: (state) => {
+      return initialState; // Esto resetea el estado al valor inicial
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,7 +78,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { onChecking, onLogout, clearErrorMessage,setUserFromLocalStorage } = authSlice.actions;
+export const { resetAuthState, onChecking, onLogout, clearErrorMessage,setUserFromLocalStorage } = authSlice.actions;
 
 // Selectores
 export const selectStatus = (state) => state.auth.status;

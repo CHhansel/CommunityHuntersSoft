@@ -126,7 +126,7 @@ const parsedProperties = parseProperties(yourArrayFromAPI);
 flags para enviar notificaciones
 
 
-
+administracion roles - empleados 
 
                                                     HRS
 administracion roles y variables de hacienda 

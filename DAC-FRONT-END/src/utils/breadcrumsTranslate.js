@@ -3,7 +3,10 @@ const translations = {
     dashboard: "Tablero",
     properties: "Propiedades",
     clients: "Clientes",
-    admin: "Administración"
+    admin: "Administración",
+    employees: "Empleados",
+    roles: "roles",
+    bills: "Facturas"
     // ... puedes agregar más traducciones aquí en el futuro
 };
 
