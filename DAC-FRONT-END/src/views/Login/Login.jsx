@@ -66,7 +66,7 @@ export const Login = () => {
     });
   };
   return (
-    <div className="m-auto w-100 h-screen flex flex-col justify-between">
+    <div className="m-auto w-100 h-screen flex flex-col justify-between grow-0">
       <div className="w-96 m-auto h-fit flex-column-center gap-10 p-4">
         <img
           className="w-[250px] mx-auto mb-24"
@@ -87,10 +87,15 @@ export const Login = () => {
           value={credentials.password} // Agrega esta línea
           onChange={handleInputChange} // Modifica esta línea
         />
+        
         <MainButton onClickFunction={handleLogin} label={"Iniciar Sesión"} />
+        <div>
+        <a href="/resetPasswordRequest" className="inline p-2 text-main-blue border-b-2 border-white hover:border-main-blue ease-out duration-500 ">Olvido su contraseña?</a>
+        </div>
         {status === "checking" && <p></p>}
         {status === "not-authenticated" && <p>Credenciales incorrectas.</p>}
       </div>
+      
       { status === 'authenticated' &&
       <Link
           className={` flex justify-center ease-out duration-500 my-1 px-6 py-3  `}
@@ -99,6 +104,7 @@ export const Login = () => {
           continuar como {user.name}  <img className="ml-5 w-4" src={arrow} alt="ir" />
         </Link>
         }
+       
       <div className="w-100">
         <Footer />
       </div>

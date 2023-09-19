@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUserFromLocalStorage } from "../store/authSlice";
 import { setAccessibleModulesFromLocalStorage } from "../store/modulesSlice";
+import ResetPasswordRequest from "../views/ResetPassword/ResetPasswordRequest";
+import ResetPasswordUpdate from "../views/ResetPassword/ResetPasswordUpdate";
 
 
 export const AppRouter = () => {
@@ -36,6 +38,9 @@ export const AppRouter = () => {
             } 
           />
           <Route path="/login" element={<Login />} />
+          <Route path="/resetPasswordRequest" element={<ResetPasswordRequest />} />
+          <Route path="/resetPassword" element={<ResetPasswordUpdate />} />
+
           {/* Otras rutas que no requieran autenticación */}
         </Routes>
       </div>
