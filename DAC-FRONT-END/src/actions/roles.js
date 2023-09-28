@@ -154,8 +154,7 @@ export const rolesSlice = createSlice({
         state.status = "succeeded";
         // Aquí puedes decidir cómo quieres actualizar el rol en el estado
         // Por ejemplo, podrías buscar el rol por su ID y actualizarlo
-        console.log("payload es...");
-        console.log("payload es",action.payload.updatedRole);
+
          const index = state.roles.findIndex(role => role.id === action.payload.updatedRole.id);
         if (index !== -1) {
           state.roles[index] = action.payload.updatedRole;

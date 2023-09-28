@@ -52,12 +52,13 @@ const SideMenu = () => {
     });
   };
   return (
-    <div className="sidebar bg-black flex flex-col justify-between	 min-h-screen w-[200px] items-center">
+    <div className="sidebar bg-black flex flex-col justify-between min-h-screen  items-center">
       <div className="my-12 flex flex-col items-center">
         <SideBarLogo />
         <h4 className="text-white mt-8">{user.name}</h4>
+        <h4 className="text-white mt-2">{user.company_name}</h4>
       </div>
-      <div className="flex flex-col justify-start w-[200px] px-2">
+      <div className="flex flex-col justify-start w-52 px-2">
         {accessibleModules.map((module) => {
           const { name, path: modulePath } = allModules[module.module_id];
           const isActive = location.pathname.includes(modulePath);
@@ -65,7 +66,7 @@ const SideMenu = () => {
             <Link
               key={module.module_id}
               to={`${url}/${modulePath}`}
-              className={`ease-out duration-500  my-1 w-full py-3 border-[0.1px] border-zinc-700 rounded-lg text-center ${
+              className={`ease-out duration-500  my-1 w-full py-[6px] px-[12px] border-[0.1px] border-zinc-700 rounded-lg text-center ${
                 isActive
                   ? "bg-white text-black"
                   : "text-white hover:bg-white hover:text-black"

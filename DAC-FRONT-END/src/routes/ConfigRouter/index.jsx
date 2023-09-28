@@ -1,6 +1,7 @@
 import { Link, Route, Routes, useLocation, useResolvedPath } from "react-router-dom";
 import UserConfig from "../../views/Admin/UserConfig";
 import Roles from "../../views/Admin/Roles";
+import CompanySettings from "../../views/Admin/CompanySettings";
 
 const ConfigRouter = () => {
   const url = useResolvedPath("").pathname;
@@ -13,7 +14,13 @@ const ConfigRouter = () => {
           className={`ease-out duration-500 my-1 px-6 py-3 border-[0.1px] border-zinc-700 rounded-lg text-center ${location.pathname === url ? 'bg-gray-900 text-white' : 'hover:bg-gray-900 hover:text-white'}`}
           to={`${url}`}
         >
-          User Config
+          Usuario
+        </Link>
+        <Link
+          className={`ease-out duration-500 my-1 px-6 py-3 border-[0.1px] border-zinc-700 rounded-lg text-center ${location.pathname.includes(`${url}/roles`) ? 'bg-gray-900 text-white' : 'hover:bg-gray-900 hover:text-white'}`}
+          to={`${url}/company-settings`}
+        >
+          Compañia
         </Link>
         <Link
           className={`ease-out duration-500 my-1 px-6 py-3 border-[0.1px] border-zinc-700 rounded-lg text-center ${location.pathname.includes(`${url}/roles`) ? 'bg-gray-900 text-white' : 'hover:bg-gray-900 hover:text-white'}`}
@@ -21,11 +28,13 @@ const ConfigRouter = () => {
         >
           Roles
         </Link>
+
       </div>
       <div className="grow ">
         <Routes>
           <Route index element={<UserConfig />} />
           <Route path="/roles" element={<Roles />} />
+          <Route path="/company-settings" element={<CompanySettings />} />
         </Routes>
       </div>
     </div>

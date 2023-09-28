@@ -17,12 +17,12 @@ const Breadcrumb = () => {
   const breadcrumbs = translateRoutes(bread)
   return (
     <nav className='flex px-14 py-3'>
-      <img src={home} className='w-6 mx-2'></img>
+      <img src={home} className='w-4 mx-2'></img>
       {breadcrumbs.map((breadcrumb, index) => (
-        <span key={breadcrumb.path} className='text-lg flex items-center'> 
+        <span key={breadcrumb.path} className='text-sm flex items-center'> 
         
           <Link to={breadcrumb.path} >{breadcrumb.name}</Link>
-          {index < breadcrumbs.length - 1 && <img  src={arrow} className='mx-1 inline w-5'></img>}
+          {index < breadcrumbs.length - 1 && <img  src={arrow} className='mx-1 inline w-4'></img>}
         </span>
       ))}
     </nav>

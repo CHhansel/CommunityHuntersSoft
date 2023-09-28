@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
 import { createPropertyAction } from "../../../actions/properties";
+import { getProvincias, getCantones, getDistritos } from '../../../utils/GeoService';
 
 export const PropertyCreate = () => {
   const { user, token } = useSelector(selectUser);
@@ -35,21 +36,34 @@ export const PropertyCreate = () => {
       alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
     }
   };
+  const [cantones, setCantones] = useState([]);
+  const [distritos, setDistritos] = useState([]);
 
+  useEffect(() => {
+    if (formData.province) {
+      setCantones(getCantones(formData.province));
+    }
+  }, [formData.province]);
+
+  useEffect(() => {
+    if (formData.canton) {
+      setDistritos(getDistritos(formData.province, formData.canton));
+    }
+  }, [formData.canton]);
   return (
-    <div className="border border-black p-5 my-5">
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Propiedad</h2>
 
       <form
         onSubmit={handleSubmit}
-        className="m-5 flex justify-evenly flex-wrap items-start gap-y-5"
+        className=" flex justify-between flex-wrap items-start gap-5 w-full"
       >
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="name">
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="name">
             Nombre
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             type="text"
             name="name"
             placeholder="Nombre de la propiedad"
@@ -59,12 +73,12 @@ export const PropertyCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="description">
+        <div className="flex flex-col  gap-3 ">
+          <label className="text-lg" htmlFor="description">
             Descripción
           </label>
           <textarea
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             name="description"
             placeholder="Descripción"
             value={formData.description}
@@ -73,12 +87,12 @@ export const PropertyCreate = () => {
           ></textarea>
         </div>
 
-        <div className="flex flex-col gap-3 w-[200px]">
-          <label className="text-xl " htmlFor="state">
+        <div className="flex flex-col gap-3">
+          <label className="text-lg" htmlFor="state">
             Estado
           </label>
           <select
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             name="state"
             value={formData.state}
             onChange={handleChange}
@@ -88,76 +102,83 @@ export const PropertyCreate = () => {
             <option value="Mantenimiento">Mantenimiento</option>
           </select>
         </div>
-        <div className="flex flex-col gap-3 w-[200px]">
-            <label className="text-xl" htmlFor="antiquity">
+        <div className="flex flex-col gap-3">
+            <label className="text-lg" htmlFor="antiquity">
               Antiguedad:
             </label>
             <input
               type="date"
               name="antiquity"
               value={formData.antiquity}
-              className="border p-2 rounded-lg w-full"
+              className="input-text"
               onChange={handleChange}
               required
             />
           </div>
-        <div className="flex flex-col gap-3 w-[300px]">
-          <label className="text-xl " htmlFor="province">
-            Provincia
-          </label>
-          <select
-            className="border p-2 rounded-lg w-full"
-            name="province"
-            value={formData.province}
-            onChange={handleChange}
-          >
-            <option value="San José">San José</option>
-            <option value="Alajuela">Alajuela</option>
-            <option value="Cartago">Cartago</option>
-            <option value="Heredia">Heredia</option>
-            <option value="Guanacaste">Guanacaste</option>
-            <option value="Puntarenas">Puntarenas</option>
-            <option value="Limón">Limón</option>
-          </select>
-        </div>
+          <div className="flex flex-col gap-3">
+        <label className="text-lg " htmlFor="province">
+          Provincia
+        </label>
+        <select
+          className="input-text"
+          name="province"
+          value={formData.province}
+          onChange={handleChange}
+        >
+          {getProvincias().map(provincia => (
+            <option key={provincia} value={provincia}>
+              {provincia}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div className="flex flex-col gap-3 w-[300px]">
-          <label className="text-xl " htmlFor="canton">
-            Cantón
-          </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text"
-            name="canton"
-            placeholder="Cantón"
-            value={formData.canton}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="flex flex-col gap-3">
+        <label className="text-lg " htmlFor="canton">
+          Cantón
+        </label>
+        <select
+          className="input-text"
+          name="canton"
+          value={formData.canton}
+          onChange={handleChange}
+          disabled={!cantones.length}
+        >
+          <option value="">Seleccione un cantón</option>
+          {cantones.map(canton => (
+            <option key={canton} value={canton}>
+              {canton}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div className="flex flex-col gap-3 w-[300px]">
-          <label className="text-xl " htmlFor="district">
-            Distrito
-          </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text"
-            name="district"
-            placeholder="Distrito"
-            value={formData.district}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="flex flex-col gap-3">
+        <label className="text-lg " htmlFor="district">
+          Distrito
+        </label>
+        <select
+          className="input-text"
+          name="district"
+          value={formData.district}
+          onChange={handleChange}
+          disabled={!distritos.length}
+        >
+          <option value="">Seleccione un distrito</option>
+          {distritos.map(distrito => (
+            <option key={distrito} value={distrito}>
+              {distrito}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl " htmlFor="exact_address">
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="exact_address">
             Dirección exacta
           </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text-area"
+          <textarea
+            className="input-text"
             name="exact_address"
             placeholder="Dirección exacta"
             value={formData.exact_address}
@@ -167,7 +188,7 @@ export const PropertyCreate = () => {
         </div>
         <div className="w-full flex justify-end">
           <button
-            className="mt-12 bg-main-blue text-white px-5 py-2 border rounded-full"
+            className="mt-12 button-success"
             type="submit"
           >
             Crear Propiedad

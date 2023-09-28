@@ -63,7 +63,7 @@ const Property = () => {
     delete property.creation_date;
   });
   return (
-    <div className="w-full px-16 flex flex-col justify-start h-full">
+    <div className="w-full px-16 flex flex-col justify-start h-full ">
       <div className="w-100 flex justify-end px-8">
         <button
           onClick={() => {

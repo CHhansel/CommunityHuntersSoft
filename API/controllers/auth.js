@@ -336,8 +336,8 @@ const recoveryPassword = (req, res) => {
       const mailOptions = {
         from: "hansel.b51323@gmail.com",
         to: email,
-        subject: "Recuperación de contraseña",
-        text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`,
+        subject: "Recuperación de contraseña DAC",
+        text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink} `,
       };
 
       transporter.sendMail(mailOptions, (err, info) => {

@@ -7,9 +7,54 @@
   font-family: 'Montserrat', sans-serif;
 
 }
+:root {
+  --base-font-size: 16px;
+}
 
+html {
+  font-size: var(--base-font-size);
+}
 .flex-column-center {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+@layer components {
+  .input-text {
+    @apply border p-2 rounded-main w-72 focus:outline-main-blue focus:outline-1 text-xs shadow-sm;
+  }
+  .button-success {
+    @apply bg-main-blue text-white px-5 py-2 border rounded-main hover:bg-main-blue-hover text-sm ease-out duration-500;
+  }
+  .button-cancel {
+    @apply bg-main-red text-white px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow;
+  }
+  .button-main-menu {
+    @apply bg-main-red text-white px-5 py-2 border rounded-main hover:bg-opacity-70 text-xs ease-out duration-500;
+  }
+  .h-desktop{
+    @apply fit-content
+  }
+  .responsive-width-component{
+    @apply w-11/12 md:w-[600px] m-auto
+  }
+}@layer components {
+  .btn-green {
+    @apply text-white bg-orange-50 hover:bg-orange-100 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 ;
+  }
+  .input-text-template {
+    @apply block py-2.5 px-0 w-full text-lg text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600;
+  }
+  .input-text-label-template{
+    @apply flex items-center peer-focus:font-medium absolute text-xl text-gray-500  duration-300 transform -translate-y-8 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-8
+  }
+  .input-textarea-template{
+    @apply   flex items-center pl-1 peer-focus:font-medium absolute text-xl text-gray-500  duration-300 transform -translate-y-11 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-11
+  }
+  .h-desktop{
+    @apply fit-content
+  }
+  .responsive-width-component{
+    @apply w-11/12 md:w-[600px] m-auto
+  }
 }

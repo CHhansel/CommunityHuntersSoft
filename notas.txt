@@ -168,3 +168,42 @@ vista cliente                                     5
 
 
 
+
+
+
+
+
+
+
+
+
+
+superusuario
+
+adminAndresChang
+adminPapaChang
+
+
+adminAndresChang
+  cocinero
+  salonero
+  caja
+
+
+
+empleados   40
+Roles       80
+
+
+
+empleados CRU  y front  8
+roles mostrar empleados 8
+
+
+falta definir cambio de password
+definir facturas
+
+
+
+
+invbestigar api hacienda

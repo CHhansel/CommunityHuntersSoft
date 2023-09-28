@@ -213,7 +213,7 @@ export const PropertyDetail = ({ fila }) => {
             <div className="">
               <button
                 onClick={handleDelete}
-                className="bg-main-red  text-white px-5 py-2 border rounded-full"
+                className="button-cancel"
               >
                 Borrar
               </button>
@@ -225,7 +225,7 @@ export const PropertyDetail = ({ fila }) => {
               </button>
               <button
                 onClick={handleSave}
-                className="bg-main-blue text-white px-5 py-2 border rounded-full"
+                className="button-success"
               >
                 Guardar
               </button>

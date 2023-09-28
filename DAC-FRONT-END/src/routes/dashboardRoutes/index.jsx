@@ -11,6 +11,7 @@ import Customer from "../../views/Customer";
 import ConfigRouter from "../ConfigRouter";
 import withProtectedAccess from "../../components/HOC/withProtectedAccess";
 import Employee from "../../views/Employee";
+import FontSizeAdjuster from "../../components/FontSizeAjust";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -32,25 +33,26 @@ export const DashboardRoutes = () => {
   }
 
   return (
-    <div className="h-full w-full flex flex-row">
-      <div className="w-[200px] fixed">
+    <div className="max-h-screen w-full flex flex-row">
+      <div className="w-52 h-full">
         <SideMenu></SideMenu>
       </div>
-      <div className="flex flex-col min-h-screen justify-between ml-[200px] w-[calc(100%-200px)]"> 
-        {/* <div className="w-100 h-[50px]"> 
-         <TopBar/>
-        </div> */}
-         <Breadcrumb />
-        <div className="grow ">
-          <Routes>
-            <Route index element={<Dashboard />} />
-            {/* <Route path="/properties" element={<Property />} /> */}
-            <Route path="/properties" element={<ProtectedProperty />} />
 
-            <Route path="/clients" element={<Customer />} />
-            <Route path="/admin/*" element={<ConfigRouter />} />
-            <Route path="/employees" element={<Employee />} />
-          </Routes>
+      <div className="overflow-y-auto flex flex-col w-full min-h-screen justify-between relative">
+        <div className="absolute top-0 right-[28px]">
+          <FontSizeAdjuster />
+        </div>
+        <div className="mt-5">
+        <Breadcrumb />
+          <div className="grow">
+            <Routes>
+              <Route index element={<Dashboard />} />
+              <Route path="/properties" element={<ProtectedProperty />} />
+              <Route path="/clients" element={<Customer />} />
+              <Route path="/admin/*" element={<ConfigRouter />} />
+              <Route path="/employees" element={<Employee />} />
+            </Routes>
+          </div>
         </div>
         <div className="mt-28">
           <Footer />

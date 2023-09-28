@@ -1,0 +1,121 @@
+GO
+/****** Object:  Table [dbo].[Invoice]    Script Date: 5/16/2023 12:17:06 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Invoice](  -- factura restaurant
+	[IdInvoice] [int] IDENTITY(1,1) NOT NULL, --- 
+	[IdClient] [int] NULL,                    ---abajo
+	[IdTable] [int] NULL,     				  --                 
+	[IdCompany] [int] NULL,					  -- abajo
+	[IdUser] [int] NULL,					  --
+	[IdOrder] [int] NULL,					  --
+	[Document] [varchar](10) NULL,			  -?
+	[NameClient] [varchar](100) NULL,	      -- abajo
+	[Email] [varchar](160) NULL,				-- abajo
+	[EmailCC] [varchar](160) NULL,				-- abajo
+	[TypeIdentification] [varchar](2) NULL,     -- abajo
+	[IdentificationNumber] [varchar](12) NULL,  -- abajo
+	[ConsecutiveInvoice] [int] NULL,    		-- abajo        
+	[TypeOrder] [int] NULL,						--
+	[TypePayment] [varchar](6) NULL,			--
+	[NoteOrder] [varchar](100) NULL,			--
+	[NoteExpress] [varchar](100) NULL,			--
+	[Datafono] [varchar](10) NULL,				--	
+	[TotalServGravados] [decimal](13, 5) NULL,			--
+	[TotalMercanciasGravadas] [decimal](13, 5) NULL,    --
+	[TotalGravado] [decimal](13, 5) NULL,				--
+	[TotalVenta] [decimal](13, 5) NULL,					--
+	[TotalDescuentos] [decimal](13, 5) NULL,
+	[TotalVentaNeta] [decimal](13, 5) NULL,
+	[TotalImpuesto] [decimal](13, 5) NULL,
+	[TotalOtrosCargos] [decimal](13, 5) NULL,
+	[TotalComprobante] [decimal](13, 5) NULL,
+	[Status] [int] NULL,
+	[KeyXml] [varchar](50) NULL,
+	[StatusTokenMH] [varchar](6) NULL,
+	[StatusSendMH] [varchar](6) NULL,
+	[AcuseMH] [varchar](20) NULL,
+	[ErrorMH] [varchar](max) NULL,
+	[Created_On] [datetime] NULL,
+	[Created_By] [varchar](20) NULL,
+	[Last_Modified_On] [datetime] NULL,
+	[Last_Modified_By] [varchar](20) NULL,
+ CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED 
+(
+	[IdInvoice] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[InvoiceView]    Script Date: 5/16/2023 12:17:06 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [dbo].[InvoiceView]
+AS
+SELECT        SUBSTRING(dbo.Invoice.KeyXml, 22, 20) AS ConsecutivePrint, dbo.Invoice.IdInvoice, dbo.Invoice.IdClient, dbo.Invoice.IdCompany, dbo.Invoice.NameClient, dbo.Invoice.Email, dbo.Invoice.TypeIdentification, 
+                         dbo.Invoice.IdentificationNumber, dbo.Invoice.ConsecutiveInvoice, dbo.Invoice.TypePayment, ROUND(dbo.Invoice.TotalServGravados, 2) AS TotalServGravados, ROUND(dbo.Invoice.TotalMercanciasGravadas, 2) 
+                         AS TotalMercanciasGravadas, ROUND(dbo.Invoice.TotalGravado, 2) AS TotalGravado, ROUND(dbo.Invoice.TotalVenta, 2) AS TotalVenta, ROUND(dbo.Invoice.TotalDescuentos, 2) AS TotalDescuentos, 
+                         ROUND(dbo.Invoice.TotalVentaNeta, 2) AS TotalVentaNeta, dbo.Invoice.NoteExpress, ROUND(dbo.Invoice.TotalImpuesto, 2) AS TotalImpuesto, ROUND(dbo.Invoice.TotalOtrosCargos, 2) AS TotalOtrosCargos, 
+                         ROUND(dbo.Invoice.TotalComprobante, 2) AS TotalComprobante, dbo.Invoice.KeyXml, dbo.Invoice.StatusTokenMH, dbo.Invoice.StatusSendMH, dbo.Invoice.AcuseMH, dbo.Invoice.ErrorMH, REPLACE(STUFF(CONVERT(char, 
+                         TODATETIMEOFFSET(dbo.Invoice.Created_On, '-06:00'), 120), LEN(CONVERT(char, TODATETIMEOFFSET(dbo.Invoice.Created_On, '-06:00'), 120)) - 15, 0, 'T'), ' ', '') AS Date, FORMAT(dbo.Invoice.Created_On, 
+                         'dd/MM/yyyy, hh:mm:ss') AS DatePdf, dbo.Invoice.[Document], dbo.Invoice.TypeOrder, dbo.Invoice.NoteOrder, dbo.Invoice.Datafono, dbo.[Order].IdTable
+FROM            dbo.Invoice INNER JOIN
+                         dbo.[Order] ON dbo.Invoice.IdOrder = dbo.[Order].IdOrder
+GO
+/****** Object:  Table [dbo].[InvoiceDetail]    Script Date: 5/16/2023 12:17:06 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[InvoiceDetail](
+	[IdInvoiceDetail] [int] IDENTITY(1,1) NOT NULL, --
+	[IdInvoice] [int] NULL,                         --
+	[IdOrderDetail] [int] NULL,						
+	[IdProduct] [int] NULL,							--
+	[IdCompany] [int] NULL,							--
+	[IdPresentation] [int] NULL,					--
+	[UnidMeasure] [varchar](6) NULL,				
+	[Quantity] [int] NULL,							--
+	[Price] [decimal](13, 5) NULL,					--
+	[Observation] [varchar](100) NULL,				--
+	[MontoTotal] [decimal](13, 5) NULL,				--
+	[Descuento] [decimal](13, 5) NULL,				--
+	[Impuesto] [decimal](13, 5) NULL,				--
+	[SubTotal] [decimal](13, 5) NULL,				--
+	[MontoTotalLinea] [decimal](13, 5) NULL,		--
+	[Status] [int] NULL,							-?
+	[LineExe] [int] NULL,											
+	[QuantityFacturada] [int] NULL,					--
+	[Created_On] [datetime] NULL,					--
+	[Created_By] [varchar](20) NULL,				--
+	[Last_Modified_On] [datetime] NULL,				--
+	[Last_Modified_By] [varchar](20) NULL,			--
+ CONSTRAINT [PK_InvoiceDetail] PRIMARY KEY CLUSTERED 
+(
+	[IdInvoiceDetail] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+facturas
+ campos genericos
+
+factura restaurante
+ campos espec
+
+vista factura resta 
+
+modulo usa vista
+
+
+
+
+
+restaurante  fac rest -  fact tiend
+
+
+

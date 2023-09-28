@@ -1,33 +1,8 @@
 table { 
     border-collapse: separate; 
     border-spacing: 0 1px; 
-    margin-top: -10px; /* correct offset on first border spacing if desired */
+
 }
 tr{
-    background: #B1B1B1;
+   
 }
-
-      
-td {
-    border-style: solid none;
-    padding: 5px;
-}
-td:first-child ,th:first-child{
-    border-left-style: solid;
-    border-top-left-radius: 10px; 
-    border-bottom-left-radius: 10px;
-}
-td:last-child, th:last-child {
-    border-right-style: solid;
-    border-bottom-right-radius: 10px; 
-    border-top-right-radius: 10px; 
-}
-/* Aplicar color a las celdas pares */
-tbody tr:nth-child(even) td {
-    
-  }
-  
-  /* Aplicar color a las celdas impares */
-  tbody tr:nth-child(odd) td {
-  
-  }
