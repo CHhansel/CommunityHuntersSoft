@@ -53,9 +53,9 @@ export const Login = () => {
     dispatch(loginUser(credentials)).then((response) => {
       if (response && response.payload && response.payload.token) {
         const token = response.payload.token;
-        const id = response.payload.user.id;
+        const user_id = response.payload.user.id;
         const user_role_id = response.payload.user.role_id;
-        dispatch(fetchAccessibleModules({ id, user_role_id, token })).then(
+        dispatch(fetchAccessibleModules({ user_id, user_role_id, token })).then(
           (modulesResponse) => {
             if (modulesResponse && modulesResponse.payload) {
               // Guarda la información en localStorage

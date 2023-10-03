@@ -50,7 +50,7 @@ const getAccessibleModulesByRoleId = (req, res) => {
         SELECT m.* 
         FROM module AS m
         JOIN role_access_module AS ram ON m.id = ram.module_id
-        WHERE ram.user_role_id = ?
+        WHERE ram.company_id = ?
     `;
 
     // Ejecutar la consulta en la base de datos
@@ -71,7 +71,7 @@ const updateRole = (req, res) => {
     }
 
     // Paso 1: Actualizar el nombre del rol
-    const updateRoleQuery = 'UPDATE user_role SET name = ? WHERE id = ?';
+    const updateRoleQuery = 'UPDATE company_rol SET name = ? WHERE id = ?';
     connection.query(updateRoleQuery, [name, id], (err, result) => {
         if (err) {
             console.error('Error al actualizar el rol:', err);
@@ -79,7 +79,7 @@ const updateRole = (req, res) => {
         }
 
         // Paso 2: Obtener todos los module_id asociados al user_role_id
-        const selectPermissionsQuery = 'SELECT module_id FROM role_access_module WHERE user_role_id = ?';
+        const selectPermissionsQuery = 'SELECT module_id FROM role_access_module WHERE company_id = ?';
         connection.query(selectPermissionsQuery, [id], (err, existingModules) => {
             if (err) {
                 console.error('Error al obtener los permisos existentes:', err);
@@ -242,16 +242,16 @@ const deleteRole = (req, res) => {
 };
 
 const getRolesByUserId = (req, res) => {
-    const { id, page, itemsPerPage } = req.query;
+    const { user_id, company_id, page, itemsPerPage } = req.query;
   
     // Valida que los parámetros necesarios estén presentes
-    if (!id || !page || !itemsPerPage) {
+    if (!user_id || !page || !itemsPerPage) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });
     }
   
     // Llama al procedimiento almacenado para obtener los roles paginados
     const query = 'CALL sp_get_roles_by_user_id(?, ?, ?)';
-    const values = [id, page, itemsPerPage];
+    const values = [company_id, page, itemsPerPage];
   
     connection.query(query, values, (err, result) => {
       if (err) {

@@ -24,6 +24,7 @@ const SideMenu = () => {
     4: { name: "Administración", path: "admin" },
     5: { name: "Facturas", path: "bills" },
     6: { name: "Empleados", path: "employees" },
+    7: { name: "Ordenes", path: "orders" },
     // Agrega más módulos según sea necesario
   };
   const navigate = useNavigate();

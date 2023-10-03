@@ -9,13 +9,12 @@ import { selectUser } from "../../store/authSlice";
 import Pagination from "../../components/pagination/pagination";
 
 const Property = () => {
-
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
 
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
 
   const { user, token } = useSelector(selectUser);
-  
+
   //const error = useSelector((state) => state.properties.error);
   const dispatch = useDispatch();
 
@@ -28,19 +27,20 @@ const Property = () => {
   useEffect(() => {
     dispatch(
       fetchProperties({
-        id: user.id,
+        id: user.company_id,
         page: currentPage,
         itemsPerPage: 10,
+        user_id: user.id,
         token,
       })
     );
-  }, [dispatch, currentPage, user.id, token,totalProperties]);
+  }, [dispatch, currentPage, user.id, token, totalProperties]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
   const status = useSelector((state) => state.properties.status);
-  if (status === "loading" || status === "idle") {
+  if (status !== "succeeded") {
     return <div>Cargando Propiedades ...</div>;
   }
 
@@ -61,8 +61,10 @@ const Property = () => {
     delete property.contract_file;
     delete property.payment_method;
     delete property.creation_date;
+    delete property.company_id;
   });
   return (
+    status === "succeeded" &&
     <div className="w-full px-16 flex flex-col justify-start h-full ">
       <div className="w-100 flex justify-end px-8">
         <button
@@ -74,17 +76,21 @@ const Property = () => {
           AGREGAR
         </button>
       </div>
-      <TablaDinamica
-        datos={propertiesResume}
-        setFilaSeleccionada={setFilaSeleccionada}
-        dataType="Properties"
-      />
-      <Pagination
-        totalItems={totalProperties}
-        itemsPerPage={10}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {propertiesResume && (
+        <>
+          <TablaDinamica
+            datos={propertiesResume}
+            setFilaSeleccionada={setFilaSeleccionada}
+            dataType="Properties"
+          />
+          <Pagination
+            totalItems={totalProperties}
+            itemsPerPage={10}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
       {filaSeleccionada >= 0 && (
         <PropertyDetail
           key={properties[filaSeleccionada].id}

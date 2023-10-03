@@ -47,16 +47,16 @@ const createCustomer = (req, res) => {
   };
 
   const getCustomersByUserId = (req, res) => {
-    const { id, page, itemsPerPage } = req.query;
-  
+    const { company_id, page, itemsPerPage } = req.query;
+
     // Valida que los parámetros necesarios estén presentes
-    if (!id || !page || !itemsPerPage) {
+    if (!company_id || !page || !itemsPerPage) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });
     }
   
     // Llama al procedimiento almacenado para obtener los clientes paginados
     const query = 'CALL sp_get_customers_by_user_id(?, ?, ?)';
-    const values = [id, page, itemsPerPage];
+    const values = [company_id, page, itemsPerPage];
   
     connection.query(query, values, (err, result) => {
       if (err) {
@@ -72,7 +72,7 @@ const createCustomer = (req, res) => {
   
       // Verifica si se obtuvieron clientes
       if (customers.length === 0) {
-        return res.status(404).json({ error: 'No se encontraron clientes para el usuario dado' });
+        return res.json({ error: 'No se encontraron clientes para el usuario dado', errorStatus: 0 });
       }
       customers.map(customers => {
         delete customers.user_id;

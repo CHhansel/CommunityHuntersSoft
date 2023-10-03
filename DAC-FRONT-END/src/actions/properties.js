@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import gpiAPI from '../api/db-connection';
 
 // Función para obtener propiedades
-async function getPropertiesByUserId({ id, page, itemsPerPage,token }) {
+async function getPropertiesByUserId({ id, page, itemsPerPage,user_id, token }) {
   const response = await gpiAPI.get(`/property/get-properties`, {
-    params: { id, page, itemsPerPage },
+    params: { id, page, itemsPerPage,user_id },
     headers: { 'Authorization': token }
   });
   return response.data;

@@ -9,7 +9,7 @@ const createProperty = (req, res) => {
     canton,
     district,
     exact_address,
-    user_id,
+    company_id,
     antiquity,
   } = req.body;
 
@@ -24,7 +24,7 @@ const createProperty = (req, res) => {
     description,
     state,
     antiquity,
-    user_id,
+    company_id,
   ];
 
   connection.query(query, values, (err, result) => {
@@ -163,7 +163,7 @@ const deleteProperty = (req, res) => {
     }
   );
 };
-const getPropertiesByUserId = (req, res) => {
+const getPropertiesByCompanyId = (req, res) => {
   const { id, page, itemsPerPage } = req.query;
 
   // Valida que los parámetros necesarios estén presentes
@@ -351,7 +351,7 @@ module.exports = {
   createProperty,
   updateProperty,
   deleteProperty,
-  getPropertiesByUserId,
+  getPropertiesByCompanyId,
   updatePropertyState,
   updatePropertyContract
 };

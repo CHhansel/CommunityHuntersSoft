@@ -102,7 +102,7 @@ const updateEmployee = (req, res) => {
         exact_address,
         client_id
     } = req.body;
- console.log(req.body);
+
     // Crear la consulta SQL para llamar al procedimiento almacenado `sp_update_employee`
     const procedureQuery = 'CALL sp_update_employee( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const procedureValues = [
@@ -120,7 +120,6 @@ const updateEmployee = (req, res) => {
         exact_address,
         client_id
     ];
- console.log(procedureValues);
     // Ejecutar la consulta en la base de datos
     connection.query(procedureQuery, procedureValues, (procedureErr, procedureResult) => {
         if (procedureErr) {
@@ -147,16 +146,16 @@ const updateEmployee = (req, res) => {
 };
 
 const getEmployeesByUserId = (req, res) => {
-    const { id, page, itemsPerPage } = req.query;
+    const { user_id, page, itemsPerPage } = req.query;
   
     // Valida que los parámetros necesarios estén presentes
-    if (!id || !page || !itemsPerPage) {
+    if (!user_id || !page || !itemsPerPage) {
       return res.status(400).json({ error: "Faltan parámetros requeridos" });
     }
   
     // Llama al procedimiento almacenado para obtener los empleados paginados
     const query = "CALL sp_get_employees_by_user_id(?, ?, ?)";
-    const values = [id, page, itemsPerPage];
+    const values = [user_id, page, itemsPerPage];
   
     connection.query(query, values, (err, result) => {
       if (err) {

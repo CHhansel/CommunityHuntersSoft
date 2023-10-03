@@ -7,7 +7,7 @@ const getAccessModulesByUserRole = (req, res) => {
   const { user_role_id } = req.query;
 
   // Consulta SQL para obtener los registros de rol_access_module por user_rol_id
-  const query = 'SELECT * FROM access_module_view WHERE user_role_id = ?';
+  const query = 'SELECT * FROM access_module_view WHERE company_role_id = ?';
   const values = [user_role_id];
   // Ejecutar la consulta en la base de datos
   connection.query(query, values, (err, results) => {

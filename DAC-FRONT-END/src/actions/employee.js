@@ -10,9 +10,9 @@ async function updateEmployeeAPI(employeeData, token) {
 }
 
 // Función para obtener empleados por user_id
-async function getEmployeesByUserId({ id, page, itemsPerPage, token }) {
+async function getEmployeesByUserId({ user_id, company_id, page, itemsPerPage, token }) {
   const response = await gpiAPI.get(`/employees/get-employees`, {
-    params: { id, page, itemsPerPage },
+    params: { user_id, company_id, page, itemsPerPage },
     headers: { Authorization: token },
   });
   return response.data;

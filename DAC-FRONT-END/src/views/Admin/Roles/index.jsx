@@ -17,7 +17,8 @@ const Roles = () => {
   useEffect(() => {
     dispatch(
       fetchRoles({
-        id: user.id,
+        user_id: user.id,
+        company_id: user.company_id,
         page: 1,
         itemsPerPage: 10,
         token,

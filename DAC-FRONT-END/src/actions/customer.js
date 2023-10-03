@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import gpiAPI from '../api/db-connection';
 
 // Función para obtener clientes por ID de usuario
-async function getCustomersByUserId({ id, page, itemsPerPage, token }) {
-    const response = await gpiAPI.get(`/customer/get-customers`, {
-      params: { id, page, itemsPerPage },
+async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, token }) {
+  console.log(company_id," adasdasd");  
+  const response = await gpiAPI.get(`/customer/get-customers`, {
+      params: { user_id, page,company_id, itemsPerPage },
       headers: { 'Authorization': token }
     });
     return response.data;
@@ -117,6 +118,7 @@ async function getCustomersByUserId({ id, page, itemsPerPage, token }) {
         .addCase(fetchCustomers.rejected, (state, action) => {
           state.status = 'failed';
           state.error = action.error.message;
+          state.totalCustomers = 0;
         })
         .addCase(createCustomerAction.pending, (state) => {
           state.status = 'loading';

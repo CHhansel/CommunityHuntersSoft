@@ -15,13 +15,15 @@ const Index = ({ setFormData }) => {
   useEffect(() => {
     dispatch(
       fetchCustomers({
-        id: user.id,
+        user_id: user.id,
+        company_id: user.company_id,
         page: 1,
         itemsPerPage: 1000,
         token,
       })
     );
   }, [dispatch, user.id, token]);
+  const status = useSelector((state) => state.customers.status);
 
   const customers = useSelector((state) => state.customers.customers);
   const totalCustomers = useSelector((state) => state.customers.totalCustomers);
@@ -42,8 +44,7 @@ const Index = ({ setFormData }) => {
     setCurrentPage(pageNumber);
   };
   useEffect(() => {
-
-    if (filaSeleccionada>=0) {
+    if (filaSeleccionada >= 0) {
       const customerId = customers[filaSeleccionada].Id;
       setFormData((prevData) => ({
         ...prevData,
@@ -51,20 +52,27 @@ const Index = ({ setFormData }) => {
       }));
     }
   }, [filaSeleccionada]);
-
+  if (status !== "succeeded") {
+    return <div>Cargando clientes s...</div>;
+  }
   return (
-    <div className="max-w-[400px] m-auto">
-      <TablaDinamica
-        datos={customersResume}
-        setFilaSeleccionada={setFilaSeleccionada}
-        dataType="Customers"
-      />
-      <Pagination
-        totalItems={totalCustomers}
-        itemsPerPage={10}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+    <div className=" m-auto">
+      <p className="text-xl">Seleccion el Cliente</p>
+      {customers && (
+        <>
+          <TablaDinamica
+            datos={customersResume}
+            setFilaSeleccionada={setFilaSeleccionada}
+            dataType="Customers"
+          />
+          <Pagination
+            totalItems={totalCustomers}
+            itemsPerPage={10}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
     </div>
   );
 };

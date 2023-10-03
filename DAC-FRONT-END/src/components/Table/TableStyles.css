@@ -3,6 +3,12 @@ table {
     border-spacing: 0 1px; 
 
 }
-tr{
-   
-}
+
+.cell-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    max-height: 4.5em;  /* Ajusta según el tamaño de tu fuente y el espacio deseado para las líneas */
+  }
+  

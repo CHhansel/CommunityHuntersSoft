@@ -20,7 +20,8 @@ const Employee = () => {
   useEffect(() => {
     dispatch(
       fetchEmployees({
-        id: user.id,
+        user_id: user.id,
+        company_id: user.company_id,
         page: currentPage,
         itemsPerPage: 100,
         token,
@@ -33,6 +34,8 @@ const Employee = () => {
     delete employee.employee_user_id;
     delete employee.hire_date;
     delete employee.company_name;
+    delete employee.user_name;
+    delete employee.company_id;
     delete employee.client_id;
   });
   return (

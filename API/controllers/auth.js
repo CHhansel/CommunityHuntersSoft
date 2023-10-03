@@ -99,8 +99,6 @@ const createUser = (req, res) => {
   });
 };
 
-module.exports = createUser;
-
 const login = (req, res) => {
   const { username, password } = req.body;
 
@@ -146,9 +144,15 @@ const login = (req, res) => {
               .status(500)
               .json({ error: "Error interno del servidor" });
           }
-
+          console.log(user);
+          let userInfoQuery;
           // Consulta SQL para obtener los datos del usuario desde la vista user_view
-          const userInfoQuery = "SELECT * FROM user_view WHERE id = ?";
+          if (user.user_type == 0) {
+            // Consulta SQL para obtener los datos del usuario desde la vista user_view
+            userInfoQuery = "SELECT * FROM user_view WHERE id = ?";
+          } else {
+            userInfoQuery = "SELECT * FROM employee_view WHERE id = ?";
+          }
           const userInfoValues = [user.id];
           connection.query(
             userInfoQuery,
@@ -360,54 +364,62 @@ const resetPassword = (req, res) => {
   const { token, newPassword } = req.body;
 
   if (!token || !newPassword) {
-      return res.status(400).json({ error: 'Token y nueva contraseña son requeridos.' });
+    return res
+      .status(400)
+      .json({ error: "Token y nueva contraseña son requeridos." });
   }
 
   try {
-      // Verificar el token
-      const decoded = jwt.verify(token, secretKey);
+    // Verificar el token
+    const decoded = jwt.verify(token, secretKey);
 
-      // Consultar la tabla de tokens de restablecimiento de contraseña para asegurarse de que el token es válido
-      const tokenQuery = "SELECT * FROM password_reset_tokens WHERE token = ?";
-      connection.query(tokenQuery, [token], (tokenErr, tokenResults) => {
-          if (tokenErr) {
-              console.error("Error al consultar el token:", tokenErr);
-              return res.status(500).json({ error: "Error interno del servidor" });
-          }
-
-          if (tokenResults.length === 0) {
-              return res.status(401).json({ error: "Token inválido o expirado" });
-          }
-
-          // Hashear la nueva contraseña
-          bcrypt.hash(newPassword, saltRounds, (hashErr, hashedPassword) => {
-              if (hashErr) {
-                  console.error("Error al generar el hash de la contraseña:", hashErr);
-                  return res.status(500).json({ error: "Error interno del servidor" });
-              }
-
-              // Actualizar la contraseña en la base de datos
-              const updateQuery = 'UPDATE user SET password = ? WHERE id = ?';
-              connection.query(updateQuery, [hashedPassword, decoded.userId], (updateErr, updateResults) => {
-                  if (updateErr) {
-                      console.error("Error al actualizar la contraseña:", updateErr);
-                      return res.status(500).json({ error: "Error interno del servidor" });
-                  }
-
-                  // Opcionalmente, puedes invalidar el token aquí para que no pueda ser usado nuevamente
-
-                  res.json({ message: 'Contraseña actualizada exitosamente.' });
-              });
-          });
-      });
-  } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-          return res.status(401).json({ error: 'El token ha expirado.' });
-      } else if (error.name === 'JsonWebTokenError') {
-          return res.status(401).json({ error: 'Token inválido.' });
+    // Consultar la tabla de tokens de restablecimiento de contraseña para asegurarse de que el token es válido
+    const tokenQuery = "SELECT * FROM password_reset_tokens WHERE token = ?";
+    connection.query(tokenQuery, [token], (tokenErr, tokenResults) => {
+      if (tokenErr) {
+        console.error("Error al consultar el token:", tokenErr);
+        return res.status(500).json({ error: "Error interno del servidor" });
       }
-      console.error('Error al restablecer la contraseña:', error);
-      res.status(500).json({ error: 'Error interno del servidor.' });
+
+      if (tokenResults.length === 0) {
+        return res.status(401).json({ error: "Token inválido o expirado" });
+      }
+
+      // Hashear la nueva contraseña
+      bcrypt.hash(newPassword, saltRounds, (hashErr, hashedPassword) => {
+        if (hashErr) {
+          console.error("Error al generar el hash de la contraseña:", hashErr);
+          return res.status(500).json({ error: "Error interno del servidor" });
+        }
+
+        // Actualizar la contraseña en la base de datos
+        const updateQuery = "UPDATE user SET password = ? WHERE id = ?";
+        connection.query(
+          updateQuery,
+          [hashedPassword, decoded.userId],
+          (updateErr, updateResults) => {
+            if (updateErr) {
+              console.error("Error al actualizar la contraseña:", updateErr);
+              return res
+                .status(500)
+                .json({ error: "Error interno del servidor" });
+            }
+
+            // Opcionalmente, puedes invalidar el token aquí para que no pueda ser usado nuevamente
+
+            res.json({ message: "Contraseña actualizada exitosamente." });
+          }
+        );
+      });
+    });
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "El token ha expirado." });
+    } else if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ error: "Token inválido." });
+    }
+    console.error("Error al restablecer la contraseña:", error);
+    res.status(500).json({ error: "Error interno del servidor." });
   }
 };
 module.exports = {
@@ -418,5 +430,5 @@ module.exports = {
   createDniType,
   getDniTypes,
   recoveryPassword,
-  resetPassword
+  resetPassword,
 };

@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import gpiAPI from "../api/db-connection";
 
 // Función para obtener roles por user_id
-async function getRolesByUserId({ id, page, itemsPerPage, token }) {
+async function getRolesByUserId({ user_id, company_id, page, itemsPerPage, token }) {
   const response = await gpiAPI.get(`/role/get-roles`, {
-    params: { id, page, itemsPerPage },
+    params: { user_id,company_id, page, itemsPerPage },
     headers: { Authorization: token },
   });
   return response.data;

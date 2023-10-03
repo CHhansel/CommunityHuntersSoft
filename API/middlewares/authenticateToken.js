@@ -3,12 +3,11 @@ const jwt = require('jsonwebtoken');
 const verifyPermissions = (req, res, next) => {
   const token = req.headers.authorization;
   let user_id = req.body.user_id; // Intenta obtener el user_id del cuerpo de la solicitud
-
   // Si el user_id no se encuentra en el cuerpo, intenta obtenerlo de los parámetros de la URL
-  if (!user_id && req.query.id) {
-    user_id = req.query.id;
+  if (!user_id && req.query.user_id) {
+    user_id = req.query.user_id;
   }
-
+ 
   // Verificar si se proporcionó el token
   if (!token) {
     return res.status(401).json({ error: 'Token de autenticación no proporcionado' });

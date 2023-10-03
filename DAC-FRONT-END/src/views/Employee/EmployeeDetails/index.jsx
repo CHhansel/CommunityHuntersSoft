@@ -63,19 +63,7 @@ export const EmployeeDetails = ({ fila }) => {
       <h2 className="text-2xl text-main-blue mb-8">Editar Empleado</h2>
       <form className="m-5 flex flex-col justify-evenly gap-8 flex-wrap items-start">
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
-            <label className="text-xl" htmlFor="company_name">
-              Nombre de la Compañía:
-            </label>
-            <input
-              type="text"
-              name="company_name"
-              value={formData.company_name}
-              disabled={!isEditable}
-              onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
-            />
-          </div>
+
           <div className="flex flex-col gap-3 w-[300px]">
             <label className="text-xl" htmlFor="user_name">
               Usuario:

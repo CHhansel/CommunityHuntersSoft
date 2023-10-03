@@ -21,9 +21,9 @@ export const DashboardRoutes = () => {
   const { user, token } = useSelector(selectUser);
   // // Si ha ocurrido un error, muestra un mensaje de error
 
-  const id = user.id;
+  const user_id = user.id;
   const user_role_id = user.role_id;
-  useDispatch(fetchAccessibleModules({ id, user_role_id, token }));
+  useDispatch(fetchAccessibleModules({ user_id, user_role_id, token }));
   const ProtectedProperty = withProtectedAccess(Property, 1);
 
   const status = useSelector((state) => state.modules.status);

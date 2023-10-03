@@ -12,14 +12,18 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
     setFilaSeleccionada(index);
     setFilaActiva(index);
   };
-
+  console.log("tabla ", dataType);
+  const truncateText = (text, maxLength) => {
+    // Si el texto es más largo que maxLength, lo corta y añade "..."
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+  };
   return (
     <div className="w-100 flex flex-col justify-center items-center my-5 rounded-main shadow  p-5 bg-white">
       <table className="table-auto w-full radio rounded-main">
         <thead>
           <tr className="">
             {columnsParseadas.map((col, index) => (
-              <th className="bg-[#dadae3] py-[16px] text-base first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main" key={index}>
+              <th className="bg-[#dadae3] py-[16px] text-base first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main " key={index}>
                 {col}
               </th>
             ))}
@@ -31,7 +35,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
             <tr
               key={index}
               onClick={() => handleClick(index)}
-              className={`hover:text-white hover:bg-main-blue cursor-pointer rounded-main hover:opacity-70  text-sm ${
+              className={`hover:text-white  hover:bg-main-blue cursor-pointer rounded-main hover:opacity-70  text-sm ${
                 filaActiva === index
                   ? "bg-main-blue text-white"
                   : " odd:bg-[#F7F7F9] "
@@ -39,7 +43,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
             >
               {columnas.map((col, colIndex) => (
                 <td key={colIndex} className=" text-center pointer p-[8px] first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main">
-                  {fila[col]}
+                  {truncateText(fila[col], 200)}
                 </td>
               ))}
             </tr>

@@ -15,6 +15,7 @@ export const PropertyCreate = () => {
     district: "",
     exact_address: "",
     antiquity: "",
+    company_id: user.company_id,
     user_id: user.id
   });
   const dispatch = useDispatch();

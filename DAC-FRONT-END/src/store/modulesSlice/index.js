@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import gpiAPI from '../../api/db-connection';
 
-async function getAccessibleModules({ id, user_role_id, token }) {
+async function getAccessibleModules({ user_id, user_role_id, token }) {
+  console.log(user_id, user_role_id, token);
   const response = await gpiAPI.get(`/module/get-access-modules`, {
-    params: { id, user_role_id },
+    params: { user_id, user_role_id },
     headers: { 'Authorization': token }
   });
   return response.data;
@@ -12,6 +13,7 @@ export const fetchAccessibleModules = createAsyncThunk(
     'modules/fetchAccessibleModules',
     async (params, { rejectWithValue }) => {
       try {
+        console.log("params es ",params);
         const modules = await getAccessibleModules(params);
         
         return modules;
