@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import gpiAPI from '../api/db-connection';
+import DAC_API from '../api/db-connection';
 
 // Función para obtener clientes por ID de usuario
 async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, token }) {
   console.log(company_id," adasdasd");  
-  const response = await gpiAPI.get(`/customer/get-customers`, {
+  const response = await DAC_API.get(`/customer/get-customers`, {
       params: { user_id, page,company_id, itemsPerPage },
       headers: { 'Authorization': token }
     });
@@ -28,7 +28,7 @@ async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, to
   
   // Función para crear un cliente
   async function createCustomer(data, token) {
-    const response = await gpiAPI.post('/customer/create-customer', data, {
+    const response = await DAC_API.post('/customer/create-customer', data, {
       headers: { 'Authorization': token, 'Content-Type': 'application/json' }
     });
     return response.data;
@@ -51,7 +51,7 @@ async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, to
   
   // Función para actualizar un cliente
   async function updateCustomer(data, token) {
-    const response = await gpiAPI.put('/customer/update-customer', data, {
+    const response = await DAC_API.put('/customer/update-customer', data, {
       headers: { 'Authorization': token, 'Content-Type': 'application/json' }
     });
     return response.data;
@@ -74,7 +74,7 @@ async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, to
   
   // Función para eliminar un cliente
   async function deleteCustomer(customerId, token) {
-    const response = await gpiAPI.delete(`/customer/delete-customer/${customerId}`, {
+    const response = await DAC_API.delete(`/customer/delete-customer/${customerId}`, {
       headers: { 'Authorization': token }
     });
     return response.data;

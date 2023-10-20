@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import gpiAPI from "../api/db-connection";
+import DAC_API from "../api/db-connection";
 
 // Función para obtener roles por user_id
 async function getRolesByUserId({ user_id, company_id, page, itemsPerPage, token }) {
-  const response = await gpiAPI.get(`/role/get-roles`, {
+  const response = await DAC_API.get(`/role/get-roles`, {
     params: { user_id,company_id, page, itemsPerPage },
     headers: { Authorization: token },
   });
@@ -11,14 +11,14 @@ async function getRolesByUserId({ user_id, company_id, page, itemsPerPage, token
 }
 // Función para obtener módulos accesibles por role_id
 async function getAccessibleModulesByRoleId({ role_id, token }) {
-  const response = await gpiAPI.get(`/role/get-accessible-modules/${role_id}`, {
+  const response = await DAC_API.get(`/role/get-accessible-modules/${role_id}`, {
     headers: { Authorization: token },
   });
   return response.data;
 }
 // Función para crear un rol
 async function createRole(data, token) {
-  const response = await gpiAPI.post("/role/create-role", data, {
+  const response = await DAC_API.post("/role/create-role", data, {
     headers: { Authorization: token, "Content-Type": "application/json" },
   });
   return response.data;
@@ -27,7 +27,7 @@ async function createRole(data, token) {
 // Función para actualizar un rol
 async function updateRole(data, token) {
   
-  const response = await gpiAPI.patch("/role/update-role", data, {
+  const response = await DAC_API.patch("/role/update-role", data, {
     headers: { Authorization: token, "Content-Type": "application/json" },
   });
   return response.data;

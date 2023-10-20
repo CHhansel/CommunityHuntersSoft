@@ -21,7 +21,7 @@ export default {
         // otras fuentes aquí
       },
       borderRadius: {
-        'main': '2rem',
+        'main': '.4rem',
       }
     },
   },

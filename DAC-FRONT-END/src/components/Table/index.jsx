@@ -12,7 +12,6 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
     setFilaSeleccionada(index);
     setFilaActiva(index);
   };
-  console.log("tabla ", dataType);
   const truncateText = (text, maxLength) => {
     // Si el texto es más largo que maxLength, lo corta y añade "..."
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;

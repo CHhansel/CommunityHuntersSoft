@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import gpiAPI from '../api/db-connection';
+import DAC_API from '../api/db-connection';
 
 // Función para obtener propiedades
 async function getPropertiesByUserId({ id, page, itemsPerPage,user_id, token }) {
-  const response = await gpiAPI.get(`/property/get-properties`, {
+  const response = await DAC_API.get(`/property/get-properties`, {
     params: { id, page, itemsPerPage,user_id },
     headers: { 'Authorization': token }
   });
@@ -28,7 +28,7 @@ export const fetchProperties = createAsyncThunk(
 );
 // Función para crear una propiedad
 async function createProperty(data, token) {
-  const response = await gpiAPI.post('/property/create-property', data, {
+  const response = await DAC_API.post('/property/create-property', data, {
     headers: { 'Authorization': token,  'Content-Type': 'application/json' }
   });
   return response.data;
@@ -50,7 +50,7 @@ export const createPropertyAction = createAsyncThunk(
   }
 );
 async function updatePropertyContract(data, token) {
-  const response = await gpiAPI.patch(`/property/update-property-contract`, data, {
+  const response = await DAC_API.patch(`/property/update-property-contract`, data, {
     headers: { 'Authorization': token, 'Content-Type': 'application/json' }
   });
   return response.data;
@@ -71,7 +71,7 @@ export const updatePropertyContractAction = createAsyncThunk(
 );
 
 async function updateProperty(data, token) {
-  const response = await gpiAPI.patch(`/property/update-property`, data, {
+  const response = await DAC_API.patch(`/property/update-property`, data, {
     headers: { 'Authorization': token, 'Content-Type': 'application/json' }
   });
   return response.data;

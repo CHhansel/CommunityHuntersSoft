@@ -1,21 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import gpiAPI from '../../api/db-connection';
+import DAC_API from '../../api/db-connection';
 
 
 // Función para solicitar la recuperación de contraseña
 async function requestPasswordRecoveryAPI(email) {
-  const { data } = await gpiAPI.post("/user/recovery-password", { email });
+  const { data } = await DAC_API.post("/user/recovery-password", { email });
   return data;
 }
 // Función para restablecer la contraseña
 async function resetPasswordAPI({ token, newPassword }) {
-  const { data } = await gpiAPI.post("/user/reset-password", { token, newPassword });
+  const { data } = await DAC_API.post("/user/reset-password", { token, newPassword });
   return data;
 }
 // Ejemplo de función de inicio de sesión (deberías reemplazar esto con tu propia lógica)
 async function loginAPI({username, password}) {
   // Lógica de llamada a la API
-  const { data } = await gpiAPI.post("/user/login", { username, password });
+  const { data } = await DAC_API.post("/user/login", { username, password });
   return data;
 }
 export const requestPasswordRecovery = createAsyncThunk(

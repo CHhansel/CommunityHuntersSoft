@@ -30,6 +30,7 @@ app.use("/api/address", require("./routes/address_info"));
 app.use("/api/role", require("./routes/role"));
 app.use("/api/employees", require("./routes/employee"));
 app.use("/api/module", require("./routes/module"));
+app.use("/api/cabys", require("./routes/cabys"));
 // Resto de tus rutas y lógica de la API
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

@@ -1,0 +1,11 @@
+
+https://apis.gometa.org/
+
+https://github.com/CRLibre/API_Hacienda?fbclid=IwAR2kQHmbdAmoSfHZmKmalzq9xbiA_6yy41yxU1n4VXD0xOjjt_rySTEmYAE
+
+
+token (clave criptografica)
+firmar documento (buscar como se firma)
+barrios usar codigo y no nombre https://github.com/CRLibre/fe-hacienda-cr-misc/blob/master/Codificacionubicacion_V4.2.pdf
+
+otro diagrama mas simple que el de gometa https://raw.githubusercontent.com/CRLibre/docs-fe-hacienda-cr/master/diagrama-flujo/Diagrama%20de%20Flujo%20para%20Factura%20Electronica%20Costa%20Rica.png

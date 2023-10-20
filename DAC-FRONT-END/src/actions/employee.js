@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import gpiAPI from "../api/db-connection"; // Asegúrate de que esta ruta sea la correcta para tu configuración
+import DAC_API from "../api/db-connection"; // Asegúrate de que esta ruta sea la correcta para tu configuración
 
 
 async function updateEmployeeAPI(employeeData, token) {
-  const response = await gpiAPI.patch(`/employees/update-employee`, employeeData, {
+  const response = await DAC_API.patch(`/employees/update-employee`, employeeData, {
     headers: { 'Authorization': token, 'Content-Type': 'application/json' }
   });
   return response.data;
@@ -11,7 +11,7 @@ async function updateEmployeeAPI(employeeData, token) {
 
 // Función para obtener empleados por user_id
 async function getEmployeesByUserId({ user_id, company_id, page, itemsPerPage, token }) {
-  const response = await gpiAPI.get(`/employees/get-employees`, {
+  const response = await DAC_API.get(`/employees/get-employees`, {
     params: { user_id, company_id, page, itemsPerPage },
     headers: { Authorization: token },
   });
@@ -19,7 +19,7 @@ async function getEmployeesByUserId({ user_id, company_id, page, itemsPerPage, t
 }
 // Función para crear un empleado
 async function createEmployeeAPI(employeeData, token) {
-  const response = await gpiAPI.post(`/employees/create-employee`, employeeData,{
+  const response = await DAC_API.post(`/employees/create-employee`, employeeData,{
     headers: { 'Authorization': token,  'Content-Type': 'application/json' }
   });
   return response.data;

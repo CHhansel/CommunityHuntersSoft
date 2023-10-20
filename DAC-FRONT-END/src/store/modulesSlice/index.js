@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import gpiAPI from '../../api/db-connection';
+import DAC_API from '../../api/db-connection';
 
 async function getAccessibleModules({ user_id, user_role_id, token }) {
   console.log(user_id, user_role_id, token);
-  const response = await gpiAPI.get(`/module/get-access-modules`, {
+  const response = await DAC_API.get(`/module/get-access-modules`, {
     params: { user_id, user_role_id },
     headers: { 'Authorization': token }
   });

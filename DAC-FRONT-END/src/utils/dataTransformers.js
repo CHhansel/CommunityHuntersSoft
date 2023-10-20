@@ -48,9 +48,12 @@ export function parseData(data, dataType) {
     case "Contracts":
       data = parseContractColumnNames(data);
       break;
-      case "Employee":
-        data = parseEmployeeColumnNames(data);
-        break;
+    case "Employee":
+      data = parseEmployeeColumnNames(data);
+      break;
+    case "Cabys":
+      data = parseCabysColumnNames(data);
+      break;
     default:
       break;
   }
@@ -58,7 +61,6 @@ export function parseData(data, dataType) {
 }
 
 function parseColumnNames(columns) {
-
   const translations = {
     Id: "ID",
     name: "Nombre",
@@ -72,7 +74,7 @@ function parseColumnNames(columns) {
     district: "Distrito",
     exact_address: "Dirección Exacta",
     antiquity: "Antiguedad",
-    users_count: "Usuarios"
+    users_count: "Usuarios",
   };
 
   return columns.map((column) => translations[column] || column);
@@ -112,6 +114,25 @@ function parseEmployeeColumnNames(columns) {
     hire_date: "Fecha de Contratación",
     province: "Provincia",
     canton: "Cantón",
+    district: "Distrito",
+    exact_address: "Dirección Exacta",
+  };
+
+  return columns.map((column) => translations[column] || column);
+}
+function parseCabysColumnNames(columns) {
+  const translations = {
+    cat1desc: "Categoría 1",
+    cat2desc: "Categoría 2",
+    cat3desc: "Categoría 3",
+    cat4desc: "Categoría 4",
+    cat5desc: "Categoría 5",
+    cat6desc: "Categoría 6",
+    cat7desc: "Categoría 7",
+    cat8desc: "Categoría 8",
+    code: "Código",
+    tax: "Impuesto %",
+    description: "Descripción",
     district: "Distrito",
     exact_address: "Dirección Exacta",
   };

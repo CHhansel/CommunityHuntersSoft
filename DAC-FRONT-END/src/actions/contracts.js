@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import gpiAPI from '../api/db-connection';
+import DAC_API from '../api/db-connection';
 
 // Función para obtener contratos por ID de usuario
 async function getContractsByUserId({ id, page, itemsPerPage, token }) {
-    const response = await gpiAPI.get(`/contract/get-contracts`, {
+    const response = await DAC_API.get(`/contract/get-contracts`, {
       params: { id, page, itemsPerPage },
       headers: { 'Authorization': token }
     });
@@ -27,7 +27,7 @@ export const fetchContracts = createAsyncThunk(
 
 // Función para crear un contrato
 async function createContract(data, token) {
-  const response = await gpiAPI.post('/contract/create-contract', data, {
+  const response = await DAC_API.post('/contract/create-contract', data, {
     headers: { 'Authorization': token, 'Content-Type': 'application/json' }
   });
   return response.data;
@@ -50,7 +50,7 @@ export const createContractAction = createAsyncThunk(
 
 // Función para actualizar un contrato
 async function updateContract(data, token) {
-  const response = await gpiAPI.put('/contract/update-contract', data, {
+  const response = await DAC_API.put('/contract/update-contract', data, {
     headers: { 'Authorization': token, 'Content-Type': 'application/json' }
   });
   return response.data;
@@ -73,7 +73,7 @@ export const updateContractAction = createAsyncThunk(
 
 // Función para eliminar un contrato
 async function deleteContract(contractId, token) {
-  const response = await gpiAPI.delete(`/contract/delete-contract/${contractId}`, {
+  const response = await DAC_API.delete(`/contract/delete-contract/${contractId}`, {
     headers: { 'Authorization': token }
   });
   return response.data;

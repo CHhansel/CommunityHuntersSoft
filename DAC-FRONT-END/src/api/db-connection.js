@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const gpiAPI = axios.create({
+const DAC_API = axios.create({
     baseURL: 'http://localhost:3000/api',
 });
 
 // Interceptor de Solicitud para Adjuntar Token si Existe
-gpiAPI.interceptors.request.use(config => {
+DAC_API.interceptors.request.use(config => {
     const token = localStorage.getItem('token');
     if (token) {
         config.headers = {
@@ -16,4 +16,4 @@ gpiAPI.interceptors.request.use(config => {
     return config;
 });
 
-export default gpiAPI;
+export default DAC_API;
