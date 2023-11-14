@@ -7,13 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateContractFirstStep from "./CreateContractSelectClient";
 
 // eslint-disable-next-line react/prop-types
-export const ContractCreate = ({ propiedad }) => {
+export const ContractCreate = ({ propiedad, updateTable }) => {
   const { user, token } = useSelector(selectUser);
   // const [formData, setFormData] = useState({ ...propiedad, user_id: user.id });
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     antiquity: "2023-05-01",
     customer_id: "",
+    customer_dni: "",
     start_date: "",
     end_date: "",
     state: "Ocupado",
@@ -41,10 +42,10 @@ export const ContractCreate = ({ propiedad }) => {
   };
 
   const handleSave = () => {
-    console.log(formData);
     try {
       dispatch(updatePropertyContractAction({ data: formData, token }));
       alert("Propiedad creada con éxito!");
+      updateTable();
     } catch (error) {
       console.error("Hubo un error al crear la propiedad:", error);
       alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
@@ -52,28 +53,28 @@ export const ContractCreate = ({ propiedad }) => {
   };
 
   return (
-    <div className="border border-black p-5 my-5">
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">
-        Crear Contrato de Propiedad
+        Crear Contrato
       </h2>
       <CreateContractFirstStep
         setFormData={setFormData}
       ></CreateContractFirstStep>
       <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
-        <div className="flex flex-col gap-3 w-[300px]">
-          <label className="text-xl" htmlFor="customer_id">
-            Cliente id:
+        <div className="flex flex-col gap-3">
+          <label className="text-xl" htmlFor="customer_dni">
+          Identificación Cliente:
           </label>
           <input
             type="text"
-            name="customer_id"
-            value={formData.customer_id}
+            name="customer_dni"
+            value={formData.customer_dni}
             onChange={handleInputChange}
             disabled={true}
-            className={`border p-2 rounded-lg w-full `}
+            className={`input-text`}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3">
           <label className="text-xl" htmlFor="payment_date">
             Fecha de pago:
           </label>
@@ -82,19 +83,18 @@ export const ContractCreate = ({ propiedad }) => {
             name="payment_date"
             value={formData.payment_date}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full`}
+            className={`input-text`}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3">
           <label className="text-xl" htmlFor="payment_method">
-            Metodo de Pago:
+            Método de Pago:
           </label>
           <select
             name="payment_method"
             value={formData.payment_method}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full disabled:text-black 
-            disabled:opacity-100 `}
+            className={`input-text `}
           >
             <option value="1">Sinpe</option>
             <option value="2">Transacción</option>
@@ -102,7 +102,7 @@ export const ContractCreate = ({ propiedad }) => {
           </select>
         </div>
         <div className="w-full flex justify-center gap-5">
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="start_date">
               Fecha de Inicio:
             </label>
@@ -111,70 +111,70 @@ export const ContractCreate = ({ propiedad }) => {
               name="start_date"
               value={formData.start_date}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="end_date">
-              Fecha de Fín:
+              Fecha de Fin:
             </label>
             <input
               type="date"
               name="end_date"
               value={formData.end_date}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
         </div>
 
         <div className="flex gap-5 mt-5">
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="deposit_amount">
-              Deposito:
+              Depósito:
             </label>
             <input
               type="number"
               name="deposit_amount"
               value={formData.deposit_amount}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="rent_amount">
-              Monto de renta:
+              Monto alquiler (sin IVA):
             </label>
             <input
               type="number"
               name="rent_amount"
               value={formData.rent_amount}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="tax_amount">
-              Monto de tax:
+              Monto Impuesto:
             </label>
             <input
               type="number"
               name="tax_amount"
               value={formData.tax_amount}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="total_amount">
-              Monto de total:
+              Monto total:
             </label>
             <input
               type="number"
               name="total_amount"
               value={formData.total_amount}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>

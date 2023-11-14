@@ -12,12 +12,14 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
     setFilaSeleccionada(index);
     setFilaActiva(index);
   };
+
   const truncateText = (text, maxLength) => {
     // Si el texto es más largo que maxLength, lo corta y añade "..."
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   };
+
   return (
-    <div className="w-100 flex flex-col justify-center items-center my-5 rounded-main shadow  p-5 bg-white">
+    <div className="w-100 flex flex-col justify-center items-center my-5 rounded-main   p-5 bg-white">
       <table className="table-auto w-full radio rounded-main">
         <thead>
           <tr className="">
@@ -42,7 +44,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
             >
               {columnas.map((col, colIndex) => (
                 <td key={colIndex} className=" text-center pointer p-[8px] first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main">
-                  {truncateText(fila[col], 200)}
+                  { (fila[col] !== null )?truncateText(fila[col], 200): "vacio"}
                 </td>
               ))}
             </tr>

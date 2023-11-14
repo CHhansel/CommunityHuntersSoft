@@ -8,60 +8,68 @@ import { fetchCustomers } from "../../actions/customer";
 import Pagination from "../../components/pagination/pagination";
 import { CustomerDetails } from "./CustomerDetails";
 import { CustomerCreate } from "./CustomerCreate";
+import { CustomerService } from "../../services/customerService";
 
 const Customer = () => {
-  const [filaSeleccionada, setFilaSeleccionada] = useState(null);
-  const [createCustomnerActive, setCreateCustomerActive] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [customersSimplified, setCustomersSimplified] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { user, token } = useSelector(selectUser);
-  const loading = useSelector((state) => state.customers.loading);
-  const error = useSelector((state) => state.customers.error);
-  const dispatch = useDispatch();
-
-  const customers = useSelector((state) => state.customers.customers);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const totalCustomers = useSelector((state) => state.customers.totalCustomers);
+  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
+  const [createCustomerActive, setCreateCustomerActive] = useState(false);
+
+
+
   useEffect(() => {
-    dispatch(
-      fetchCustomers({
-        user_id: user.id,
-        company_id: user.company_id,
-        page: currentPage,
-        itemsPerPage: 10,
-        token,
-      })
-    );
-  }, [dispatch, currentPage, user.id, token]);
+    const fetchCustomers = async () => {
+      setLoading(true);
+      try {
+        const data = await CustomerService.getCustomers(token, user.company_id, currentPage, 10);
+        setCustomers(data.customers);
+        setTotalCustomers(data.totalCustomers);
+        setCustomersSimplified(data.customers.map(customer => ({
+          nombre: customer.name,
+          apellido: customer.lastname,
+          dni: customer.dni,
+          email: customer.email
+        })))
+        setLoading(false);
+      } catch (error) {
+        console.error('Error al obtener los clientes:', error);
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+
+  }, [currentPage, user.company_id, token]);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  const status = useSelector((state) => state.customers.status);
-
-  if (status === "loading" || status === "idle") {
-    return <div>Loading dashboards ...</div>;
-  }
 
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
       {loading && <p>Cargando...</p>}
       {error && <p>Error: {error}</p>}
-      <p>Clientes</p>
       <div className="w-100 flex justify-end px-8">
         <button
           onClick={() => {
             setCreateCustomerActive(true);
-            setFilaSeleccionada(null);
+            setFilaSeleccionada(-1);
           }}
           className="bg-main-blue px-6 py-2 border text-white rounded-full"
         >
           AGREGAR
         </button>
       </div>
-      { customers &&
+      { customers && customers.length > 0 &&
         <>
           <TablaDinamica
-            datos={customers}
+            datos={customersSimplified}
             setFilaSeleccionada={setFilaSeleccionada}
             dataType="Customers"
           />
@@ -74,8 +82,8 @@ const Customer = () => {
         </>
       }
       { !customers && <div className="w-full h-full bg-slate-500 flex justify-center"><p>No posee Clientes Registrados</p></div>}
-      {filaSeleccionada && <CustomerDetails fila={filaSeleccionada} />}
-      {createCustomnerActive && filaSeleccionada == null && <CustomerCreate />}
+      {filaSeleccionada >= 0 && <CustomerDetails fila={customers[filaSeleccionada]} />}
+      {createCustomerActive && filaSeleccionada == -1 && <CustomerCreate />}
     </div>
   );
 };

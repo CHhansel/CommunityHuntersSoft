@@ -108,7 +108,7 @@ export const Login = () => {
             href="/resetPasswordRequest"
             className="inline p-2 text-main-blue border-b-2 border-white hover:border-main-blue ease-out duration-500 "
           >
-            Olvido su contraseña?
+            Olvidó su contraseña?
           </a>
         </div>
         {status === "checking" && <p></p>}

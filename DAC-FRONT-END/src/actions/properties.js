@@ -1,19 +1,24 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import DAC_API from '../api/db-connection';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import DAC_API from "../api/db-connection";
 
 // Función para obtener propiedades
-async function getPropertiesByUserId({ id, page, itemsPerPage,user_id, token }) {
+async function getPropertiesByUserId({
+  id,
+  page,
+  itemsPerPage,
+  user_id,
+  token,
+}) {
   const response = await DAC_API.get(`/property/get-properties`, {
-    params: { id, page, itemsPerPage,user_id },
-    headers: { 'Authorization': token }
+    params: { id, page, itemsPerPage, user_id },
+    headers: { Authorization: token },
   });
   return response.data;
 }
 
 // Acción asíncrona
 export const fetchProperties = createAsyncThunk(
-
-  'properties/fetchProperties',
+  "properties/fetchProperties",
   async (params, { rejectWithValue }) => {
     try {
       const data = await getPropertiesByUserId(params);
@@ -28,15 +33,15 @@ export const fetchProperties = createAsyncThunk(
 );
 // Función para crear una propiedad
 async function createProperty(data, token) {
-  const response = await DAC_API.post('/property/create-property', data, {
-    headers: { 'Authorization': token,  'Content-Type': 'application/json' }
+  const response = await DAC_API.post("/property/create-property", data, {
+    headers: { Authorization: token, "Content-Type": "application/json" },
   });
   return response.data;
 }
 
 // Acción asíncrona para crear propiedad
 export const createPropertyAction = createAsyncThunk(
-  'properties/createProperty',
+  "properties/createProperty",
   async (params, { rejectWithValue }) => {
     try {
       const data = await createProperty(params.data, params.token);
@@ -50,13 +55,17 @@ export const createPropertyAction = createAsyncThunk(
   }
 );
 async function updatePropertyContract(data, token) {
-  const response = await DAC_API.patch(`/property/update-property-contract`, data, {
-    headers: { 'Authorization': token, 'Content-Type': 'application/json' }
-  });
+  const response = await DAC_API.patch(
+    `/property/update-property-contract`,
+    data,
+    {
+      headers: { Authorization: token, "Content-Type": "application/json" },
+    }
+  );
   return response.data;
 }
 export const updatePropertyContractAction = createAsyncThunk(
-  'properties/updatePropertyContract',
+  "properties/updatePropertyContract",
   async (params, { rejectWithValue }) => {
     try {
       const data = await updatePropertyContract(params.data, params.token);
@@ -72,12 +81,12 @@ export const updatePropertyContractAction = createAsyncThunk(
 
 async function updateProperty(data, token) {
   const response = await DAC_API.patch(`/property/update-property`, data, {
-    headers: { 'Authorization': token, 'Content-Type': 'application/json' }
+    headers: { Authorization: token, "Content-Type": "application/json" },
   });
   return response.data;
 }
 export const updatePropertyAction = createAsyncThunk(
-  'properties/updateProperty',
+  "properties/updateProperty",
   async (params, { rejectWithValue }) => {
     try {
       const data = await updateProperty(params.data, params.token);
@@ -91,80 +100,81 @@ export const updatePropertyAction = createAsyncThunk(
   }
 );
 
-
 // Slice
 export const propertiesSlice = createSlice({
-  name: 'properties',
+  name: "properties",
   initialState: {
     properties: [],
     totalProperties: 0,
-    status: 'idle',
+    status: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchProperties.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(fetchProperties.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.properties = action.payload.properties;
         state.totalProperties = action.payload.totalProperties;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(createPropertyAction.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(createPropertyAction.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         // Añade la nueva propiedad al array de propiedades
         state.properties.push(action.payload.updatedProperty);
         state.totalProperties++;
       })
       .addCase(createPropertyAction.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(updatePropertyAction.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(updatePropertyAction.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
 
         // Encuentra el índice de la propiedad a actualizar
-         const index = state.properties.findIndex(property => property.Id === action.payload.updatedProperty.Id);
-         console.log("T ",index);
+        const index = state.properties.findIndex(
+          (property) => property.Id === action.payload.updatedProperty.Id
+        );
         if (index !== -1) {
-           // Reemplaza la propiedad en el array por la actualizada
-            state.properties[index] = action.payload.updatedProperty;
-         }
+          // Reemplaza la propiedad en el array por la actualizada
+          state.properties[index] = action.payload.updatedProperty;
+        }
       })
       .addCase(updatePropertyAction.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(updatePropertyContractAction.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(updatePropertyContractAction.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-      
+        state.status = "succeeded";
+
         // Encuentra el índice de la propiedad a actualizar
-        const index = state.properties.findIndex(property => property.Id === action.payload.updatedProperty.Id);
+        const index = state.properties.findIndex(
+          (property) => property.Id === action.payload.updatedProperty.Id
+        );
         if (index !== -1) {
           // Reemplaza la propiedad en el array por la actualizada
           state.properties[index] = action.payload.updatedProperty;
         }
       })
       .addCase(updatePropertyContractAction.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       });
-      
   },
 });
 

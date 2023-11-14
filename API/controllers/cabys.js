@@ -10,7 +10,7 @@ const searchCabys = (req, res) => {
     }
 
     // Consulta SQL para buscar productos por descripción
-    const searchQuery = 'SELECT * FROM cabys WHERE description LIKE ? LIMIT 100';
+    const searchQuery = 'SELECT code, description, tax FROM cabys WHERE description LIKE ? LIMIT 100';
     const searchValues = [`%${term}%`];
 
     // Ejecutar la consulta en la base de datos

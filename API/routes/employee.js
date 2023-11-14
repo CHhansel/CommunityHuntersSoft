@@ -12,7 +12,7 @@ const { getEmployeesByUserId, createEmployee, updateEmployee } = require("../con
 const router = Router();
 
 
-router.get('/get-employees/', verifyPermissions, getEmployeesByUserId);
-router.post('/create-employee/', verifyPermissions, createEmployee);
-router.patch('/update-employee/', verifyPermissions, updateEmployee);
+router.get('/get-employees/' , getEmployeesByUserId);
+router.post('/create-employee/' , createEmployee);
+router.patch('/update-employee/' , updateEmployee);
 module.exports = router;

@@ -5,8 +5,10 @@ const translations = {
     clients: "Clientes",
     admin: "Administración",
     employees: "Empleados",
-    roles: "roles",
-    bills: "Facturas"
+    roles: "Roles",
+    bills: "Facturas",
+    "company-settings": "Ajustes de Compañía",
+    "atv-settings": "Ajustes de ATV"
     // ... puedes agregar más traducciones aquí en el futuro
 };
 

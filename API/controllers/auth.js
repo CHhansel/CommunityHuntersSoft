@@ -283,26 +283,6 @@ const createDniType = (req, res) => {
     });
   });
 };
-const getDniTypes = (req, res) => {
-  // Crear la consulta SQL para obtener todos los tipos de DNI de la tabla `dni_type`
-  const selectQuery = "SELECT * FROM dni_type";
-
-  // Ejecutar la consulta en la base de datos
-  connection.query(selectQuery, (err, result) => {
-    if (err) {
-      console.error("Error al obtener los tipos de DNI:", err);
-      return res.status(500).json({ error: "Error interno del servidor" });
-    }
-
-    // Verifica si se obtuvieron tipos de DNI
-    if (result.length === 0) {
-      return res.status(404).json({ error: "No se encontraron tipos de DNI" });
-    }
-
-    // Devuelve los tipos de DNI
-    res.json({ dniTypes: result });
-  });
-};
 
 const recoveryPassword = (req, res) => {
   const { email } = req.body;
@@ -428,7 +408,6 @@ module.exports = {
   updateUser,
   getUsersPaged,
   createDniType,
-  getDniTypes,
   recoveryPassword,
   resetPassword,
 };

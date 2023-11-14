@@ -65,7 +65,6 @@ const getAccessibleModulesByRoleId = (req, res) => {
 };
 const updateRole = (req, res) => {
     const { id, name, moduleIds } = req.body;
- console.log(req.body);
     if (!id || !name || !moduleIds || moduleIds.length === 0) {
         return res.status(400).json({ error: 'Faltan parámetros requeridos' });
     }

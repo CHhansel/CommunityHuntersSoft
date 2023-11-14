@@ -30,6 +30,11 @@ const Roles = () => {
   if (status === "loading" || status === "idle") {
     return <div>Cargando Roles ... {status}</div>;
   }
+    // propiedades Resumidas para la tabla
+    const rolesResume = JSON.parse(JSON.stringify(roles));
+    rolesResume.forEach((rol) => {
+      delete rol.company_id;
+    });
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
 
@@ -44,7 +49,7 @@ const Roles = () => {
         </button>
       </div>
       <TablaDinamica
-        datos={roles}
+        datos={rolesResume}
         setFilaSeleccionada={setFilaSeleccionada}
         dataType="Properties"
       />

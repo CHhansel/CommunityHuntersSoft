@@ -12,6 +12,7 @@ import ConfigRouter from "../ConfigRouter";
 import withProtectedAccess from "../../components/HOC/withProtectedAccess";
 import Employee from "../../views/Employee";
 import FontSizeAdjuster from "../../components/FontSizeAjust";
+import Billing from "../../views/Billing";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -38,7 +39,7 @@ export const DashboardRoutes = () => {
         <SideMenu></SideMenu>
       </div>
 
-      <div className="overflow-y-auto flex flex-col w-full min-h-screen justify-between relative">
+      <div className="overflow-y-auto flex flex-col w-full min-h-screen justify-between relative ">
         <div className="absolute top-0 right-[28px]">
           <FontSizeAdjuster />
         </div>
@@ -51,6 +52,7 @@ export const DashboardRoutes = () => {
               <Route path="/clients" element={<Customer />} />
               <Route path="/admin/*" element={<ConfigRouter />} />
               <Route path="/employees" element={<Employee />} />
+              <Route path="/bills" element={<Billing />} />
             </Routes>
           </div>
         </div>

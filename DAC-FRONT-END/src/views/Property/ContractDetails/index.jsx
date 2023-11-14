@@ -4,7 +4,7 @@ import { selectUser } from "../../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
-export const ContractDetail = ({ propiedad }) => {
+export const ContractDetail = ({ propiedad, updateTable }) => {
   const { user, token } = useSelector(selectUser);
   const [isEditable, setIsEditable] = useState(false);
   const [formData, setFormData] = useState({ ...propiedad, user_id: user.id });
@@ -39,6 +39,7 @@ export const ContractDetail = ({ propiedad }) => {
     try {
       dispatch(updatePropertyContractAction({ data: formData, token }));
       alert("Propiedad creada con éxito!");
+      updateTable();
     } catch (error) {
       console.error("Hubo un error al crear la propiedad:", error);
       alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
@@ -46,27 +47,24 @@ export const ContractDetail = ({ propiedad }) => {
 
     setIsEditable(false);
   };
-  console.log(propiedad);
   return (
-    <div className="border border-black p-5 my-5">
-      <h2 className="text-2xl text-main-blue mb-8">Ver Contrato de Propiedad</h2>
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
+      <h2 className="text-2xl text-main-blue mb-8">Contrato</h2>
       <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
-        <div className="flex flex-col gap-3 w-[300px]">
-          <label className="text-xl" htmlFor="customer_id">
-            Cliente id:
+        <div className="flex flex-col gap-3">
+          <label className="text-xl" htmlFor="customer_dni">
+            Identificación Cliente:
           </label>
           <input
             type="text"
-            name="customer_id"
-            value={formData.customer_id}
+            name="customer_dni"
+            value={formData.customer_dni}
             onChange={handleInputChange}
             disabled={!isEditable}
-            className={`border p-2 rounded-lg w-full ${
-              isEditable ? "  border-slate-400" : " "
-            }`}
+            className={`input-text`}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3">
           <label className="text-xl" htmlFor="payment_date">
             Fecha de pago:
           </label>
@@ -76,25 +74,19 @@ export const ContractDetail = ({ propiedad }) => {
             value={formData.payment_date}
             onChange={handleInputChange}
             disabled={!isEditable}
-            className={`border p-2 rounded-lg w-full ${
-              isEditable ? "  border-slate-400" : " "
-            }`}
+            className={`input-text`}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3">
           <label className="text-xl" htmlFor="payment_method">
-            Metodo de Pago:
+            Método de Pago:
           </label>
           <select
             name="payment_method"
             value={formData.payment_method}
             onChange={handleInputChange}
             disabled={!isEditable}
-            className={`border p-2 rounded-lg w-full disabled:text-black disabled:opacity-100 ${
-              isEditable
-                ? "bg-white  border-slate-400"
-                : "bg-input border-white "
-            }`}
+            className={`input-text`}
           >
             <option value="1">Sinpe</option>
             <option value="2">Transacción</option>
@@ -102,7 +94,7 @@ export const ContractDetail = ({ propiedad }) => {
           </select>
         </div>
         <div className="w-full flex justify-center gap-5">
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="start_date">
               Fecha de Inicio:
             </label>
@@ -112,14 +104,12 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.start_date}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full ${
-                isEditable ? "  border-slate-400" : " "
-              }`}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="end_date">
-              Fecha de Fín:
+              Fecha de Fin:
             </label>
             <input
               type="date"
@@ -127,17 +117,15 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.end_date}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full ${
-                isEditable ? "  border-slate-400" : " "
-              }`}
+              className={`input-text`}
             />
           </div>
         </div>
 
         <div className="flex gap-5 mt-5">
-        <div className="flex flex-col gap-3 w-[200px]">
+        <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="deposit_amount">
-              Deposito:
+              Depósito:
             </label>
             <input
               type="number"
@@ -145,12 +133,12 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.deposit_amount}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="rent_amount">
-              Monto de renta:
+              Monto alquiler:
             </label>
             <input
               type="number"
@@ -158,14 +146,12 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.rent_amount}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full ${
-                isEditable ? "  border-slate-400" : " "
-              }`}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="tax_amount">
-              Monto de tax:
+              Monto Impuesto:
             </label>
             <input
               type="number"
@@ -173,14 +159,12 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.tax_amount}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full ${
-                isEditable ? "  border-slate-400" : " "
-              }`}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[200px]">
+          <div className="flex flex-col gap-3">
             <label className="text-xl" htmlFor="total_amount">
-              Monto de total:
+              Monto total:
             </label>
             <input
               type="number"
@@ -188,9 +172,7 @@ export const ContractDetail = ({ propiedad }) => {
               value={formData.total_amount}
               onChange={handleInputChange}
               disabled={!isEditable}
-              className={`border p-2 rounded-lg w-full ${
-                isEditable ? "  border-slate-400" : " "
-              }`}
+              className={`input-text`}
             />
           </div>
         </div>

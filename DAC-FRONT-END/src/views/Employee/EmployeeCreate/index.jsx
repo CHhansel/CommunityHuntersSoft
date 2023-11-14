@@ -11,7 +11,6 @@ export const EmployeeCreate = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    company_name: "",
     user_name: "",
     email: "",
     role_id: "",
@@ -25,7 +24,7 @@ export const EmployeeCreate = () => {
     district: "",
     exact_address: "",
     client_id: user.id,
-    user_id: user.id,
+    company_id: user.company_id
   });
 
   const handleInputChange = (event) => {
@@ -54,23 +53,11 @@ export const EmployeeCreate = () => {
   };
 
   return (
-    <div className="border border-black p-5 my-5">
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Empleado</h2>
-      <form className="m-5 flex flex-col justify-evenly gap-8 flex-wrap items-start">
+      <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
-            <label className="text-xl" htmlFor="company_name">
-              Nombre de la Compañía:
-            </label>
-            <input
-              type="text"
-              name="company_name"
-              value={formData.company_name}
-              onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
-            />
-          </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="user_name">
               Nombre de Usuario:
             </label>
@@ -79,10 +66,10 @@ export const EmployeeCreate = () => {
               name="user_name"
               value={formData.user_name}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="email">
               Email:
             </label>
@@ -91,10 +78,10 @@ export const EmployeeCreate = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="role_id">
               ID del Rol:
             </label>
@@ -103,12 +90,12 @@ export const EmployeeCreate = () => {
               name="role_id"
               value={formData.role_id}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="password">
               Contraseña:
             </label>
@@ -117,11 +104,11 @@ export const EmployeeCreate = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
 
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="confirmPassword">
               Repita Contraseña:
             </label>
@@ -130,12 +117,12 @@ export const EmployeeCreate = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="employee_name">
               Nombre:
             </label>
@@ -144,10 +131,10 @@ export const EmployeeCreate = () => {
               name="employee_name"
               value={formData.employee_name}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="employee_lastname">
               Apellido:
             </label>
@@ -156,11 +143,11 @@ export const EmployeeCreate = () => {
               name="employee_lastname"
               value={formData.employee_lastname}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="phone_number">
             Número de Teléfono:
           </label>
@@ -169,10 +156,10 @@ export const EmployeeCreate = () => {
             name="phone_number"
             value={formData.phone_number}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full `}
+            className={`input-text `}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="salary">
             Salario:
           </label>
@@ -181,11 +168,11 @@ export const EmployeeCreate = () => {
             name="salary"
             value={formData.salary}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full `}
+            className={`input-text `}
           />
         </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="province">
               Provincia:
             </label>
@@ -194,10 +181,10 @@ export const EmployeeCreate = () => {
               name="province"
               value={formData.province}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="canton">
               Cantón:
             </label>
@@ -206,10 +193,10 @@ export const EmployeeCreate = () => {
               name="canton"
               value={formData.canton}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="district">
               Distrito:
             </label>
@@ -218,10 +205,10 @@ export const EmployeeCreate = () => {
               name="district"
               value={formData.district}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="exact_address">
               Dirección Exacta:
             </label>
@@ -229,7 +216,7 @@ export const EmployeeCreate = () => {
               name="exact_address"
               value={formData.exact_address}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>

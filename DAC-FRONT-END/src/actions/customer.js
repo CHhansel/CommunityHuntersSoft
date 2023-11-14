@@ -3,7 +3,6 @@ import DAC_API from '../api/db-connection';
 
 // Función para obtener clientes por ID de usuario
 async function getCustomersByUserId({ user_id, page,company_id, itemsPerPage, token }) {
-  console.log(company_id," adasdasd");  
   const response = await DAC_API.get(`/customer/get-customers`, {
       params: { user_id, page,company_id, itemsPerPage },
       headers: { 'Authorization': token }

@@ -1,48 +1,80 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { TablaDinamica } from "../../components/Table/index";
-
 import { PropertyDetail } from "./PropertyDetails";
 import { PropertyCreate } from "./PropertyCreate";
-import { fetchProperties } from "../../actions/properties";
 import { selectUser } from "../../store/authSlice";
 import Pagination from "../../components/pagination/pagination";
+import { PropertyService } from "../../services/propertyServices";
 
 const Property = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
-
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [totalProperties, setTotalProperties] = useState(0);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const { user, token } = useSelector(selectUser);
-
-  //const error = useSelector((state) => state.properties.error);
-  const dispatch = useDispatch();
-
-  const properties = useSelector((state) => state.properties.properties);
-
-  const totalProperties = useSelector(
-    (state) => state.properties.totalProperties
-  );
   const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
-    dispatch(
-      fetchProperties({
-        id: user.company_id,
-        page: currentPage,
-        itemsPerPage: 10,
-        user_id: user.id,
-        token,
-      })
-    );
-  }, [dispatch, currentPage, user.id, token, totalProperties]);
+    const fetchProperties = async () => {
+      setLoading(true);
+      try {
+        const data = await PropertyService.getPropertiesByCompanyId(
+          token,
+          user.company_id,
+          currentPage,
+          10
+        );
+        setProperties(data.properties); // Asegúrate de ajustar según la estructura de tu respuesta
+        setTotalProperties(data.totalProperties); // Ajusta según la estructura de tu respuesta
+        setError(null);
+      } catch (error) {
+        setError('Error al cargar las propiedades');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [currentPage, user.company_id, token]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  const status = useSelector((state) => state.properties.status);
-  if (status !== "succeeded") {
+
+  if (loading) {
     return <div>Cargando Propiedades ...</div>;
   }
+
+  const updateTable = () => {
+    const fetchProperties = async () => {
+      setLoading(true);
+      try {
+        const data = await PropertyService.getPropertiesByCompanyId(
+          token,
+          user.company_id,
+          currentPage,
+          10
+        );
+        setProperties(data.properties); // Asegúrate de ajustar según la estructura de tu respuesta
+        setTotalProperties(data.totalProperties); // Ajusta según la estructura de tu respuesta
+        setError(null);
+      } catch (error) {
+        setError('Error al cargar las propiedades');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProperties();
+  };
+  // if (error) {
+  //   return <div>Error al cargar las propiedades</div>;
+  // }
 
   // propiedades Resumidas para la tabla
   const propertiesResume = JSON.parse(JSON.stringify(properties));
@@ -62,9 +94,14 @@ const Property = () => {
     delete property.payment_method;
     delete property.creation_date;
     delete property.company_id;
+    delete property.exact_address;
+    delete property.antiquity;
+    delete property.description;
+    delete property.customer_dni;
+    delete property.dni_type_description;
   });
   return (
-    status === "succeeded" &&
+    
     <div className="w-full px-16 flex flex-col justify-start h-full ">
       <div className="w-100 flex justify-end px-8">
         <button
@@ -76,7 +113,7 @@ const Property = () => {
           AGREGAR
         </button>
       </div>
-      {propertiesResume && (
+      {propertiesResume && totalProperties > 0 &&(
         <>
           <TablaDinamica
             datos={propertiesResume}
@@ -95,9 +132,10 @@ const Property = () => {
         <PropertyDetail
           key={properties[filaSeleccionada].id}
           fila={properties[filaSeleccionada]}
+          updateTable={updateTable}
         />
       )}
-      {createPropertyActive && filaSeleccionada < 0 && <PropertyCreate />}
+      {createPropertyActive && filaSeleccionada < 0 && <PropertyCreate updateTable={updateTable} />}
     </div>
   );
 };

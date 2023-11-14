@@ -45,7 +45,6 @@ export const createEmployee = createAsyncThunk(
   "employees/createEmployee",
   async (params, { rejectWithValue }) => {
     try {
-      console.log("params es ", params);
       const data = await createEmployeeAPI(params.data, params.token);
       return data;
     } catch (error) {
@@ -115,7 +114,6 @@ export const employeesSlice = createSlice({
         state.status = "succeeded";
         // Encuentra el índice del empleado que se actualizó
         const index = state.employees.findIndex(emp => emp.employee_user_id === action.payload.employee.id);
-        console.log("T ",index);
         if (index !== -1) {
           // Reemplaza el empleado antiguo con el empleado actualizado
           state.employees[index] = action.payload.employee;

@@ -11,12 +11,13 @@ export const CustomerCreate = () => {
     dni: "",
     email: "",
     company_name: "",
+    dni_type_id: 2,
     note: "",
     province: "",
     canton: "",
     district: "",
-    exactAddress: "",
-    user_id: user.id,
+    exact_address: "",
+    company_id: user.company_id,
   });
   const dispatch = useDispatch();
 
@@ -40,17 +41,17 @@ export const CustomerCreate = () => {
   };
 
   return (
-    <div className="create-customer-form">
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
       <form
         onSubmit={handleSubmit}
-        className="m-5 flex justify-evenly flex-wrap items-start gap-y-5"
+        className="flex justify-between flex-wrap items-start gap-5 w-full"
       >
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="name">
             Nombre
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             type="text"
             name="name"
             placeholder="Nombre"
@@ -60,12 +61,12 @@ export const CustomerCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="lastname">
             Apellido
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             type="text"
             name="lastname"
             placeholder="Apellido"
@@ -74,28 +75,41 @@ export const CustomerCreate = () => {
             required
           />
         </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl" htmlFor="dni">
-            DNI
+        <div className="flex flex-col gap-3 ">
+          <label className="text-xl" htmlFor="dni_type_id">
+            Tipo de Identificación
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
+            type="text"
+            name="dni_type_id"
+            placeholder="Tipo de indentificación"
+            value={formData.dni_type_id}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-3 ">
+          <label className="text-xl" htmlFor="dni">
+            Identificación
+          </label>
+          <input
+            className="input-text"
             type="text"
             name="dni"
-            placeholder="DNI"
+            placeholder="Identificación"
             value={formData.dni}
             onChange={handleChange}
             required
           />
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="email">
             Correo
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             type="email"
             name="email"
             placeholder="Correo"
@@ -105,12 +119,12 @@ export const CustomerCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="company_name">
             Nombre de la Empresa
           </label>
           <input
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             type="text"
             name="company_name"
             placeholder="Nombre de la Empresa"
@@ -118,91 +132,92 @@ export const CustomerCreate = () => {
             onChange={handleChange}
           />
         </div>
+        <div className="flex flex-wrap gap-5">
+          <div className="flex flex-col gap-3 ">
+            <label className="text-xl" htmlFor="province">
+              Provincia
+            </label>
+            <select
+              className="input-text"
+              name="province"
+              value={formData.province}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecciona una provincia</option>
+              <option value="San José">San José</option>
+              <option value="Alajuela">Alajuela</option>
+              <option value="Cartago">Cartago</option>
+              <option value="Heredia">Heredia</option>
+              <option value="Guanacaste">Guanacaste</option>
+              <option value="Puntarenas">Puntarenas</option>
+              <option value="Limón">Limón</option>
+            </select>
+          </div>
 
-        <div className="flex flex-col gap-3 w-[400px]">
+          <div className="flex flex-col gap-3 ">
+            <label className="text-xl" htmlFor="canton">
+              Cantón
+            </label>
+            <input
+              className="input-text"
+              type="text"
+              name="canton"
+              placeholder="Cantón"
+              value={formData.canton}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-3 ">
+            <label className="text-xl" htmlFor="district">
+              Distrito
+            </label>
+            <input
+              className="input-text"
+              type="text"
+              name="district"
+              placeholder="Distrito"
+              value={formData.district}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-3 ">
+            <label className="text-xl" htmlFor="exact_address">
+              Dirección exacta
+            </label>
+            <input
+              className="input-text"
+              type="text"
+              name="exact_address"
+              placeholder="Dirección exacta"
+              value={formData.exact_address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="note">
             Nota
           </label>
           <textarea
-            className="border p-2 rounded-lg w-full"
+            className="input-text"
             name="note"
             placeholder="Nota"
             value={formData.note}
             onChange={handleChange}
           ></textarea>
         </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl" htmlFor="province">
-            Provincia
-          </label>
-          <select
-            className="border p-2 rounded-lg w-full"
-            name="province"
-            value={formData.province}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona una provincia</option>
-            <option value="San José">San José</option>
-            <option value="Alajuela">Alajuela</option>
-            <option value="Cartago">Cartago</option>
-            <option value="Heredia">Heredia</option>
-            <option value="Guanacaste">Guanacaste</option>
-            <option value="Puntarenas">Puntarenas</option>
-            <option value="Limón">Limón</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl" htmlFor="canton">
-            Cantón
-          </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text"
-            name="canton"
-            placeholder="Cantón"
-            value={formData.canton}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl" htmlFor="district">
-            Distrito
-          </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text"
-            name="district"
-            placeholder="Distrito"
-            value={formData.district}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="flex flex-col gap-3 w-[400px]">
-          <label className="text-xl" htmlFor="exactAddress">
-            Dirección exacta
-          </label>
-          <input
-            className="border p-2 rounded-lg w-full"
-            type="text"
-            name="exactAddress"
-            placeholder="Dirección exacta"
-            value={formData.exactAddress}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button className="mt-12 w-full" type="submit">
+      </form>
+      <div className="flex justify-end gap-8 mt-5">
+        <button className="button-success" type="submit">
           Crear Cliente
         </button>
-      </form>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignHanging } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate, useResolvedPath } from "react-router-dom";
 import SideBarLogo from "./Logo/index";
 import exit_icon from "../../assets/logout_icon_white.svg";
@@ -20,11 +20,10 @@ const SideMenu = () => {
   const allModules = {
     1: { name: "Propiedades", path: "properties" },
     2: { name: "Clientes", path: "clients"},
-    3: { name: "Contratos", path: "contracts" },
-    4: { name: "Administración", path: "admin" },
-    5: { name: "Facturas", path: "bills" },
-    6: { name: "Empleados", path: "employees" },
-    7: { name: "Ordenes", path: "orders" },
+    3: { name: "Administración", path: "admin" },
+    4: { name: "Facturas", path: "bills" },
+    5: { name: "Empleados", path: "employees" },
+    6: { name: "Ordenes", path: "orders" },
     // Agrega más módulos según sea necesario
   };
   const navigate = useNavigate();
@@ -57,6 +56,7 @@ const SideMenu = () => {
       <div className="my-12 flex flex-col items-center">
         <SideBarLogo />
         <h4 className="text-white mt-8">{user.name}</h4>
+        <h4 className="text-white mt-2">{user.role}</h4>
         <h4 className="text-white mt-2">{user.company_name}</h4>
       </div>
       <div className="flex flex-col justify-start w-52 px-2">
@@ -64,6 +64,7 @@ const SideMenu = () => {
           const { name, path: modulePath } = allModules[module.module_id];
           const isActive = location.pathname.includes(modulePath);
           return (
+            
             <Link
               key={module.module_id}
               to={`${url}/${modulePath}`}
@@ -73,7 +74,7 @@ const SideMenu = () => {
                   : "text-white hover:bg-white hover:text-black"
               }`}
             >
-              {name}
+            {name}
             </Link>
           );
         })}

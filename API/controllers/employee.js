@@ -4,7 +4,7 @@ const connection = require('../config/db'); // Ajusta la ruta según la ubicaci�
 const saltRounds = 10; // Número de rondas de sal utilizadas para el hash de la contraseña
 const createEmployee = (req, res) => {
     const {
-        company_name,
+        company_id,
         user_name,
         email,
         role_id,
@@ -17,7 +17,6 @@ const createEmployee = (req, res) => {
         canton,
         district,
         exact_address,
-        client_id
     } = req.body;
 
     // Verificar si el userName o el email ya existen en la base de datos
@@ -42,9 +41,9 @@ const createEmployee = (req, res) => {
             }
 
             // Crear la consulta SQL para llamar al procedimiento almacenado `sp_create_employee`
-            const procedureQuery = 'CALL sp_create_employee(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const procedureQuery = 'CALL sp_create_employee(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             const procedureValues = [
-                company_name,
+                company_id,
                 user_name,
                 email,
                 role_id,
@@ -56,8 +55,7 @@ const createEmployee = (req, res) => {
                 province,
                 canton,
                 district,
-                exact_address,
-                client_id
+                exact_address
             ];
 
             // Ejecutar la consulta en la base de datos
@@ -99,8 +97,7 @@ const updateEmployee = (req, res) => {
         province,
         canton,
         district,
-        exact_address,
-        client_id
+        exact_address
     } = req.body;
 
     // Crear la consulta SQL para llamar al procedimiento almacenado `sp_update_employee`

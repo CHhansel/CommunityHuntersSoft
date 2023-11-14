@@ -13,7 +13,9 @@ export default {
         'even-row-table': '#E8E8E8',
         'main-red': '#FF0000',
         'main-red-hover': '#DF0000',
-        'input':'#FAFAFA'
+        'input':'#FAFAFA',
+        'main-bg-plate':'#e7e9f6',
+        'color-disabled':'#f5f5f5',
 
       },
       fontFamily: {
@@ -21,7 +23,7 @@ export default {
         // otras fuentes aquí
       },
       borderRadius: {
-        'main': '.4rem',
+        'main': '1rem',
       }
     },
   },

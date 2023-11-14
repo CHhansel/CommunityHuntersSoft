@@ -7,9 +7,9 @@ const { createContract,updateContract, updateContractState, getContractsByUserId
 
 const router = Router();
 
-router.post('/create-contract', verifyPermissions, createContract);
-router.patch('/update-contract/:id', verifyPermissions, updateContract);
-router.patch('/update-contract-state/:id', verifyPermissions, updateContractState);
-router.get('/get-contracts/', verifyPermissions, getContractsByUserId);
+router.post('/create-contract', createContract);
+router.patch('/update-contract/:id', updateContract);
+router.patch('/update-contract-state/:id', updateContractState);
+router.get('/get-contracts/', getContractsByUserId);
 
 module.exports = router;

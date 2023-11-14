@@ -7,7 +7,7 @@ const Footer = () => {
           href="https://www.communityhunters.com/"
           className="text-main-yellow mr-5"
         >
-          CommunityHunters.®️
+          CommunityHunters ®️
         </a>
       </p>
     </div>
@@ -15,4 +15,3 @@ const Footer = () => {
 };
 
 export default Footer;
-                         

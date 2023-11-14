@@ -40,7 +40,6 @@ export const RoleCreate = () => {
       ...prevState,
       [name]: value,
     }));
-   console.log(formData);
   };
   formData.province;
 
@@ -50,7 +49,6 @@ export const RoleCreate = () => {
       ...prevState,
       moduleIds: selectedModules,
     }));
-    console.log(formData);
     try {
       dispatch(createRoleAction({ data: formData, token }));
       alert("Rol creada con éxito!");

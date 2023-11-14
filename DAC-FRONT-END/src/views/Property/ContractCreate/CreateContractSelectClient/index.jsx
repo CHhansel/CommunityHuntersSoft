@@ -38,6 +38,7 @@ const Index = ({ setFormData }) => {
     delete customer.company_name;
     delete customer.creation_date;
     delete customer.note;
+    delete customer.company_id;
   });
 
   const handlePageChange = (pageNumber) => {
@@ -57,7 +58,7 @@ const Index = ({ setFormData }) => {
   }
   return (
     <div className=" m-auto">
-      <p className="text-xl">Seleccion el Cliente</p>
+      <p className="text-xl">Seleccione el Cliente</p>
       {customers && (
         <>
           <TablaDinamica

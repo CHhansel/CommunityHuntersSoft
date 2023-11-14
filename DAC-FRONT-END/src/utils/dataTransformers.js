@@ -20,9 +20,9 @@ export function parseProperties(properties) {
 function parseCustomerColumnNames(columns) {
   const translations = {
     Id: "ID",
-    name: "Nombre",
-    lastname: "Apellido",
-    dni: "DNI",
+    nombre: "Nombre",
+    apellido: "Apellido",
+    dni: "Identificación",
     dni_type_id: "Tipo de DNI",
     email: "Correo",
     company_name: "Nombre de la Empresa",
@@ -73,7 +73,7 @@ function parseColumnNames(columns) {
     canton: "Cantón",
     district: "Distrito",
     exact_address: "Dirección Exacta",
-    antiquity: "Antiguedad",
+    antiquity: "Antigüedad",
     users_count: "Usuarios",
   };
 

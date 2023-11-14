@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
 import { createPropertyAction } from "../../../actions/properties";
-import { getProvincias, getCantones, getDistritos } from '../../../utils/GeoService';
+import {
+  getProvincias,
+  getCantones,
+  getDistritos,
+} from "../../../utils/GeoService";
 
-export const PropertyCreate = () => {
+// eslint-disable-next-line react/prop-types
+export const PropertyCreate = ( {updateTable}) => {
   const { user, token } = useSelector(selectUser);
   const [formData, setFormData] = useState({
     name: "",
@@ -16,7 +21,7 @@ export const PropertyCreate = () => {
     exact_address: "",
     antiquity: "",
     company_id: user.company_id,
-    user_id: user.id
+    user_id: user.id,
   });
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -32,6 +37,7 @@ export const PropertyCreate = () => {
     try {
       dispatch(createPropertyAction({ data: formData, token }));
       alert("Propiedad creada con éxito!");
+      updateTable();
     } catch (error) {
       console.error("Hubo un error al crear la propiedad:", error);
       alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
@@ -104,75 +110,75 @@ export const PropertyCreate = () => {
           </select>
         </div>
         <div className="flex flex-col gap-3">
-            <label className="text-lg" htmlFor="antiquity">
-              Antiguedad:
-            </label>
-            <input
-              type="date"
-              name="antiquity"
-              value={formData.antiquity}
-              className="input-text"
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-        <label className="text-lg " htmlFor="province">
-          Provincia
-        </label>
-        <select
-          className="input-text"
-          name="province"
-          value={formData.province}
-          onChange={handleChange}
-        >
-          {getProvincias().map(provincia => (
-            <option key={provincia} value={provincia}>
-              {provincia}
-            </option>
-          ))}
-        </select>
-      </div>
+          <label className="text-lg" htmlFor="antiquity">
+            Antigüedad:
+          </label>
+          <input
+            type="date"
+            name="antiquity"
+            value={formData.antiquity}
+            className="input-text"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="province">
+            Provincia
+          </label>
+          <select
+            className="input-text"
+            name="province"
+            value={formData.province}
+            onChange={handleChange}
+          >
+            {getProvincias().map((provincia) => (
+              <option key={provincia} value={provincia}>
+                {provincia}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="flex flex-col gap-3">
-        <label className="text-lg " htmlFor="canton">
-          Cantón
-        </label>
-        <select
-          className="input-text"
-          name="canton"
-          value={formData.canton}
-          onChange={handleChange}
-          disabled={!cantones.length}
-        >
-          <option value="">Seleccione un cantón</option>
-          {cantones.map(canton => (
-            <option key={canton} value={canton}>
-              {canton}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="canton">
+            Cantón
+          </label>
+          <select
+            className="input-text"
+            name="canton"
+            value={formData.canton}
+            onChange={handleChange}
+            disabled={!cantones.length}
+          >
+            <option value="">Seleccione un cantón</option>
+            {cantones.map((canton) => (
+              <option key={canton} value={canton}>
+                {canton}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="flex flex-col gap-3">
-        <label className="text-lg " htmlFor="district">
-          Distrito
-        </label>
-        <select
-          className="input-text"
-          name="district"
-          value={formData.district}
-          onChange={handleChange}
-          disabled={!distritos.length}
-        >
-          <option value="">Seleccione un distrito</option>
-          {distritos.map(distrito => (
-            <option key={distrito} value={distrito}>
-              {distrito}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="district">
+            Distrito
+          </label>
+          <select
+            className="input-text"
+            name="district"
+            value={formData.district}
+            onChange={handleChange}
+            disabled={!distritos.length}
+          >
+            <option value="">Seleccione un distrito</option>
+            {distritos.map((distrito) => (
+              <option key={distrito} value={distrito}>
+                {distrito}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="flex flex-col gap-3">
           <label className="text-lg " htmlFor="exact_address">
@@ -188,10 +194,7 @@ export const PropertyCreate = () => {
           />
         </div>
         <div className="w-full flex justify-end">
-          <button
-            className="mt-12 button-success"
-            type="submit"
-          >
+          <button className="mt-12 button-success" type="submit">
             Crear Propiedad
           </button>
         </div>

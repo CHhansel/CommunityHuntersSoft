@@ -1,4 +1,4 @@
-import CabysSearch from "../../components/cabys";
+
 
 
 
@@ -11,8 +11,8 @@ const Dashboard = () => {
 
   return (
     <div className="">
-      <p>hola</p>
-      <CabysSearch></CabysSearch>
+      <p>Dashboard Info</p>
+      
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import DAC_API from '../../api/db-connection';
 
 async function getAccessibleModules({ user_id, user_role_id, token }) {
-  console.log(user_id, user_role_id, token);
   const response = await DAC_API.get(`/module/get-access-modules`, {
     params: { user_id, user_role_id },
     headers: { 'Authorization': token }
@@ -13,7 +12,6 @@ export const fetchAccessibleModules = createAsyncThunk(
     'modules/fetchAccessibleModules',
     async (params, { rejectWithValue }) => {
       try {
-        console.log("params es ",params);
         const modules = await getAccessibleModules(params);
         
         return modules;
