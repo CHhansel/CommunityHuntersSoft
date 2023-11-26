@@ -5,7 +5,7 @@ import { DniTypeService } from "../../../services/customerService"; // As
 import { selectUser } from "../../../store/authSlice";
 import { useSelector } from "react-redux";
 
-const ClientData = ({ clientData }) => {
+const ClientData = ({ clientData, setClient }) => {
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
@@ -23,7 +23,7 @@ const ClientData = ({ clientData }) => {
   useEffect(() => {
     if (clientData) {
       setFormData(clientData);
-      console.log(clientData);
+      console.log("cliente recibido es ", clientData);
     }
     // Obtener tipos de DNI
     const loadDniTypes = async () => {
@@ -36,11 +36,16 @@ const ClientData = ({ clientData }) => {
     };
     loadDniTypes();
   }, [clientData]);
+
   const [isPopUpOpen, setPopUpOpen] = useState(false);
 
   const togglePopUp = () => {
-    console.log(formData);
     setPopUpOpen((prev) => !prev);
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setClient(formData);
   };
   return (
     <div className="p-10 my-5 rounded-main bg-white border shadow">
@@ -58,10 +63,8 @@ const ClientData = ({ clientData }) => {
             type="text"
             name="name"
             value={formData.name}
-            disabled={!!clientData}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
+
+            onChange={handleInputChange}
           />
         </div>
         <div className="flex flex-col gap-3">
@@ -71,10 +74,8 @@ const ClientData = ({ clientData }) => {
             type="text"
             name="lastname"
             value={formData.lastname}
-            disabled={!!clientData}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, lastname: e.target.value }))
-            }
+  
+            onChange={handleInputChange}
           />
         </div>
         <div className="flex flex-col gap-3">
@@ -83,10 +84,10 @@ const ClientData = ({ clientData }) => {
             className="input-text"
             name="dni_type_id"
             value={formData.dni_type_id}
-            onChange={e => setFormData(prev => ({ ...prev, dni_type_id: e.target.value }))}
+            onChange={handleInputChange}
           >
             <option value="">Selecciona un tipo</option>
-            {dniTypes.map(dniType => (
+            {dniTypes.map((dniType) => (
               <option key={dniType.id} value={dniType.id}>
                 {dniType.code}
               </option>
@@ -100,10 +101,7 @@ const ClientData = ({ clientData }) => {
             type="text"
             name="dni"
             value={formData.dni}
-            disabled={!!clientData}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, dni: e.target.value }))
-            }
+            onChange={handleInputChange}
           />
         </div>
         <div className="flex flex-col gap-3">
@@ -113,10 +111,8 @@ const ClientData = ({ clientData }) => {
             type="email"
             name="email"
             value={formData.email}
-            disabled={!!clientData}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, email: e.target.value }))
-            }
+
+            onChange={handleInputChange}
           />
         </div>
       </form>

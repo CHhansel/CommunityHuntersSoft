@@ -5,7 +5,7 @@ import { PropertyService } from "../../services/propertyServices"; // Servicio d
 import { selectUser } from "../../store/authSlice";
 import { useSelector } from "react-redux";
 
-const PropertySearch = ({ setPropertyData }) => {
+const PropertySearch = ({ setPropertyData,setProperty }) => {
   const { user, token } = useSelector(selectUser);
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
@@ -49,6 +49,7 @@ const PropertySearch = ({ setPropertyData }) => {
   useEffect(() => {
     if (filaSeleccionada >= 0 && results[filaSeleccionada]) {
       setPropertyData(results[filaSeleccionada]);
+      setProperty(results[filaSeleccionada]);
     }
   }, [filaSeleccionada, setPropertyData, results]);
   

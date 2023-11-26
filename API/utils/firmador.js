@@ -1,39 +1,53 @@
 const fs = require('fs');
+const forge = require('node-forge');
 const { SignedXml } = require('xml-crypto');
 
-class Firmador {
-  static firmarXml(pfxPath, pin, xmlInputPath, xmlOutputPath) {
-    // Leer el contenido del archivo XML
-    const xml = fs.readFileSync(xmlInputPath, 'utf8');
 
-    // Crear una nueva instancia de SignedXml
+function extraerClaveYCertificado(pfxPath, password) {
+  // Leer el archivo PFX
+  const pfx = fs.readFileSync(pfxPath, 'binary');
+  const pfxAsn1 = forge.asn1.fromDer(pfx);
+  const pfxObj = forge.pkcs12.pkcs12FromAsn1(pfxAsn1, password);
+
+  // Buscar la clave privada y el certificado
+  let key = null;
+  let cert = null;
+
+  // Supongamos que solo hay un keyBag y un certBag
+  const keyBags = pfxObj.getBags({bagType: forge.pki.oids.pkcs8ShroudedKeyBag});
+  const certBags = pfxObj.getBags({bagType: forge.pki.oids.certBag});
+
+  // Extraer la clave privada
+  if (keyBags && keyBags[forge.pki.oids.pkcs8ShroudedKeyBag]) {
+      const keyBag = keyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
+      key = forge.pki.privateKeyToPem(keyBag.key);
+  }
+  // Extraer el certificado
+  if (certBags && certBags[forge.pki.oids.certBag]) {
+      const certBag = certBags[forge.pki.oids.certBag][0];
+      cert = forge.pki.certificateToPem(certBag.cert);
+  }
+
+  return { privateKey: key, certificate: cert };
+}
+class Firmador {
+  static firmarXml(pfxPath, password, xmlInputPath, xmlOutputPath) {
+    const xml = fs.readFileSync(xmlInputPath, 'utf8');
     const signedXml = new SignedXml();
 
-    // Leer el contenido del archivo PFX
-    const pfx = fs.readFileSync(pfxPath);
+    // Extraer clave privada y certificado del PFX
+    const { privateKey, certificate } = extraerClaveYCertificado(pfxPath, password);
 
-    // Cargar la clave privada desde el archivo PFX
-    // Asumiendo que la clave privada está en formato PEM
-    const privateKey = SignedXml.loadKeyFromPfx(pfx, pin);
+    signedXml.privateKey = privateKey;
 
-    // Establecer la clave privada para la firma
-    signedXml.signingKey = privateKey;
-
-    // Crear una referencia al nodo raíz del documento XML
-    signedXml.addReference("//*[local-name(.)='RootNodeName']");
 
     // Calcular la firma
     signedXml.computeSignature(xml);
 
-    // Obtener el XML firmado
-    const signedXmlText = signedXml.getSignedXml();
-
-    // Guardar el XML firmado en el archivo de salida
-    fs.writeFileSync(xmlOutputPath, signedXmlText, 'utf8');
-  }
+    // Guardar el XML firmado
+    fs.writeFileSync(xmlOutputPath, signedXml.getSignedXml(), 'utf8');
+}
+  
 }
 
 module.exports = Firmador;
-
-// Uso:
-// Firmador.firmarXml('path/to/your.pfx', 'your-pin', 'path/to/input.xml', 'path/to/output.xml');

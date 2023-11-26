@@ -104,7 +104,6 @@ function generateXML(data) {
         </ResumenFactura>`;
     
     xmlString += `</${data.footerDocument}>`;
-
     return xmlString;
 }
 
@@ -171,8 +170,9 @@ let data = {
     }]
 };
 
-// Llama a la función generateXML con el objeto data como argumento
-let xmlString = generateXML(data);
 
-// Imprime la cadena XML resultante en la consola
-console.log(xmlString);
+  // Exporta la función para utilizarla en otras partes de tu aplicación
+  module.exports = {
+    generateXML,
+  };
+  

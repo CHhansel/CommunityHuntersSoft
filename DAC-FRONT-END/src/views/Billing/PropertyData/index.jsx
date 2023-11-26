@@ -14,7 +14,6 @@ const PropertyData = ({ propertyData, setProperty }) => {
   useEffect(() => {
     if (propertyData) {
       setFormData(propertyData);
-      setProperty(propertyData);
     }
   }, [propertyData]);
   const [isPopUpOpen, setPopUpOpen] = useState(false);
@@ -27,7 +26,7 @@ const PropertyData = ({ propertyData, setProperty }) => {
       
       <button className='my-5 button-success' onClick={togglePopUp}>Buscar Propiedad</button>
       <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
-        <PropertySearch setProperty={setFormData}></PropertySearch>
+        <PropertySearch setPropertyData={setFormData} setProperty={setProperty}></PropertySearch>
       </PopUp>
       <form className="flex justify-between flex-wrap items-start gap-5 w-full">
         <div className="flex flex-col gap-3">
