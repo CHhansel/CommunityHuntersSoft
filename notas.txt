@@ -212,3 +212,24 @@ invbestigar api hacienda
 
 
 
+
+
+
+
+
+
+facturas, mejor varios pages dependiendo del negocio 
+
+
+
+
+
+
+
+
+definir membresia, dentro de sitio DAC mejor
+
+
+en sitio CH crear una seccion para el DAC y mostrar sus caracteristicas junto con sus paquetes
+
+

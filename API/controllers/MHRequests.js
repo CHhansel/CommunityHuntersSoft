@@ -4,54 +4,54 @@ const Firmador = require("../utils/firmador");
 const { generateXML } = require("../utils/genXML");
 const { getClave } = require("../utils/getClave");
 const connection = require("../config/db");
-
-
-
+const axios = require("axios");
 
 async function getToken(company_id) {
+  console.log("company id ", company_id);
   return new Promise((resolve, reject) => {
-      const selectQuery = "SELECT * FROM company_credentials WHERE company_id = ?";
-      connection.query(selectQuery, [company_id], async (err, results) => {
-          if (err) {
-              console.error("Error al obtener las credenciales:", err);
-              return reject(new Error("Error interno del servidor"));
+    const selectQuery =
+      "SELECT * FROM company_credentials WHERE company_id = ?";
+    connection.query(selectQuery, [company_id], async (err, results) => {
+      if (err) {
+        console.error("Error al obtener las credenciales:", err);
+        return reject(new Error("Error interno del servidor"));
+      }
+
+      if (results.length === 0) {
+        return reject(
+          new Error(
+            "Credenciales no encontradas para el company_id proporcionado"
+          )
+        );
+      }
+
+      const credentials = results[0];
+
+      try {
+        const response = await axios.post(
+          "https://idp.comprobanteselectronicos.go.cr/auth/realms/rut-stag/protocol/openid-connect/token",
+          new URLSearchParams({
+            client_id: credentials.client_id,
+            username: credentials.usuario,
+            password: credentials.password,
+            grant_type: "password",
+          }).toString(),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
           }
+        );
 
-          if (results.length === 0) {
-              return reject(new Error("Credenciales no encontradas para el company_id proporcionado"));
-          }
-
-          const credentials = results[0];
-
-          try {
-              const response = await axios.post(
-                  "https://idp.comprobanteselectronicos.go.cr/auth/realms/rut-stag/protocol/openid-connect/token",
-                  new URLSearchParams({
-                      client_id: credentials.client_id,
-                      username: credentials.usuario,
-                      password: credentials.password,
-                      grant_type: "password",
-                  }).toString(),
-                  {
-                      headers: {
-                          "Content-Type": "application/x-www-form-urlencoded",
-                      },
-                  }
-              );
-
-              const token = response.data.access_token;
-              console.log("token es",token);
-              resolve(token);
-          } catch (error) {
-              console.error("Error al solicitar el token:", error);
-              reject(new Error("Error al solicitar el token"));
-          }
-      });
+        const token = response.data.access_token;
+        resolve(token);
+      } catch (error) {
+        console.error("Error al solicitar el token:", error);
+        reject(new Error("Error al solicitar el token"));
+      }
+    });
   });
-  
 }
-
-
 
 const createInvoice = async (req, res) => {
   const { company_id, invoiceDetails } = req.body;
@@ -62,25 +62,18 @@ const createInvoice = async (req, res) => {
   try {
     // Obtener los datos de la compañía
     const companyData = await getCompanyData(company_id);
-    console.log(companyData);
+
     // Generar clave y consecutivo
     const { clave, consecutivo } = getClave(
       "FE",
-      "01",
-      companyData.identification_number,
+      "fisico",
+      "304830937",
       "normal",
       "506",
-      "123123",
-      "132"
+      "12345678",
+      "12345678"
     );
 
-    // Preparar datos para la generación del XML
-    // const xmlData = {
-    //   ...invoiceDetails,
-    //   KeyXml: clave,
-    //   Consecutive: consecutivoFinal,
-    //   DataEmisor: [companyData]
-    // };
     const data = {
       headDocument: "FacturaElectronica",
       footerDocument: "FacturaElectronica",
@@ -142,16 +135,20 @@ const createInvoice = async (req, res) => {
 
     const xmlFilename = "factura.xml"; // El nombre del archivo que deseas guardar
     saveXMLToFile(xml, xmlFilename);
-    
-   
-    const xmlInputPath = path.join(__dirname, '..', 'files', 'factura.xml');
-    const xmlOutputPath = path.join(__dirname, '..', 'files', `xmlFirmado${consecutivo}.xml`);
-    const pfxPath = path.join(__dirname, '..', 'files', '011693011422.p12');
+
+    const xmlInputPath = path.join(__dirname, "..", "files", "factura.xml");
+    const xmlOutputPath = path.join(
+      __dirname,
+      "..",
+      "files",
+      `xmlFirmado${consecutivo}.xml`
+    );
+    const pfxPath = path.join(__dirname, "..", "files", "011693011422.p12");
     // Guarda temporalmente el XML antes de firmarlo
     fs.writeFileSync(xmlInputPath, xml, "utf8");
     // Firma el XML
     try {
-      Firmador.firmarXml(pfxPath, '5050', xmlInputPath, xmlOutputPath);
+      Firmador.firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
     } catch (error) {
       console.error("Error al firmar el XML:", error);
       return res
@@ -160,10 +157,10 @@ const createInvoice = async (req, res) => {
     }
     // Leer el XML firmado
     const signedXml = fs.readFileSync(xmlOutputPath, "utf8");
-    enviarFacturaHacienda(data,company_id,signedXml)
-    res.status(200).json({ data });
+    const response = enviarFacturaHacienda(data, company_id, signedXml);
+    res.status(200).json( response );
   } catch (error) {
-    console.error("Error en la creación de la factura:", error);
+    console.error("Error en la creación de la factura:");
     res.status(500).json({ error: error.message, data });
   }
 };
@@ -216,41 +213,50 @@ function saveXMLToFile(xmlString, filename) {
 }
 
 // Función para enviar la factura a Hacienda
-const enviarFacturaHacienda = async (data,companyId, signedXml) => {
-  const token = getToken(companyId);
+const enviarFacturaHacienda = async (data, companyId, signedXml) => {
+  const token = await getToken(companyId);
+  console.log("clave es ", data.KeyXml);
   console.log("datos de data en enviarFactura");
-  console.log(data);
   try {
-    const xmlBase64 = Buffer.from(signedXml).toString('base64');
+    const xmlBase64 = Buffer.from(signedXml).toString("base64");
     const jsonBody = {
-      // clave: ..., 
-      // fecha: ..., 
-      // emisor: ...,
-      // receptor: ..., 
+      clave: data.KeyXml,
+      fecha: "2023-11-29T15:20:30.45Z",
+      emisor: {
+        tipoIdentificacion: "1",
+        numeroIdentificacion: "123123"
+      },
+      receptor: {
+        tipoIdentificacion: "1",
+        numeroIdentificacion: "123123"
+      },
       comprobanteXml: xmlBase64,
     };
+
     const response = await axios.post(
-      'https://api.comprobanteselectronicos.go.cr/recepcion/v1/recepcion',
+      "https://api-sandbox.comprobanteselectronicos.go.cr/recepcion/v1/recepcion/",
       jsonBody,
       {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       }
     );
 
     // Aquí manejas la respuesta de la API de Hacienda
-    if (response.status === 201) {
+    if (response.status === 202) {
       // Factura enviada con éxito
-      return response.headers.location;
+      console.log("holaa");
     } else {
       // Manejar respuestas inesperadas
-      throw new Error('Respuesta inesperada de la API');
+      console.log(response);
+      throw new Error("Respuesta inesperada de la API",response.x-error-cause);
     }
   } catch (error) {
-    console.error('Error al enviar la factura:', error);
-    throw error;
+    console.error("Error al enviar la factura:", error.response.headers);
+    return error;
+    //throw error;
   }
-}
+};
 module.exports = { createInvoice };

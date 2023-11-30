@@ -2,7 +2,7 @@ const fs = require('fs');
 const forge = require('node-forge');
 const { SignedXml } = require('xml-crypto');
 
-
+//La firma del documento no es XAdES, se obtuvo [ERROR]
 function extraerClaveYCertificado(pfxPath, password) {
   // Leer el archivo PFX
   const pfx = fs.readFileSync(pfxPath, 'binary');
