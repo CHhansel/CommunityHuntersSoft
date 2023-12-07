@@ -46,7 +46,8 @@ class Firmador {
 
     // Guardar el XML firmado
     fs.writeFileSync(xmlOutputPath, signedXml.getSignedXml(), 'utf8');
-}
+
+  }
   
 }
 

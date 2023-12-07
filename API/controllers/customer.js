@@ -147,9 +147,9 @@ function formatCreationDateInArray(data) {
   });
 }
 const getAllDniTypes = (req, res) => {
-  // Consulta SQL para obtener todos los elementos de la tabla dni_type
+  // Consulta SQL para obtener todos los elementos de la tabla tiposdeidentificacion
   const selectQuery = `
-      SELECT * FROM dni_type
+      SELECT * FROM tiposdeidentificacion
   `;
 
   // Ejecutar la consulta en la base de datos

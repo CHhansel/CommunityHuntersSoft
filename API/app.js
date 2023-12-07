@@ -33,6 +33,7 @@ app.use("/api/module", require("./routes/module"));
 app.use("/api/cabys", require("./routes/cabys"));
 app.use("/api/company", require("./routes/company"));
 app.use("/api/atv", require("./routes/MHRequest"));
+app.use("/api/billing", require("./routes/billing"));
 // Resto de tus rutas y lógica de la API
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
