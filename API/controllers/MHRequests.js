@@ -5,6 +5,7 @@ const { generateXML } = require("../utils/genXML");
 const { getClave } = require("../utils/getClave");
 const connection = require("../config/db");
 const axios = require("axios");
+const firmarXml = require("../utils/FirmadorDos");
 
 async function getToken(company_id) {
   console.log("company id ", company_id);
@@ -67,35 +68,36 @@ const createInvoice = async (req, res) => {
     const { clave, consecutivo } = getClave(
       "FE",
       "fisico",
-      "304830937",
+      "116930114",
       "normal",
       "506",
-      "12345678",
-      "12345678"
+      "15111118",
+      "58379673"
     );
-
+    let fechaActual = new Date();
+    let fechaISO = fechaActual.toISOString();
     const data = {
       headDocument: "FacturaElectronica",
       footerDocument: "FacturaElectronica",
       KeyXml: clave, // La clave debería generarse según las especificaciones requeridas
       DataEmisor: [
         {
-          CodeActivity: companyData.economic_activity || "", // Ejemplo de campo opcional
+          CodeActivity: "011802" || "", // Ejemplo de campo opcional
           Name: companyData.name,
           TypeIdentification: companyData.identification_type,
           IdentificationNumber: companyData.identification_number,
           TradeName: companyData.trade_name || "", // Ejemplo de campo opcional
-          Province: "", // Estos detalles de ubicación podrían necesitar ser añadidos
-          Canton: "",
-          District: "",
-          Address: "",
-          CodePhone: "", // Deberás agregar el código de país si es necesario
+          Province: "1", // Estos detalles de ubicación podrían necesitar ser añadidos
+          Canton: "03",
+          District: "01",
+          Address: "residencial porton del prado casa 37d",
+          CodePhone: "506", // Deberás agregar el código de país si es necesario
           Phone: companyData.phone,
           Email: companyData.email,
         },
       ],
       Consecutive: consecutivo, // El consecutivo también debería generarse según las especificaciones requeridas
-      DateDocument: paymentDetails.issueDate,
+      DateDocument: fechaISO,
       DocumentHead: [
         {
           TypeIdentification: clientData.dniType || "",
@@ -105,18 +107,18 @@ const createInvoice = async (req, res) => {
           TypePayment: paymentDetails.paymentMethod,
           TotalServGravados: propertyData.taxAmount,
           TotalMercanciasGravadas: propertyData.rentAmount,
-          TotalGravado: "", // Calcular si es necesario
+          TotalGravado: "00", // Calcular si es necesario
           TotalVenta: propertyData.totalAmount,
-          TotalVentaNeta: "", // Calcular si es necesario
+          TotalVentaNeta: "00", // Calcular si es necesario
           TotalImpuesto: propertyData.taxAmount,
-          TotalOtrosCargos: "", // Añadir si hay otros cargos
+          TotalOtrosCargos: "00", // Añadir si hay otros cargos
           TotalComprobante: propertyData.totalAmount + propertyData.taxAmount, // Asumiendo que es la suma del total más impuestos
         },
       ],
       DocumentDetail: [
         {
           // Detalles de la propiedad, se pueden replicar para múltiples ítems
-          Code: "001", // Este debe ser un código que identifique la propiedad o el servicio
+          Code: "7211100000100", // Este debe ser un código que identifique la propiedad o el servicio
           CodeReference: "A001", // Un código de referencia para la propiedad o servicio
           Quantity: "1", // Cantidad de servicios/productos, en este caso podría ser '1' por ser una propiedad
           UnidMeasure: "Unid", // La unidad de medida, 'Unid' para 'unidad' es común para servicios
@@ -126,11 +128,12 @@ const createInvoice = async (req, res) => {
           Discount: "0", // Asumiendo que no hay descuento
           DetailDiscount: "",
           Impuesto: propertyData.taxAmount,
-          MontoTotalLinea: propertyData.totalAmount + propertyData.taxAmount, // Total incluyendo impuestos
+          MontoTotalLinea: propertyData.rentAmount // Total incluyendo impuestos
         },
       ],
     };
     // Generar XML
+
     const xml = generateXML(data);
 
     const xmlFilename = "factura.xml"; // El nombre del archivo que deseas guardar
@@ -148,7 +151,8 @@ const createInvoice = async (req, res) => {
     fs.writeFileSync(xmlInputPath, xml, "utf8");
     // Firma el XML
     try {
-      Firmador.firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
+      //Firmador.firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
+      firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
     } catch (error) {
       console.error("Error al firmar el XML:", error);
       return res

@@ -233,3 +233,15 @@ definir membresia, dentro de sitio DAC mejor
 en sitio CH crear una seccion para el DAC y mostrar sus caracteristicas junto con sus paquetes
 
 
+
+
+
+consecutivbo en backend fill de 8 digitos
+
+
+
+
+
+tabla producto general
+pedir todos los datos necesarios en el front
+mostrar

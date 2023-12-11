@@ -68,7 +68,7 @@ function generateXML(data) {
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>13.00</Tarifa>
-                    <Monto>${data.DocumentDetail[i].Impuesto}</Monto>
+                    <Monto>${data.DocumentDetail[i].SubTotal * 13}</Monto>
                 </Impuesto>
                 <MontoTotalLinea>${data.DocumentDetail[i].MontoTotalLinea}</MontoTotalLinea>
             </LineaDetalle>`;
@@ -106,71 +106,6 @@ function generateXML(data) {
     xmlString += `</${data.footerDocument}>`;
     return xmlString;
 }
-
-
-let data = {
-    headDocument: 'Documento',
-    footerDocument: 'Documento',
-    KeyXml: '123456',
-    DataEmisor: [{
-        CodeActivity: '78910',
-        Name: 'Nombre Emisor',
-        TypeIdentification: '01',
-        IdentificationNumber: '112233',
-        TradeName: 'Nombre Comercial',
-        Province: 'Provincia',
-        Canton: 'Canton',
-        District: 'Distrito',
-        Address: 'Dirección',
-        CodePhone: '506',
-        Phone: '12345678',
-        Email: 'email@example.com'
-    }],
-    Consecutive: '123456789',
-    DateDocument: '2023-10-28T12:34:56',
-    DocumentHead: [{
-        TypeIdentification: '02',
-        IdentificationNumber: '445566',
-        NameClient: 'Nombre Cliente',
-        Email: 'client@example.com',
-        TypePayment: '01',
-        TotalServGravados: '100.00',
-        TotalMercanciasGravadas: '200.00',
-        TotalGravado: '300.00',
-        TotalVenta: '400.00',
-        TotalVentaNeta: '500.00',
-        TotalImpuesto: '60.00',
-        TotalOtrosCargos: '10.00',
-        TotalComprobante: '570.00'
-    }],
-    DocumentDetail: [{
-        Code: '001',
-        CodeReference: 'A001',
-        Quantity: '10',
-        UnidMeasure: 'kg',
-        ProductDescription: 'Producto 1',
-        Price: '10.00',
-        SubTotal: '100.00',
-        Discount: '10.00',
-        DetailDiscount: 'Descuento aplicado',
-        Impuesto: '13.00',
-        MontoTotalLinea: '103.00'
-    }, {
-        Code: '002',
-        CodeReference: 'A002',
-        Quantity: '20',
-        UnidMeasure: 'lt',
-        ProductDescription: 'Producto 2',
-        Price: '5.00',
-        SubTotal: '100.00',
-        Discount: '0',
-        DetailDiscount: '',
-        Impuesto: '13.00',
-        MontoTotalLinea: '113.00'
-    }]
-};
-
-
   // Exporta la función para utilizarla en otras partes de tu aplicación
   module.exports = {
     generateXML,

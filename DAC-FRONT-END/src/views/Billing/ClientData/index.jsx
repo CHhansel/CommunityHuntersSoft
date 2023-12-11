@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PopUp from "../../../components/popUp";
 import CustomerSearch from "../../../components/CustomerSelect";
-import { DniTypeService } from "../../../services/customerService"; // As
 import { selectUser } from "../../../store/authSlice";
 import { useSelector } from "react-redux";
+import { haciendaService } from "../../../services/billingServices";
+import { DniTypeService } from "../../../services/CustomerService";
 
 const ClientData = ({ clientData, setClient }) => {
   const [formData, setFormData] = useState({
@@ -45,8 +46,31 @@ const ClientData = ({ clientData, setClient }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setClient(formData);
+    //setClient(formData);
   };
+  const handleDniNumber = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (value.length >= 9) {
+      haciendaService
+        .getDNIinfo(value)
+        .then((data) => {
+          const dniTypeCode = dniTypes.find(
+            (dniType) => dniType.tipoIdentificacion === data.tipoIdentificacion
+          )?.codigo;
+
+          setFormData((prev) => ({
+            ...prev,
+            name: data.nombre,
+            dni_type_id: data.tipoIdentificacion,
+          }));
+        })
+        .catch((error) => console.error(error));
+    }
+    console.log(formData);
+  };
+
   return (
     <div className="p-10 my-5 rounded-main bg-white border shadow">
       <button className="my-5 button-success" onClick={togglePopUp}>
@@ -63,18 +87,6 @@ const ClientData = ({ clientData, setClient }) => {
             type="text"
             name="name"
             value={formData.name}
-
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Apellidos:</label>
-          <input
-            className="input-text"
-            type="text"
-            name="lastname"
-            value={formData.lastname}
-  
             onChange={handleInputChange}
           />
         </div>
@@ -88,8 +100,8 @@ const ClientData = ({ clientData, setClient }) => {
           >
             <option value="">Selecciona un tipo</option>
             {dniTypes.map((dniType) => (
-              <option key={dniType.id} value={dniType.id}>
-                {dniType.code}
+              <option key={dniType.codigo} value={dniType.codigo}>
+                {dniType.tipoIdentificacion}
               </option>
             ))}
           </select>
@@ -101,7 +113,7 @@ const ClientData = ({ clientData, setClient }) => {
             type="text"
             name="dni"
             value={formData.dni}
-            onChange={handleInputChange}
+            onChange={handleDniNumber}
           />
         </div>
         <div className="flex flex-col gap-3">
@@ -111,7 +123,6 @@ const ClientData = ({ clientData, setClient }) => {
             type="email"
             name="email"
             value={formData.email}
-
             onChange={handleInputChange}
           />
         </div>

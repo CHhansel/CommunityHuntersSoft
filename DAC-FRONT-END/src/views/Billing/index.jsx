@@ -11,6 +11,7 @@ const Billing = () => {
 
   const [client, setClient] = useState({});
   const [property, setProperty] = useState({});
+  const [billParams, setBillParams] = useState({});
   const [companyInfo, setCompanyInfo] = useState({});
   const [cabys, setCabys] = useState();
   const [isPopUpOpen, setPopUpOpen] = useState(false);
@@ -22,7 +23,47 @@ const Billing = () => {
   const togglePopUp = () => {
     setPopUpOpen((prev) => !prev);
   };
-
+  const products = [
+    {
+      "internal_code": "ABC123",
+      "name": "Producto 1",
+      "description": "Descripción del Producto 1",
+      "product_type": "Tipo 1",
+      "price": 100.00,
+      "quantity": 1,
+      "cabys_code": "12345",
+      "unit_of_measure": "Unidad",
+      "tax_rate": 13.00,
+      "created_at": "2023-12-08T12:00:00",
+      "updated_at": "2023-12-08T12:00:00"
+    },
+    {
+      "internal_code": "DEF456",
+      "name": "Producto 2",
+      "description": "Descripción del Producto 2",
+      "product_type": "Tipo 2",
+      "price": 200.00,
+      "quantity": 1,
+      "cabys_code": "67890",
+      "unit_of_measure": "Paquete",
+      "tax_rate": 0.00,
+      "created_at": "2023-12-08T12:00:00",
+      "updated_at": "2023-12-08T12:00:00"
+    },
+    {
+      "internal_code": "GHI789",
+      "name": "Producto 3",
+      "description": "Descripción del Producto 3",
+      "product_type": "Tipo 3",
+      "price": 50.00,
+      "quantity": 1,
+      "cabys_code": "54321",
+      "unit_of_measure": "Caja",
+      "tax_rate": 13.00,
+      "created_at": "2023-12-08T12:00:00",
+      "updated_at": "2023-12-08T12:00:00"
+    }
+  ];
   const prepareInvoiceData = () => {
     const invoiceData = {
       property: {
@@ -35,7 +76,7 @@ const Billing = () => {
         taxAmount: property.tax_amount,
         totalAmount: property.total_amount,
       },
-      client: {
+      receptor: {
         id: client.customer_id,
         name: client.name,
         lastname: client.lastname,
@@ -49,8 +90,7 @@ const Billing = () => {
       },
     };
 
-    // Aquí puedes enviar estos datos al backend.
-    // Por ejemplo, usando fetch o Axios para hacer una solicitud POST.
+
     console.log(invoiceData);
     return invoiceData;
   };
@@ -65,7 +105,7 @@ const Billing = () => {
       <h4>2. Lineas de detalle</h4>
       <PropertyData setProperty={setProperty}></PropertyData>
       <h4>3. Datos de Factura</h4>
-      <BillData property={property}></BillData>
+      <BillData products={products} setBillParams="setBillParams"></BillData>
       <div>
         <button className="button-success" onClick={()=>prepareInvoiceData()}>Facturar</button>
       </div>

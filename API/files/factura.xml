@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <FacturaElectronica>
-        <Clave>50624112300000003123300100001010000123123100000132</Clave>
-        <CodigoActividad>software</CodigoActividad>
-        <NumeroConsecutivo>00100001010000123123</NumeroConsecutivo>
-        <FechaEmision>2023-11-08</FechaEmision>
+    <FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Clave>50608122300011693011400100001010015111118158379673</Clave>
+        <CodigoActividad>011802</CodigoActividad>
+        <NumeroConsecutivo>00100001010015111118</NumeroConsecutivo>
+        <FechaEmision>2023-12-09T02:43:31.508Z</FechaEmision>
         <Emisor>
-            <Nombre>Community Hunters</Nombre>
+            <Nombre>ANDRES FRANCISCO ZAMORA SOTO</Nombre>
             <Identificacion>
-                <Tipo>1</Tipo>
-                <Numero>31233</Numero>
+                <Tipo>01</Tipo>
+                <Numero>116930114</Numero>
             </Identificacion>
             <NombreComercial>Community hunters</NombreComercial>
             <Ubicacion>
-                <Provincia></Provincia>
-                <Canton></Canton>
-                <Distrito></Distrito>
-                <OtrasSenas></OtrasSenas>
+                <Provincia>1</Provincia>
+                <Canton>011</Canton>
+                <Distrito>01</Distrito>
+                <OtrasSenas>residencial porton del prado casa 37d</OtrasSenas>
             </Ubicacion>
             <Telefono>
-                <CodigoPais></CodigoPais>
-                <NumTelefono>13123</NumTelefono>
+                <CodigoPais>506</CodigoPais>
+                <NumTelefono>70945578</NumTelefono>
             </Telefono>
             <CorreoElectronico>Andres@communityhunters.com</CorreoElectronico>
         </Emisor>
             <Receptor>
                 <Nombre>Hansel Calderon</Nombre>
                 <Identificacion>
-                    <Tipo>1</Tipo>
-                    <Numero>1231231</Numero>
+                    <Tipo>01</Tipo>
+                    <Numero>304830937</Numero>
                 </Identificacion>
                 <CorreoElectronico>client@example.com</CorreoElectronico>
             </Receptor>
             
         <CondicionVenta>01</CondicionVenta>
-        <MedioPago>2</MedioPago>
+        <MedioPago>02</MedioPago>
         <DetalleServicio>
             <LineaDetalle>
                 <NumeroLinea>1</NumeroLinea>
-                <Codigo>001</Codigo>
+                <Codigo>7211100000100</Codigo>
                 <CodigoComercial>
                     <Tipo>04</Tipo>
                     <Codigo>A001</Codigo>
@@ -52,9 +52,9 @@
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>13.00</Tarifa>
-                    <Monto>13000</Monto>
+                    <Monto>1469000</Monto>
                 </Impuesto>
-                <MontoTotalLinea>126000</MontoTotalLinea>
+                <MontoTotalLinea>100000</MontoTotalLinea>
             </LineaDetalle>
         </DetalleServicio>
         <ResumenFactura>
@@ -64,10 +64,10 @@
             </CodigoTipoMoneda>
             <TotalServGravados>13000</TotalServGravados>
             <TotalMercanciasGravadas>100000</TotalMercanciasGravadas>
-            <TotalGravado></TotalGravado>
+            <TotalGravado>00</TotalGravado>
             <TotalVenta>113000</TotalVenta>
-            <TotalVentaNeta></TotalVentaNeta>
+            <TotalVentaNeta>00</TotalVentaNeta>
             <TotalImpuesto>13000</TotalImpuesto>
-            <TotalOtrosCargos></TotalOtrosCargos>
+            <TotalOtrosCargos>00</TotalOtrosCargos>
             <TotalComprobante>126000</TotalComprobante>
         </ResumenFactura></FacturaElectronica>

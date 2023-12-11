@@ -14,7 +14,7 @@ const getAllPaymentMethods = (req, res) => {
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
   
-        res.json({ dniTypes: results });
+        res.json({ paymentMethods: results });
     });
   };
 
@@ -31,7 +31,7 @@ const getAllPaymentMethods = (req, res) => {
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
   
-        res.json({ dniTypes: results });
+        res.json({ salesConditions: results });
     });
   };
 const getAllDniTypes = (req, res) => {
