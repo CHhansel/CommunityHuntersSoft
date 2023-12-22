@@ -39,3 +39,16 @@ export const haciendaService = {
         }
     }
 };
+export const invoiceService = {
+    createInvoice: async (token, invoiceData) => {
+        try {
+            const response = await DAC_API.post('atv/create-invoice/', invoiceData, {
+                headers: { 'Authorization': token }
+            });
+            return response.data; // devuelve los datos de la respuesta
+        } catch (error) {
+            console.error(`Error al crear la factura: `, error);
+            throw error; // Lanza el error para manejarlo más adelante
+        }
+    }
+};

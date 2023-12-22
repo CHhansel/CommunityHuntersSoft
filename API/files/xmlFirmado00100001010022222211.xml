@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Clave>50620122300011693011400100001010022222211158379673</Clave>
+        <CodigoActividad>552004</CodigoActividad>
+        <NumeroConsecutivo>00100001010022222211</NumeroConsecutivo>
+        <FechaEmision>2023-12-20T23:54:25.617Z</FechaEmision>
+        <Emisor>
+            <Nombre>Andrés Francisco Zamora Soto</Nombre>
+            <Identificacion>
+                <Tipo>01</Tipo>
+                <Numero>116930114</Numero>
+            </Identificacion>
+            <NombreComercial>Community Hunters</NombreComercial>
+            <Ubicacion>
+                <Provincia>1</Provincia>
+                <Canton>01</Canton>
+                <Distrito>02</Distrito>
+                <OtrasSenas>Torres de Paseo Colón, Torre A, Oficina A-504.</OtrasSenas>
+            </Ubicacion>
+            <Telefono>
+                <CodigoPais>506</CodigoPais>
+                <NumTelefono>70945578</NumTelefono>
+            </Telefono>
+            <CorreoElectronico>info@communityhunters.com</CorreoElectronico>
+        </Emisor>
+        <Receptor>
+            <Nombre>HANSEL MAURICIO CALDERON CALVO</Nombre>
+            <Identificacion>
+                <Tipo>01</Tipo>
+                <Numero>304830937</Numero>
+            </Identificacion>
+            <CorreoElectronico>hansel@communityhunters.com</CorreoElectronico>
+        </Receptor>
+        <CondicionVenta>01</CondicionVenta>
+        <MedioPago>01</MedioPago>
+        <DetalleServicio>
+            <LineaDetalle>
+                <NumeroLinea>1</NumeroLinea>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>1</Cantidad>
+                <UnidadMedida>Unid</UnidadMedida>
+                <Detalle>Descripción del Producto 1</Detalle>
+                <PrecioUnitario>100</PrecioUnitario>
+                <MontoTotal>100</MontoTotal>
+                <SubTotal>100</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>08</CodigoTarifa>
+                    <Tarifa>13.00</Tarifa>
+                    <Monto>13</Monto>
+                </Impuesto>
+                <MontoTotalLinea>113</MontoTotalLinea>
+            </LineaDetalle>
+            <LineaDetalle>
+                <NumeroLinea>2</NumeroLinea>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>1</Cantidad>
+                <UnidadMedida>Unid</UnidadMedida>
+                <Detalle>Descripción del Producto 2</Detalle>
+                <PrecioUnitario>200</PrecioUnitario>
+                <MontoTotal>200</MontoTotal>
+                <SubTotal>200</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>08</CodigoTarifa>
+                    <Tarifa>0.00</Tarifa>
+                    <Monto>0</Monto>
+                </Impuesto>
+                <MontoTotalLinea>200</MontoTotalLinea>
+            </LineaDetalle>
+            <LineaDetalle>
+                <NumeroLinea>3</NumeroLinea>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>1</Cantidad>
+                <UnidadMedida>Unid</UnidadMedida>
+                <Detalle>Descripción del Producto 3</Detalle>
+                <PrecioUnitario>50</PrecioUnitario>
+                <MontoTotal>50</MontoTotal>
+                <SubTotal>50</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>08</CodigoTarifa>
+                    <Tarifa>13.00</Tarifa>
+                    <Monto>6.5</Monto>
+                </Impuesto>
+                <MontoTotalLinea>56.5</MontoTotalLinea>
+            </LineaDetalle></DetalleServicio>
+    <ResumenFactura>
+        <CodigoTipoMoneda>
+            <CodigoMoneda>CRC</CodigoMoneda>
+            <TipoCambio>1</TipoCambio>
+        </CodigoTipoMoneda>
+        <TotalServGravados>0</TotalServGravados> <!-- Ajustar según corresponda -->
+        <TotalMercanciasGravadas>350.00</TotalMercanciasGravadas>
+        <TotalGravado>350.00</TotalGravado>
+        <TotalVenta>350.00</TotalVenta>
+        <TotalVentaNeta>350.00</TotalVentaNeta>
+        <TotalImpuesto>19.50</TotalImpuesto>
+        <TotalOtrosCargos>0.00</TotalOtrosCargos>
+        <TotalComprobante>369.50</TotalComprobante>
+    </ResumenFactura>
+<ds:Signature Id="id-b410f1eccf49" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference Id="Reference-7e8bb6d7-d503-4b50-84ac-4ab6be0ddd04" URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>y7gHPFfYtXze+Ps/A3KgOcVVoh5PvNlBuIqL/n1u0ec=</ds:DigestValue></ds:Reference><ds:Reference URI="#xades-id-b410f1eccf49" Type="http://uri.etsi.org/01903#SignedProperties"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>5NX5XAC80Pubg2qp9ktFEWPYD/e0YBiF3Jhk+Iy+bhk=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>TzzJxHK9KmRgJwSRnGe/YTs+Yq9JvrqqU0sr1S0A+FsxYGvnNqlRtH2mSE/WOMjPVyD+dm61okqyHjszBxqUZvkUHzcqtl5hFLzERfnunPWNhC/x2XC14rzzoymyyQjaFy6ltanCSbuyz2/XWrYUF8WQSZVfcBY9y9ogbxYgCkYTfZujoNQQ+CIXsJjqZqw9ssisKAUqmg0XchYZPww43zovoRGutIZnOmBC7BDSwez4xzCQPSTTgAivMi777WlBpzrEeEy7wBthZJgFG6COlszJZbn3LbPB3cAgpaLaFVoyxULJDhblYh7LBa64lOK5L1rOkVd2DzfVAPJL54t8dg==</ds:SignatureValue><ds:KeyInfo><ds:KeyValue><ds:RSAKeyValue><ds:Modulus>uUAIIKd/H1RwFLfNa74FVS4s2xWpnpyU2wAXbYeV8ddsiyOiqUt5jRsBjDgZHFV0Ir9Gr7Z79qXUEUWgpueijAAMguaamw6fv7q/V+U0ehz4qEGWD7Jq7d06bkbI0KChjLZgNTwJWo2N5HE1EeD4R7G5gBuCzeXQLFkzKRVAX+9Vl8NrSJ7rfeN3bF5wpilMXSxAAXFWao2q4kVoAa/r0UUA6GU/ldReC+dHfk+bqHdyrXXFnyoy2Ko3xJFINhLixUEaixk3NWiigDUlqsOhEYoWdK3Iwf5km55IK4iqs7IHVzBs+k8C6OOkpvrJwqHRNMJZb+IzCOVMduV0ZxolvQ==</ds:Modulus><ds:Exponent>AQAB</ds:Exponent></ds:RSAKeyValue></ds:KeyValue><ds:X509Data><ds:X509Certificate>MIIFXzCCA0egAwIBAgIGAYyFQUYAMA0GCSqGSIb3DQEBCwUAMGwxCzAJBgNVBAYTAkNSMSkwJwYDVQQKDCBNSU5JU1RFUklPIERFIEhBQ0lFTkRBIC0gU0FOREJPWDEMMAoGA1UECwwDREdUMSQwIgYDVQQDDBtDQSBQRVJTT05BIEZJU0lDQSAtIFNBTkRCT1gwHhcNMjMxMjIwMDMyNDU2WhcNMjcxMjE5MDMyNDU2WjCBpzEZMBcGA1UEBRMQQ1BGLTAxLTE2OTMtMDExNDEUMBIGA1UEBAwLWkFNT1JBIFNPVE8xGTAXBgNVBCoMEEFORFJFUyBGUkFOQ0lTQ08xCzAJBgNVBAYTAkNSMRcwFQYDVQQKDA5QRVJTT05BIEZJU0lDQTEMMAoGA1UECwwDQ1BGMSUwIwYDVQQDDBxBTkRSRVMgRlJBTkNJU0NPIFpBTU9SQSBTT1RPMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuUAIIKd/H1RwFLfNa74FVS4s2xWpnpyU2wAXbYeV8ddsiyOiqUt5jRsBjDgZHFV0Ir9Gr7Z79qXUEUWgpueijAAMguaamw6fv7q/V+U0ehz4qEGWD7Jq7d06bkbI0KChjLZgNTwJWo2N5HE1EeD4R7G5gBuCzeXQLFkzKRVAX+9Vl8NrSJ7rfeN3bF5wpilMXSxAAXFWao2q4kVoAa/r0UUA6GU/ldReC+dHfk+bqHdyrXXFnyoy2Ko3xJFINhLixUEaixk3NWiigDUlqsOhEYoWdK3Iwf5km55IK4iqs7IHVzBs+k8C6OOkpvrJwqHRNMJZb+IzCOVMduV0ZxolvQIDAQABo4HKMIHHMB8GA1UdIwQYMBaAFEYj0kRPv1dZIeS/k9Uwm5VM4/eHMB0GA1UdDgQWBBQ5F4Fru6Vehyss0TV4HqmhCmo2MjALBgNVHQ8EBAMCBsAwEwYDVR0lBAwwCgYIKwYBBQUHAwQwYwYIKwYBBQUHAQEEVzBVMFMGCCsGAQUFBzAChkdodHRwczovL3BraS5jb21wcm9iYW50ZXNlbGVjdHJvbmljb3MuZ28uY3Ivc3RhZy9pbnRlcm1lZGlhdGUtcGYtcGVtLmNydDANBgkqhkiG9w0BAQsFAAOCAgEABZPE9+KuyV32zoun9h1yF54ZlJ/UwjzOPadbPH1Ka1ktGWA9MFDvlVUxmxFvdbkoZSdlWhkxaSTt0ohLVhe6wqLgEwHi0joQSgBHTocMoD/SDJUrYQexdNs3xo/iBi5DUGLQ1GT/faYSR7xFjYl1NBcsf7vKYWCB4uPM/TCTD7riFDbrmejwUR16YOlj4Omy0Dm7PxUhL16mKQVKMGDRGHVpxetWu9KgjbYEVFKJFBsev1kl+PW5wYgvlsBCmbrzN10pqeMctRgt5hnCw6mzVcedBuskAvPAVV5GUOi2Dhz3H+cv5U48kyu5E8RrejIGQGp/FuMXTPnVRjBXsLB7Qqu5vWJ034LbemGil2seWrxjkenxc8mPRWzyoZ5gqcLVSy81GO/duZyjsEsiwIu/fGN4Dg5Ee1+V4bHv8H5I1nLlVCDptkHvC6CLvYIhuQf2f5AB5Y6WSKlDczxM7cSOFGhlcsbhLwp6GYI6qrBF1P3AFSVBQl7kcYOohbdyrk/V2qKFDS47+4Cyek7ufA9fsrIuyXQLgvbOyqbs3n53hGUrB/KW1RCq/DSGGBFZJP6mCaLKjY/dPxI6myKq3HYcqfyCFuXU/ShbHI1N22LAQdovowBWLEMGeZnp/3jmgfIXZObIRrr/bQy/VQzoaeuz05NH03aNm/EkH6j585H/n5w=</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties Target="#id-b410f1eccf49" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"><xades:SignedProperties Id="xades-id-b410f1eccf49"><xades:SignedSignatureProperties><xades:SigningTime>2023-12-20T23:54:26.582Z</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>N0D6xlY+Ya6F/2Ozoz/8fryMtw0gyOT0RlMPq21mXgE=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>C=CR, O=MINISTERIO DE HACIENDA - SANDBOX, OU=DGT, CN=CA PERSONA FISICA - SANDBOX</ds:X509IssuerName><ds:X509SerialNumber>1703042696704</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:SignaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:Identifier Qualifier="OIDAsURI">https://tribunet.hacienda.go.cr/docs/esquemas/2016/v4/Resolucion%20Comprobantes%20Electronicos%20%20DGT-R-48-2016.pdf</xades:Identifier></xades:SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>XP3WH17Ax7dgban74dCDMegMDyw=</ds:DigestValue></xades:SigPolicyHash></xades:SignaturePolicyId></xades:SignaturePolicyIdentifier><xades:SignerRole><xades:ClaimedRoles><xades:ClaimedRole>ObligadoTributario</xades:ClaimedRole></xades:ClaimedRoles></xades:SignerRole></xades:SignedSignatureProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></FacturaElectronica>

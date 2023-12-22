@@ -340,6 +340,8 @@ const recoveryPassword = (req, res) => {
     });
   });
 };
+
+
 const resetPassword = (req, res) => {
   const { token, newPassword } = req.body;
 
@@ -402,6 +404,42 @@ const resetPassword = (req, res) => {
     res.status(500).json({ error: "Error interno del servidor." });
   }
 };
+const sendInvoiceByEmail = async (comercialName, email, nombre, xmlFilePath, pdfFilePath, voucherXmlFilePath) => {
+  // Configura las opciones del correo electrónico
+  const mailOptions = {
+    from: "hansel.b51323@gmail.com",
+    to: email,
+    subject: "Factura " + comercialName,
+    text: "Hola "+ nombre +" en este correo encuentra adjuntos la factura y los comprobantes correspondientes.",
+    attachments: [
+      {
+        filename: 'factura.xml',
+        path: xmlFilePath // La ruta al archivo XML de la factura
+      },
+      {
+        filename: 'factura.pdf',
+        path: pdfFilePath // La ruta al archivo PDF de la factura
+      },
+      {
+        filename: 'comprobante.xml',
+        path: voucherXmlFilePath // La ruta al archivo XML del comprobante
+      }
+    ]
+  };
+
+  try {
+    // Envía el correo electrónico
+    let info = await transporter.sendMail(mailOptions);
+    console.log("Message sent: %s", info.messageId);
+
+    // Puedes retornar algo aquí si es necesario, por ejemplo, una confirmación
+    return { message: "Correo electrónico con la factura enviado con éxito." };
+  } catch (error) {
+    console.error("Error al enviar el correo electrónico:", error);
+    throw error; // Puedes lanzar el error o manejarlo como prefieras
+  }
+};
+
 module.exports = {
   login,
   createUser,
@@ -410,4 +448,5 @@ module.exports = {
   createDniType,
   recoveryPassword,
   resetPassword,
+  sendInvoiceByEmail
 };

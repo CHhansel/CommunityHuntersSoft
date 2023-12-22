@@ -5,13 +5,19 @@ import PopUp from "../../components/popUp";
 
 import PropertyData from "./PropertyData";
 import BillData from "./BillData";
+import { selectUser } from "../../store/authSlice";
+import { useSelector } from "react-redux";
+import { invoiceService } from "../../services/billingServices";
 
 const Billing = () => {
+  const { user, token } = useSelector(selectUser);
   const [lines, setLines] = useState([]);
 
   const [client, setClient] = useState({});
   const [property, setProperty] = useState({});
-  const [billParams, setBillParams] = useState({});
+  //const [billParams, setBillParams] = useState({});
+  const [payCondition, setpayCondition] = useState("01");
+  const [paymentMethod, setpaymentMethod] = useState("01")
   const [companyInfo, setCompanyInfo] = useState({});
   const [cabys, setCabys] = useState();
   const [isPopUpOpen, setPopUpOpen] = useState(false);
@@ -31,8 +37,8 @@ const Billing = () => {
       "product_type": "Tipo 1",
       "price": 100.00,
       "quantity": 1,
-      "cabys_code": "12345",
-      "unit_of_measure": "Unidad",
+      "cabys_code": "0111100009900",
+      "unit_of_measure": "Unid",
       "tax_rate": 13.00,
       "created_at": "2023-12-08T12:00:00",
       "updated_at": "2023-12-08T12:00:00"
@@ -44,9 +50,9 @@ const Billing = () => {
       "product_type": "Tipo 2",
       "price": 200.00,
       "quantity": 1,
-      "cabys_code": "67890",
-      "unit_of_measure": "Paquete",
-      "tax_rate": 0.00,
+      "cabys_code": "0111100009900",
+      "unit_of_measure": "Unid",
+      "tax_rate": 13.00,
       "created_at": "2023-12-08T12:00:00",
       "updated_at": "2023-12-08T12:00:00"
     },
@@ -57,8 +63,8 @@ const Billing = () => {
       "product_type": "Tipo 3",
       "price": 50.00,
       "quantity": 1,
-      "cabys_code": "54321",
-      "unit_of_measure": "Caja",
+      "cabys_code": "0111100009900",
+      "unit_of_measure": "Unid",
       "tax_rate": 13.00,
       "created_at": "2023-12-08T12:00:00",
       "updated_at": "2023-12-08T12:00:00"
@@ -66,48 +72,54 @@ const Billing = () => {
   ];
   const prepareInvoiceData = () => {
     const invoiceData = {
-      property: {
-        id: property.id,
-        rentAmount: property.rent_amount,
-        depositAmount: property.deposit_amount,
-        description: property.description,
-        startDate: property.start_date,
-        endDate: property.end_date,
-        taxAmount: property.tax_amount,
-        totalAmount: property.total_amount,
-      },
-      receptor: {
+      company_id: user.company_id,
+      Cliente: {
         id: client.customer_id,
-        name: client.name,
-        lastname: client.lastname,
-        dniType: client.dni_type_description,
-        customerDni: client.customer_dni,
+        nombre: client.name,
+        tipoIdentificacion: client.dni_type_id,
+        idenficacion: client.customer_dni,
+        email: client.email
       },
-      paymentDetails: {
-        issueDate: property.creation_date,
-        paymentDate: property.payment_date,
-        paymentMethod: property.payment_method,
-      },
+      CondicionDeVenta: payCondition,
+      MedioDePago: paymentMethod,
+      LineaDeDetalle: products
     };
 
 
     console.log(invoiceData);
     return invoiceData;
   };
+
+  const invoice = async e => {
+    //e.preventDefault();
+    try {
+
+      // Prepara los datos de la factura
+      const invoiceData = prepareInvoiceData();
+  
+      // Llama al servicio de facturación y espera por la respuesta
+      const response = await invoiceService.createInvoice(token, invoiceData);
+      
+      console.log('Factura creada con éxito', response);
+  
+      // Aquí podrías redirigir al usuario o mostrar un mensaje de éxito
+    } catch (error) {
+      console.error('Error al crear la factura', error);
+      // Aquí podrías manejar el error, por ejemplo, mostrar un mensaje al usuario
+    }
+
+  } 
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full ">
       <h4>1. Informacion del Cliente</h4>
-      <button onClick={togglePopUp}>Mostrar PopUp</button>
-      <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
-        <CabysSearch setCabys={setCabys}></CabysSearch>
-      </PopUp>
+
       <ClientData clientData={client} setClient={setClient} />
       <h4>2. Lineas de detalle</h4>
       <PropertyData setProperty={setProperty}></PropertyData>
       <h4>3. Datos de Factura</h4>
-      <BillData products={products} setBillParams="setBillParams"></BillData>
+      <BillData products={products} setpayCondition={setpayCondition} setpaymentMethod={setpaymentMethod}></BillData>
       <div>
-        <button className="button-success" onClick={()=>prepareInvoiceData()}>Facturar</button>
+        <button className="button-success" onClick={()=>invoice()}>Facturar</button>
       </div>
     </div>
   );

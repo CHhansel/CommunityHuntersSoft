@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { formatCurrency } from "../../../utils/currency";
 
 // eslint-disable-next-line react/prop-types
-const BillData = ({ products }) => {
+const BillData = ({ products, setpayCondition, setpaymentMethod }) => {
   const [productData, setProductData] = useState(null);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [discountReason, setDiscountReason] = useState("");
@@ -46,28 +46,31 @@ const BillData = ({ products }) => {
   if (!productData) {
     return <div>Cargando...</div>;
   }
-  const totals = products.reduce((acc, product) => {
-    const totalProductPrice = product.price * product.quantity;
-    const isTaxed = product.tax_rate > 0;
+  const totals = products.reduce(
+    (acc, product) => {
+      const totalProductPrice = product.price * product.quantity;
+      const isTaxed = product.tax_rate > 0;
 
-    acc.totalCantidadProductos += product.quantity;
-    acc.totalVenta += totalProductPrice;
+      acc.totalCantidadProductos += product.quantity;
+      acc.totalVenta += totalProductPrice;
 
-    if (isTaxed) {
-      acc.totalGravado += totalProductPrice;
-      acc.impuestoTotal += totalProductPrice * (product.tax_rate / 100);
-    } else {
-      acc.totalExento += totalProductPrice;
+      if (isTaxed) {
+        acc.totalGravado += totalProductPrice;
+        acc.impuestoTotal += totalProductPrice * (product.tax_rate / 100);
+      } else {
+        acc.totalExento += totalProductPrice;
+      }
+
+      return acc;
+    },
+    {
+      totalCantidadProductos: 0,
+      totalVenta: 0,
+      totalGravado: 0,
+      totalExento: 0,
+      impuestoTotal: 0,
     }
-
-    return acc;
-  }, {
-    totalCantidadProductos: 0,
-    totalVenta: 0,
-    totalGravado: 0,
-    totalExento: 0,
-    impuestoTotal: 0
-  });
+  );
 
   // Asumiendo que no hay descuentos por ahora
   const descuentoTotal = 0;
@@ -92,7 +95,10 @@ const BillData = ({ products }) => {
             <select
               id="saleCondition"
               value={selectedCondition}
-              onChange={(e) => setSelectedCondition(e.target.value)}
+              onChange={(e) => {
+                setSelectedCondition(e.target.value);
+                setpayCondition(e.target.value);
+              }}
               className="input-text"
             >
               {saleConditions.map((condition) => (
@@ -107,7 +113,10 @@ const BillData = ({ products }) => {
             <select
               id="paymentMethod"
               value={selectedpaymentMethod}
-              onChange={(e) => setSelectedpaymentMethod(e.target.value)}
+              onChange={(e) => {
+                setSelectedpaymentMethod(e.target.value);
+                setpaymentMethod(e.target.value);
+              }}
               className="input-text"
             >
               {paymentMethods.map((method) => (
@@ -168,15 +177,15 @@ const BillData = ({ products }) => {
             </tr>
           </tbody>
         </table> */}
-            <div>
-      <p>Cantidad de productos: {totals.totalCantidadProductos}</p>
-      <p>Total Gravado: {totals.totalGravado.toFixed(2)}</p>
-      <p>Total Exento: {totals.totalExento.toFixed(2)}</p>
-      <p>Total Venta: {totals.totalVenta.toFixed(2)}</p>
-      <p>Descuento Total: {descuentoTotal.toFixed(2)}</p>
-      <p>Total Venta Neta: {totals.totalVentaNeta.toFixed(2)}</p>
-      <p>Impuesto Total: {totals.impuestoTotal.toFixed(2)}</p>
-    </div>
+        <div>
+          <p>Cantidad de productos: {totals.totalCantidadProductos}</p>
+          <p>Total Gravado: {totals.totalGravado.toFixed(2)}</p>
+          <p>Total Exento: {totals.totalExento.toFixed(2)}</p>
+          <p>Total Venta: {totals.totalVenta.toFixed(2)}</p>
+          <p>Descuento Total: {descuentoTotal.toFixed(2)}</p>
+          <p>Total Venta Neta: {totals.totalVentaNeta.toFixed(2)}</p>
+          <p>Impuesto Total: {totals.impuestoTotal.toFixed(2)}</p>
+        </div>
       </div>
     )
   );

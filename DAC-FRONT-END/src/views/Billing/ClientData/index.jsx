@@ -46,7 +46,7 @@ const ClientData = ({ clientData, setClient }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    //setClient(formData);
+    setClient((prev) => ({ ...prev, [name]: value }));
   };
   const handleDniNumber = (e) => {
     const { name, value } = e.target;
@@ -64,6 +64,13 @@ const ClientData = ({ clientData, setClient }) => {
             ...prev,
             name: data.nombre,
             dni_type_id: data.tipoIdentificacion,
+            customer_dni :value
+          }));
+          setClient((prev) => ({
+            ...prev,
+            name: data.nombre,
+            dni_type_id: data.tipoIdentificacion,
+            customer_dni: value
           }));
         })
         .catch((error) => console.error(error));
