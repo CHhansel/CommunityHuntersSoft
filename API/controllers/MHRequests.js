@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const pug = require('pug');
+const puppeteer = require('puppeteer');
 
 const { generateXML } = require("../utils/genXML");
 const { getClave } = require("../utils/getClave");
@@ -10,6 +12,7 @@ const { createXML } = require("../utils/createXML");
 const { sendInvoiceByEmail } = require("./auth");
 
 
+/** Obtener token */
 async function getToken(company_id) {
   console.log("company id ", company_id);
   return new Promise((resolve, reject) => {
@@ -204,12 +207,8 @@ const getCompanyData = (companyId) => {
           Canton: result.canton,
           Distrito: result.district,
           direccionExacta: result.exact_address,
-          CodigoTelefono: result.phone
-            ? result.phone.substring(0, result.phone.indexOf("-"))
-            : "",
-          Telefono: result.phone
-            ? result.phone.substring(result.phone.indexOf("-") + 1)
-            : "",
+          codigoTelefono: result.country_code,
+          Telefono: result.phone,
           correo: result.email,
         };
 
@@ -243,21 +242,20 @@ function saveXMLToFile(xmlString, filename) {
 
 // Función para enviar la factura a Hacienda
 const enviarFacturaHacienda = async (data, companyId, signedXml) => {
+  await generarFacturaPDF(data);
   const token = await getToken(companyId);
-  console.log("clave es ", data.KeyXml);
-  console.log("datos de data en enviarFactura");
   try {
     const xmlBase64 = Buffer.from(signedXml).toString("base64");
     const jsonBody = {
       clave: data.KeyXml,
       fecha: data.Fecha,
       emisor: {
-        tipoIdentificacion: "01",
-        numeroIdentificacion: "116930114",
+        tipoIdentificacion: data.Emisor.tipoDeIdentificacion,
+        numeroIdentificacion: data.Emisor.identificacion,
       },
       receptor: {
-        tipoIdentificacion: "01",
-        numeroIdentificacion: "304830937",
+        tipoIdentificacion: Data.Cliente.tipoDeIdentificacion,
+        numeroIdentificacion: Data.Cliente.identificacion,
       },
       comprobanteXml: xmlBase64,
     };
@@ -276,7 +274,9 @@ const enviarFacturaHacienda = async (data, companyId, signedXml) => {
     // Aquí manejas la respuesta de la API de Hacienda
     if (response.status === 202) {
       // Factura enviada con éxito
-
+      console.log("la data de la factura es", data);
+      console.log("factura enviada con exito", response);
+      // guardar en bd
     } else {
       // Manejar respuestas inesperadas
       console.log(response);
@@ -291,7 +291,7 @@ const enviarFacturaHacienda = async (data, companyId, signedXml) => {
     //throw error;
   }
 };
-
+/**arquitect */
 const createInvoice = async (req, res) => {
   const {
     company_id,
@@ -321,10 +321,10 @@ const createInvoice = async (req, res) => {
       "116930114",
       "normal",
       "506",
-      "22222222",
+      "32222222",
       "58379673"
     );
-    console.log("consecutivo es ", consecutivo);
+
     let fechaActual = new Date();
     let fechaISO = fechaActual.toISOString();
 
@@ -380,5 +380,24 @@ const createInvoice = async (req, res) => {
     res.status(500).json({ error: error.message, data });
   }
 };
+
+// Suponiendo que esta función está correctamente definida en tu entorno
+async function generarFacturaPDF(datosFactura) {
+  const compiledPug = pug.compileFile(path.join(__dirname, '../utils/BillTemplates', 'bill.pug'));
+  const html = compiledPug(datosFactura);
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(html);
+
+  const widthPixels = 80 / 25.4 * 96; // Convertir 80 mm a píxeles
+  await page.pdf({
+    path: `factura${datosFactura.KeyXml}.pdf`,
+    width: `${widthPixels}px`,
+    printBackground: true,
+    // No se especifica la altura para que sea automática
+});
+  await browser.close();
+}
 module.exports = { createInvoice };
 

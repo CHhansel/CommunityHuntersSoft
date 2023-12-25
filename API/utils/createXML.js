@@ -1,3 +1,5 @@
+const { jsbn } = require("node-forge");
+
 function createXML(datosFactura) {
   // Calcular totales
   let totalMercanciasGravadas = 0;
@@ -40,7 +42,7 @@ function createXML(datosFactura) {
                 <OtrasSenas>${datosFactura.Emisor.direccionExacta}</OtrasSenas>
             </Ubicacion>
             <Telefono>
-                <CodigoPais>506</CodigoPais>
+                <CodigoPais>${datosFactura.Emisor.codigoTelefono}</CodigoPais>
                 <NumTelefono>${datosFactura.Emisor.Telefono}</NumTelefono>
             </Telefono>
             <CorreoElectronico>info@communityhunters.com</CorreoElectronico>
@@ -121,3 +123,6 @@ function createXML(datosFactura) {
 module.exports = {
   createXML,
 };
+
+
+
