@@ -31,12 +31,12 @@ const Billing = () => {
   };
   const products = [
     {
-      "internal_code": "ABC123",
+      "internal_code": "749238473",
       "name": "Producto 1",
-      "description": "Descripción del Producto 1",
+      "description": "Galleta Maria",
       "product_type": "Tipo 1",
-      "price": 100.00,
-      "quantity": 1,
+      "price": 1350.00,
+      "quantity": 2,
       "cabys_code": "0111100009900",
       "unit_of_measure": "Unid",
       "tax_rate": 13.00,
@@ -44,12 +44,12 @@ const Billing = () => {
       "updated_at": "2023-12-08T12:00:00"
     },
     {
-      "internal_code": "DEF456",
+      "internal_code": "809534543",
       "name": "Producto 2",
-      "description": "Descripción del Producto 2",
+      "description": "Leche Dos pinos 1.5 lts",
       "product_type": "Tipo 2",
-      "price": 200.00,
-      "quantity": 1,
+      "price": 1545.00,
+      "quantity": 3,
       "cabys_code": "0111100009900",
       "unit_of_measure": "Unid",
       "tax_rate": 13.00,
@@ -57,11 +57,11 @@ const Billing = () => {
       "updated_at": "2023-12-08T12:00:00"
     },
     {
-      "internal_code": "GHI789",
+      "internal_code": "805934552",
       "name": "Producto 3",
-      "description": "Descripción del Producto 3",
+      "description": "Atun Calvo",
       "product_type": "Tipo 3",
-      "price": 50.00,
+      "price": 900.00,
       "quantity": 1,
       "cabys_code": "0111100009900",
       "unit_of_measure": "Unid",

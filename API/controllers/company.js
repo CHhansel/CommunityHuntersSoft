@@ -160,5 +160,33 @@ const updateCompanyInfo = (req, res) => {
         res.json({ message: "Compañía actualizada exitosamente" });
     });
 };
+const getCompanyData = (req, res) => {
+    const companyId = req.params.companyId; // Asumiendo que el ID de la compañía viene como un parámetro en la URL
 
-module.exports = { updateCompanyInfo, createCompanyCredentials,getCompanyCredentialsByCompanyId  };
+    connection.query(
+        `
+        SELECT 
+            *
+        FROM 
+            company_address_view
+        WHERE 
+            status = 'ACTIVE'
+            AND id = ?`,
+        [companyId],
+        (error, results) => {
+            if (error) {
+                console.error('Error al obtener los datos de la compañía:', error);
+                return res.status(500).json({ error: 'Error interno del servidor' });
+            }
+            if (results.length === 0) {
+                return res.status(404).json({ error: "Company not found" });
+            }
+
+            // Retornar los resultados tal cual
+            res.json(results[0]);
+        }
+    );
+};
+
+
+module.exports = { updateCompanyInfo, createCompanyCredentials,getCompanyCredentialsByCompanyId, getCompanyData  };

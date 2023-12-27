@@ -3,6 +3,7 @@ import UserConfig from "../../views/Admin/UserConfig";
 import Roles from "../../views/Admin/Roles";
 import CompanySettings from "../../views/Admin/CompanySettings";
 import ATVSettings from "../../views/Admin/ATVSettings";
+import InvoiceCustomization from "../../views/Admin/InvoiceCustomization";
 
 const ConfigRouter = () => {
   const url = useResolvedPath("").pathname;
@@ -35,6 +36,12 @@ const ConfigRouter = () => {
         >
           Roles
         </Link>
+        <Link
+          className={`ease-out duration-500 my-1 px-6 py-3 border-[0.1px] border-zinc-700 rounded-lg text-center ${location.pathname.includes(`${url}/invoice`) ? 'bg-gray-900 text-white' : 'hover:bg-gray-900 hover:text-white'}`}
+          to={`${url}/invoice`}
+        >
+          Factura
+        </Link>
 
       </div>
       <div className="grow ">
@@ -43,6 +50,7 @@ const ConfigRouter = () => {
           <Route path="/roles" element={<Roles />} />
           <Route path="/company-settings" element={<ATVSettings />} />
           <Route path="/atv-settings" element={<CompanySettings/>} />
+          <Route path="/invoice" element={<InvoiceCustomization/>} />
         </Routes>
       </div>
     </div>

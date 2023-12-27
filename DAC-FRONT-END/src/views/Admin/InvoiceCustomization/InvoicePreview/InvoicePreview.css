@@ -1,0 +1,75 @@
+.invoice-preview {
+    font-size: 12px;
+    padding: 40px 5px;
+   
+    color: black;
+    border: 1px solid #ddd;
+    margin: 20px;
+    width: 300px;
+    background-image: url("../../../../assets/textura-blanca.jpg");
+
+  }
+  .invoice-preview header{
+  }
+  .invoice-preview header,
+  .invoice-preview section,
+  .invoice-preview footer {
+    margin-bottom: 20px;
+    
+  }
+  .break-number {
+    word-break: break-word;
+  }
+  .invoice-preview h1,
+  .invoice-preview h2 {
+    margin-bottom: 10px;
+  }
+  
+  .invoice-preview .table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .invoice-preview .thead,
+  .invoice-preview .tbody {
+    display: contents;
+  }
+  
+  .invoice-preview .tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .invoice-preview .th,
+  .invoice-preview .td {
+    padding: 5px;
+    text-align: left;
+  }
+  
+  .invoice-preview .sep {
+    height: 1px;
+    width: 100%;
+    margin: 2px 0;
+    border-bottom: 1px dashed black;
+  }
+  
+  .invoice-preview .center {
+    text-align: center;
+  }
+  
+  /* Botones y otros elementos interactivos */
+  .invoice-preview button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .invoice-preview button:hover {
+    background-color: #45a049;
+  }
+  

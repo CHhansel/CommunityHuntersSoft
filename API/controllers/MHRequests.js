@@ -320,8 +320,8 @@ const createInvoice = async (req, res) => {
       "fisico",
       "116930114",
       "normal",
-      "506",
-      "32222222",
+      companyData.country_code,
+      "33333322",
       "58379673"
     );
 
@@ -381,10 +381,13 @@ const createInvoice = async (req, res) => {
   }
 };
 
-// Suponiendo que esta función está correctamente definida en tu entorno
 async function generarFacturaPDF(datosFactura) {
+  // Leer el contenido del archivo CSS
+  const cssContent = fs.readFileSync(path.join(__dirname, '../utils/BillTemplates', 'Billstyles.css'), 'utf8');
+
+  // Compilar la plantilla Pug con el contenido del CSS
   const compiledPug = pug.compileFile(path.join(__dirname, '../utils/BillTemplates', 'bill.pug'));
-  const html = compiledPug(datosFactura);
+  const html = compiledPug({ ...datosFactura, css: cssContent });
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -396,7 +399,7 @@ async function generarFacturaPDF(datosFactura) {
     width: `${widthPixels}px`,
     printBackground: true,
     // No se especifica la altura para que sea automática
-});
+  });
   await browser.close();
 }
 module.exports = { createInvoice };

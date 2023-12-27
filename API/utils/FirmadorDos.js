@@ -21,3 +21,6 @@ async function firmarXml(pfxPath, password, xmlInputPath, xmlOutputPath) {
     fs.writeFileSync(xmlOutputPath, signedXml, 'utf8');
 }
 module.exports = firmarXml;
+
+
+

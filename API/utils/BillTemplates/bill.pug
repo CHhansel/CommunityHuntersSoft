@@ -4,9 +4,8 @@ html(lang="es")
     meta(charset="UTF-8")
     title Factura Electrónica
     // Incluir estilos CSS aquí
-    <style>
-     
-    </style>
+    style.
+      #{css}
   body
     header
       h1 #{Emisor.NombreComercial}
@@ -27,26 +26,31 @@ html(lang="es")
       p Fecha y Hora: #{Fecha}
       p Condición de Venta: #{CondicionDeVenta}
       p Medio de Pago: #{MedioDePago}
-table
-  thead
-    tr
-      th(colspan="2") Descripción
-    tr
-      th Código
-      th Producto
-      th Precio
-      th Cant.
-      th Total
-      th IVA
-  tbody
-    each item in LineaDeDetalle
-      tr
-        td #{item.internal_code}
-        td #{item.description}
-        td #{item.price}
-        td #{item.quantity}
-        td #{(item.quantity * item.price).toFixed(2)}
-        td #{(item.quantity * item.price * item.tax_rate / 100).toFixed(2)}
+    section
+      div.table 
+        div.thead 
+          div.tr
+            div.sep
+          div.tr
+            div.th(style="width: 60%;") Descripción
+            div.th(style="width: 40%;") Código
+          div.tr
+            div.th(style="width: 35%;") Precio
+            div.th(style="width: 15%;") Cant.
+            div.th(style="width: 35%;") Total
+            div.th(style="width: 15%;") IVA
+          div.tr
+            div.sep
+        div.tbody
+          each item in LineaDeDetalle
+            div.tr
+              div.td(style="width: 60%;")(colspan='2') #{item.description}
+              div.td(style="width: 40%;") #{item.internal_code}
+            div.tr
+              div.td(style="width: 35%;") #{item.price}
+              div.td(style="width: 15%;") x#{item.quantity}
+              div.td(style="width: 35%;") #{(item.quantity * item.price).toFixed(2)}
+              div.td(style="width: 15%;") #{item.tax_rate}
 
     footer
       if OtrosCargos
