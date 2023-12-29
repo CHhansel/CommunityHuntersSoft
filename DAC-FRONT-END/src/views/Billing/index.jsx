@@ -77,7 +77,7 @@ const Billing = () => {
         id: client.customer_id,
         nombre: client.name,
         tipoIdentificacion: client.dni_type_id,
-        idenficacion: client.customer_dni,
+        identificacion: client.customer_dni,
         email: client.email
       },
       CondicionDeVenta: payCondition,

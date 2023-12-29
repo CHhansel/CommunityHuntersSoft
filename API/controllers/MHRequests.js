@@ -1,16 +1,13 @@
 const fs = require("fs");
 const path = require("path");
-const pug = require('pug');
-const puppeteer = require('puppeteer');
 
-const { generateXML } = require("../utils/genXML");
 const { getClave } = require("../utils/getClave");
 const connection = require("../config/db");
 const axios = require("axios");
 const firmarXml = require("../utils/FirmadorDos");
 const { createXML } = require("../utils/createXML");
 const { sendInvoiceByEmail } = require("./auth");
-
+const { generarFacturaPDF } = require("../utils/createPDF");
 
 /** Obtener token */
 async function getToken(company_id) {
@@ -60,121 +57,6 @@ async function getToken(company_id) {
   });
 }
 
-const createInvoiceviejo = async (req, res) => {
-  const { company_id, invoiceDetails } = req.body;
-  const paymentDetails = invoiceDetails.paymentDetails;
-  const clientData = invoiceDetails.clientData;
-  const propertyData = invoiceDetails.property;
-  //const token = getToken(company_id);
-  try {
-    // Obtener los datos de la compañía
-    const companyData = await getCompanyData(company_id);
-    console.log(companyData);
-    // Generar clave y consecutivo
-    const { clave, consecutivo } = getClave(
-      "FE",
-      "fisico",
-      "116930114",
-      "normal",
-      "506",
-      "15111118",
-      "58379673"
-    );
-    let fechaActual = new Date();
-    let fechaISO = fechaActual.toISOString();
-    const data = {
-      headDocument: "FacturaElectronica",
-      footerDocument: "FacturaElectronica",
-      KeyXml: clave, // La clave debería generarse según las especificaciones requeridas
-      DataEmisor: [
-        {
-          CodeActivity: "011802" || "", // Ejemplo de campo opcional
-          Name: companyData.name,
-          TypeIdentification: companyData.identification_type,
-          IdentificationNumber: companyData.identification_number,
-          TradeName: companyData.trade_name || "", // Ejemplo de campo opcional
-          Province: "1", // Estos detalles de ubicación podrían necesitar ser añadidos
-          Canton: "03",
-          District: "01",
-          Address: "residencial porton del prado casa 37d",
-          CodePhone: "506", // Deberás agregar el código de país si es necesario
-          Phone: companyData.phone,
-          Email: companyData.email,
-        },
-      ],
-      Consecutive: consecutivo,
-      DateDocument: fechaISO,
-      DocumentHead: [
-        {
-          TypeIdentification: clientData.dniType || "",
-          IdentificationNumber: clientData.customerDni || "",
-          NameClient: `${clientData.name} ${clientData.lastname}`,
-          Email: clientData.email || "",
-          TypePayment: paymentDetails.paymentMethod,
-          TotalServGravados: propertyData.taxAmount,
-          TotalMercanciasGravadas: propertyData.rentAmount,
-          TotalGravado: "00", // Calcular si es necesario
-          TotalVenta: propertyData.totalAmount,
-          TotalVentaNeta: "00", // Calcular si es necesario
-          TotalImpuesto: propertyData.taxAmount,
-          TotalOtrosCargos: "00", // Añadir si hay otros cargos
-          TotalComprobante: propertyData.totalAmount + propertyData.taxAmount, // Asumiendo que es la suma del total más impuestos
-        },
-      ],
-      DocumentDetail: [
-        {
-          // Detalles de la propiedad, se pueden replicar para múltiples ítems
-          Code: "7211100000100", // Este debe ser un código que identifique la propiedad o el servicio
-          CodeReference: "A001", // Un código de referencia para la propiedad o servicio
-          Quantity: "1", // Cantidad de servicios/productos, en este caso podría ser '1' por ser una propiedad
-          UnidMeasure: "Unid", // La unidad de medida, 'Unid' para 'unidad' es común para servicios
-          ProductDescription: propertyData.description,
-          Price: propertyData.rentAmount,
-          SubTotal: propertyData.totalAmount, // Sin impuestos
-          Discount: "0", // Asumiendo que no hay descuento
-          DetailDiscount: "",
-          Impuesto: propertyData.taxAmount,
-          MontoTotalLinea: propertyData.rentAmount, // Total incluyendo impuestos
-        },
-      ],
-    };
-    // Generar XML
-
-    const xml = generateXML(data);
-
-    const xmlFilename = "factura.xml"; // El nombre del archivo que deseas guardar
-    saveXMLToFile(xml, xmlFilename);
-
-    const xmlInputPath = path.join(__dirname, "..", "files", "factura.xml");
-    const xmlOutputPath = path.join(
-      __dirname,
-      "..",
-      "files",
-      `xmlFirmado${consecutivo}.xml`
-    );
-    const pfxPath = path.join(__dirname, "..", "files", "011693011422.p12");
-    // Guarda temporalmente el XML antes de firmarlo
-    fs.writeFileSync(xmlInputPath, xml, "utf8");
-    // Firma el XML
-    try {
-      //Firmador.firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
-      firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
-    } catch (error) {
-      console.error("Error al firmar el XML:", error);
-      return res
-        .status(500)
-        .json({ error: "Error interno del servidor al firmar la factura" });
-    }
-    // Leer el XML firmado
-    const signedXml = fs.readFileSync(xmlOutputPath, "utf8");
-    //const response = enviarFacturaHacienda(data, company_id, signedXml);
-    res.status(200).json(response);
-  } catch (error) {
-    console.error("Error en la creación de la factura:");
-    res.status(500).json({ error: error.message, data });
-  }
-};
-
 const getCompanyData = (companyId) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -198,6 +80,7 @@ const getCompanyData = (companyId) => {
         // Transformar los resultados a un nuevo formato
         const result = results[0];
         const Emisor = {
+          company_id: result.id,
           actividadComercial: result.economic_activity,
           nombre: result.name,
           tipoDeIdentificacion: result.identification_type,
@@ -217,6 +100,26 @@ const getCompanyData = (companyId) => {
     );
   });
 };
+
+async function createInvoice2(req, res) {
+  try {
+    const invoiceData = extractInvoiceData(req.body);
+    const companyData = await getCompanyData(invoiceData.company_id);
+    const invoiceKeyData = await generateInvoiceKey(companyData);
+    const xmlData = prepareXMLData(companyData, invoiceData, invoiceKeyData);
+    const signedXml = await signXML(xmlData);
+    const response = await sendInvoiceToHacienda(
+      signedXml,
+      companyData,
+      invoiceData
+    );
+    await sendInvoiceByEmail(invoiceData, signedXml);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error en la creación de la factura:", error);
+    res.status(500).json({ error: error.message });
+  }
+}
 
 function saveXMLToFile(xmlString, filename) {
   // Define el directorio donde deseas guardar los archivos XML
@@ -241,8 +144,12 @@ function saveXMLToFile(xmlString, filename) {
 }
 
 // Función para enviar la factura a Hacienda
-const enviarFacturaHacienda = async (data, companyId, signedXml) => {
-  await generarFacturaPDF(data);
+const enviarFacturaHacienda = async (
+  data,
+  companyId,
+  signedXml,
+  signedXmlPath
+) => {
   const token = await getToken(companyId);
   try {
     const xmlBase64 = Buffer.from(signedXml).toString("base64");
@@ -254,12 +161,11 @@ const enviarFacturaHacienda = async (data, companyId, signedXml) => {
         numeroIdentificacion: data.Emisor.identificacion,
       },
       receptor: {
-        tipoIdentificacion: Data.Cliente.tipoDeIdentificacion,
-        numeroIdentificacion: Data.Cliente.identificacion,
+        tipoIdentificacion: data.Cliente.tipoIdentificacion,
+        numeroIdentificacion: data.Cliente.identificacion,
       },
       comprobanteXml: xmlBase64,
     };
-
     const response = await axios.post(
       "https://api-sandbox.comprobanteselectronicos.go.cr/recepcion/v1/recepcion/",
       jsonBody,
@@ -274,8 +180,16 @@ const enviarFacturaHacienda = async (data, companyId, signedXml) => {
     // Aquí manejas la respuesta de la API de Hacienda
     if (response.status === 202) {
       // Factura enviada con éxito
-      console.log("la data de la factura es", data);
-      console.log("factura enviada con exito", response);
+      console.log("factura enviada con exito");
+      await generarFacturaPDF(data);
+      sendInvoiceByEmail(
+        data.Emisor.NombreComercial,
+        data.Cliente.email,
+        data.Cliente.nombre,
+        signedXmlPath,
+        signedXmlPath,
+        signedXmlPath
+      );
       // guardar en bd
     } else {
       // Manejar respuestas inesperadas
@@ -286,121 +200,139 @@ const enviarFacturaHacienda = async (data, companyId, signedXml) => {
       );
     }
   } catch (error) {
-    console.error("Error al enviar la factura:", error.response.headers);
+    console.error(
+      "Error al enviar la factura:",
+      error.response.headers.status,
+      error.response.headers.statusText
+    );
     return error;
     //throw error;
   }
 };
-/**arquitect */
+
 const createInvoice = async (req, res) => {
-  const {
-    company_id,
-    Cliente,
-    LineaDeDetalle,
-    OtrosCargos,
-    CondicionDeVenta,
-    MedioDePago,
-  } = req.body;
-  console.log(req.body);
-
-  //const paymentInfo = invoiceData.paymentDetails;
-
-  //const detailLine = invoiceData.detailLine;
-  //const token = getToken(company_id);
-
   try {
-    // Obtener los datos de la compañía
-    const companyData = await getCompanyData(company_id);
+    const invoiceData = req.body;
+    const companyData = await getCompanyData(invoiceData.company_id);
+    const invoiceKeyData = await generateInvoiceKey(companyData, "FE");
+    const xmlData = prepareXMLData(companyData, invoiceData, invoiceKeyData);
 
+    const xml = createXML(xmlData);
 
-    
-    // Generar clave y consecutivo
-    const { clave, consecutivo } = getClave(
-      "FE", // a futuro un middleware que redireccione a factura/tickete crear
-      "fisico",
-      "116930114",
-      "normal",
-      companyData.country_code,
-      "33333322",
-      "58379673"
-    );
-
-    let fechaActual = new Date();
-    let fechaISO = fechaActual.toISOString();
-
-    const data = {
-      Emisor: companyData,
-      Cliente: Cliente,
-      CodigoActividad: "552004",
-      headDocument: "FacturaElectronica",
-      footerDocument: "FacturaElectronica",
-      KeyXml: clave,
-      Consecutivo: consecutivo,
-      Fecha: fechaISO,
-      CondicionDeVenta: CondicionDeVenta,
-      MedioDePago: MedioDePago,
-      LineaDeDetalle: LineaDeDetalle,
-      OtrosCargos: OtrosCargos,
-    };
-    // Generar XML
-
-    console.log("data es ", data);
-    const xml = createXML(data);
-    const xmlFilename = "factura.xml"; // El nombre del archivo que deseas guardar
+    const xmlFilename = `factura${invoiceKeyData.consecutivo}.xml`; // El nombre del archivo que deseas guardar
     saveXMLToFile(xml, xmlFilename);
-    
+
     const xmlInputPath = path.join(__dirname, "..", "files", "factura.xml");
     const xmlOutputPath = path.join(
       __dirname,
       "..",
       "files",
-      `xmlFirmado${consecutivo}.xml`
-      );
-      const pfxPath = path.join(__dirname, "..", "files", "011693011422.p12");
-      // Guarda temporalmente el XML antes de firmarlo
-      fs.writeFileSync(xmlInputPath, xml, "utf8");
-      // Firma el XML
-      try {
-        //Firmador.firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
-        firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
-      } catch (error) {
-        console.error("Error al firmar el XML:", error);
-        return res
+      `xmlFirmado${invoiceKeyData.consecutivo}.xml`
+    );
+    const pfxPath = path.join(__dirname, "..", "files", "011693011422.p12");
+    // Guarda temporalmente el XML antes de firmarlo
+    fs.writeFileSync(xmlInputPath, xml, "utf8");
+    // Firma el XML
+    console.log("todo bien aca ");
+    try {
+      firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
+    } catch (error) {
+      console.error("Error al firmar el XML:", error);
+      return res
         .status(500)
         .json({ error: "Error interno del servidor al firmar la factura" });
-      }
-      // Leer el XML firmado
-    console.log("factura creada ");
+    }
+    // Leer el XML firmado
     const signedXml = fs.readFileSync(xmlOutputPath, "utf8");
-    const response = enviarFacturaHacienda(data, company_id, signedXml);
-    sendInvoiceByEmail(data.Emisor.NombreComercial, data.Cliente.email, data.Cliente.nombre, xmlOutputPath,xmlOutputPath,xmlOutputPath);
+    const response = enviarFacturaHacienda(
+      xmlData,
+      invoiceData.company_id,
+      signedXml,
+      xmlOutputPath
+    );
+
     res.status(200).json(response);
   } catch (error) {
     console.error("Error en la creación de la factura:");
-    res.status(500).json({ error: error.message, data });
+    res.status(500).json({ error: error.message });
   }
 };
 
-async function generarFacturaPDF(datosFactura) {
-  // Leer el contenido del archivo CSS
-  const cssContent = fs.readFileSync(path.join(__dirname, '../utils/BillTemplates', 'Billstyles.css'), 'utf8');
-
-  // Compilar la plantilla Pug con el contenido del CSS
-  const compiledPug = pug.compileFile(path.join(__dirname, '../utils/BillTemplates', 'bill.pug'));
-  const html = compiledPug({ ...datosFactura, css: cssContent });
-
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(html);
-
-  const widthPixels = 80 / 25.4 * 96; // Convertir 80 mm a píxeles
-  await page.pdf({
-    path: `factura${datosFactura.KeyXml}.pdf`,
-    width: `${widthPixels}px`,
-    printBackground: true,
-    // No se especifica la altura para que sea automática
-  });
-  await browser.close();
+function generateRandomNumberString(length) {
+  let result = "";
+  const characters = "0123456789";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
-module.exports = { createInvoice };
 
+const getCurrentConsecutiveByCompany = (IDCompania) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        ConsecutivoActual
+      FROM 
+        consecutivosfactura
+      WHERE 
+        IDCompania = ?
+    `;
+
+    connection.query(query, [IDCompania], (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+
+      if (results.length === 0) {
+        return reject(
+          new Error(
+            "No se encontró el consecutivo para la compañía especificada"
+          )
+        );
+      }
+
+      const consecutivoActual = results[0].ConsecutivoActual;
+      resolve(consecutivoActual);
+    });
+  });
+};
+
+const generateInvoiceKey = async (companyData, documentType) => {
+  const codigoSeguridadAleatorio = generateRandomNumberString(8);
+  const consecutivoActual = await getCurrentConsecutiveByCompany(
+    companyData.company_id
+  );
+  const { clave, consecutivo } = getClave(
+    documentType, // Este valor podría ser estático o basado en alguna lógica
+    companyData.tipoDeIdentificacion,
+    companyData.identificacion,
+    "normal", // Este valor podría ser estático o basado en alguna lógica
+    companyData.codigoTelefono,
+    consecutivoActual,
+    codigoSeguridadAleatorio
+  );
+  return { clave, consecutivo };
+};
+
+function prepareXMLData(companyData, invoiceData, invoiceKeyData) {
+  let fechaActual = new Date();
+  let fechaISO = fechaActual.toISOString();
+
+  return {
+    Emisor: companyData,
+    Cliente: invoiceData.Cliente,
+    CodigoActividad: "552004", // jalar de algun lao
+    headDocument: "FacturaElectronica",
+    footerDocument: "FacturaElectronica",
+    KeyXml: invoiceKeyData.clave,
+    Consecutivo: invoiceKeyData.consecutivo,
+    Fecha: fechaISO,
+    CondicionDeVenta: invoiceData.CondicionDeVenta,
+    MedioDePago: invoiceData.MedioDePago,
+    LineaDeDetalle: invoiceData.LineaDeDetalle,
+    OtrosCargos: invoiceData.OtrosCargos,
+    // Puedes agregar más campos aquí según lo necesites
+  };
+}
+
+module.exports = { createInvoice };

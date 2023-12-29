@@ -12,7 +12,6 @@ function getClave(tipoDocumento = "", tipoCedula = "", cedula = "", situacion = 
   codigoSeguridad = codigoSeguridad || "";
   sucursal = sucursal || "001";
   terminal = terminal || "00001";
-
   // Obtener la fecha actual
   const fecha = new Date();
   const dia = String(fecha.getDate()).padStart(2, '0');

@@ -15,7 +15,7 @@ const InvoicePreview = ({emisor, factura}) => {
         </div>
       )}
 
-        <h1>{emisor.NombreComercial}</h1>
+        <h1 className='font-bold text-lg'>{emisor.NombreComercial}</h1>
         <p>{emisor.nombre}</p>
         <p>Ced Jur: {emisor.identificacion}</p>
         <p>{emisor.Provincia}, {emisor.direccionExacta}</p>
@@ -25,15 +25,15 @@ const InvoicePreview = ({emisor, factura}) => {
 
       <section>
 
-        <p className='w-100 break-number mb-2'>Tiquete electrónico: {factura.KeyXml}</p>
+        
         {/* <p>Número Consecutivo: {factura.Consecutivo}</p> */}
-        <p> {factura.Fecha}</p>
-        <p>Método de Pago: {factura.MedioDePago}</p>
+
+        
       </section>
 
       <section className="table">
         <div className="thead">
-          <div className="tr"><div className="sep"></div></div>
+          <div className="tr mt-2"><div className="sep"></div></div>
           <div className="tr">
             <div className="th" style={{ width: "60%" }}>Descripción</div>
             <div className="th" style={{ width: "40%" }}>Código</div>
@@ -59,18 +59,23 @@ const InvoicePreview = ({emisor, factura}) => {
                 <div className="td" style={{ width: "35%" }}>{(item.quantity * item.price).toFixed(2)}</div>
                 <div className="td" style={{ width: "15%" }}>{item.tax_rate}%</div>
               </div>
+              <div className="tr"><div className="sep2"></div></div>
             </React.Fragment>
           ))}
         </div>
+        <p className='mt-4'> {factura.Fecha}</p>
+        <p>Método de Pago: {factura.MedioDePago}</p>
+        <p className='w-100 break-number mb-2 mini'>Tiquete electrónico: {factura.KeyXml}</p>
       </section>
 
       <footer>
         {/* Aquí puedes agregar la lógica para Otros Cargos y mensajes personalizados */}
-        <p className="center">Emitida conforme lo establecido por la resoliución NO DGT-R-033-2019 del 27 de junio del 2019</p>
+        <p className="center mini">Emitida conforme lo establecido por la resolución NO DGT-R-033-2019 del 27 de junio del 2019</p>
         <p className="center">Version 4.3</p>
-        <p className="center mt-5 mb-5">{emisor.mensaje1}</p>
-        <p className="center mb-5">{emisor.mensaje2}</p>
-        <p className="center mb-5">{emisor.mensaje3}</p>
+        <p className="center">{emisor.mensaje1}</p>
+        <p className="center">{emisor.mensaje2}</p>
+        <p className="center">{emisor.mensaje3}</p>
+        <p className="center mt-2">Powered by CommunityHunters.com</p>
       </footer>
     </div>
   );

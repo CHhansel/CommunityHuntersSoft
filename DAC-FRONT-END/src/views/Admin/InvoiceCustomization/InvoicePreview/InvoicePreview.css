@@ -1,6 +1,6 @@
 .invoice-preview {
     font-size: 12px;
-    padding: 40px 5px;
+    padding: 10px 5px;
    
     color: black;
     border: 1px solid #ddd;
@@ -14,7 +14,7 @@
   .invoice-preview header,
   .invoice-preview section,
   .invoice-preview footer {
-    margin-bottom: 20px;
+   
     
   }
   .break-number {
@@ -22,9 +22,11 @@
   }
   .invoice-preview h1,
   .invoice-preview h2 {
-    margin-bottom: 10px;
+    
   }
-  
+  .mini{
+    font-size: 10px;
+  }
   .invoice-preview .table {
     display: flex;
     flex-direction: column;
@@ -44,7 +46,6 @@
   
   .invoice-preview .th,
   .invoice-preview .td {
-    padding: 5px;
     text-align: left;
   }
   
@@ -54,7 +55,13 @@
     margin: 2px 0;
     border-bottom: 1px dashed black;
   }
-  
+  .invoice-preview .sep2 {
+    height: 1px;
+    width: 100%;
+    margin: 2px 15px;
+    padding: 0 10px;
+    border-bottom: 1px dashed black;
+  }
   .invoice-preview .center {
     text-align: center;
   }

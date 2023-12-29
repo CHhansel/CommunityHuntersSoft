@@ -51,7 +51,7 @@ function createXML(datosFactura) {
             <Nombre>${datosFactura.Cliente.nombre}</Nombre>
             <Identificacion>
                 <Tipo>${datosFactura.Cliente.tipoIdentificacion}</Tipo>
-                <Numero>${datosFactura.Cliente.idenficacion}</Numero>
+                <Numero>${datosFactura.Cliente.identificacion}</Numero>
             </Identificacion>
             <CorreoElectronico>${datosFactura.Cliente.email}</CorreoElectronico>
         </Receptor>
