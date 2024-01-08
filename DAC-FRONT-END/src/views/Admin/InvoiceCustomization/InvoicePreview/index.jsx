@@ -5,7 +5,10 @@ import './InvoicePreview.css';
 const InvoicePreview = ({emisor, factura}) => {
   // Datos de prueba
 
-
+  // Calcula el subtotal y el IVA
+  const subtotal = factura.LineaDeDetalle.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalIVA = factura.LineaDeDetalle.reduce((acc, item) => acc + (item.price * item.quantity * item.tax_rate / 100), 0);
+  const totalPagar = subtotal + totalIVA;
   return (
     <div className="invoice-preview">
       <header className='flex flex-col text-center'>
@@ -63,6 +66,20 @@ const InvoicePreview = ({emisor, factura}) => {
             </React.Fragment>
           ))}
         </div>
+        <div className="totals">
+        <div className="total-row">
+          <div className="label">SUBTOTAL</div>
+          <div className="value">${subtotal.toFixed(2)}</div>
+        </div>
+        <div className="total-row">
+          <div className="label">I.V.A</div>
+          <div className="value">${totalIVA.toFixed(2)}</div>
+        </div>
+        <div className="total-row">
+          <div className="label">TOTAL A PAGAR</div>
+          <div className="value">${totalPagar.toFixed(2)}</div>
+        </div>
+      </div>
         <p className='mt-4'> {factura.Fecha}</p>
         <p>Método de Pago: {factura.MedioDePago}</p>
         <p className='w-100 break-number mb-2 mini'>Tiquete electrónico: {factura.KeyXml}</p>

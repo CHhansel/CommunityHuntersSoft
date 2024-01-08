@@ -245,3 +245,80 @@ consecutivbo en backend fill de 8 digitos
 tabla producto general
 pedir todos los datos necesarios en el front
 mostrar
+
+
+
+
+const datosFactura = {
+  cliente:{
+    nombre:"",
+    tipoIdentificacion:"",
+    idenficacion:"",
+    email:""
+  }
+
+}
+
+
+
+logo opcional
+nombre de la compania comercial *
+nombre legal  *
+ced juridica / fisica *
+direccion *
+telefono *
+persona que factura  opcional
+fecha  hora 
+tiquete electronico #
+-----------------
+linea de detalle ver figma
+
+exento
+gravado
+exonerado
+iva
+total en colones
+met de pago
+----------------
+clave numerica
+
+Autorizado mediante resolucion no....... 
+mensaje a elegir opcional 1
+
+mensaje a elegir opcional  2
+
+mensaje  a elegir opcional 3   imagen / texto
+
+
+
+crear
+
+.pug    data
+generar template
+convertirlo a pdf 
+crear
+
+
+terminar template
+guardar en base 
+
+
+
+terminar plantilla
+terminar vista persolizar factura
+enviar el pdf
+
+
+crearFactura quitar campos quemados
+guardar en bd la factura
+
+
+
+
+guardar en bd la factura
+crear tabla, facturaspedientes
+
+validaciones datos hacienda
+
+
+

@@ -1,73 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Clave>50608122300011693011400100001010015111118158379673</Clave>
-        <CodigoActividad>011802</CodigoActividad>
-        <NumeroConsecutivo>00100001010015111118</NumeroConsecutivo>
-        <FechaEmision>2023-12-09T02:43:31.508Z</FechaEmision>
+        <Clave>50606012400011693011400100001010000000030151445555</Clave>
+        <CodigoActividad>552004</CodigoActividad>
+        <NumeroConsecutivo>00100001010000000030</NumeroConsecutivo>
+        <FechaEmision>2024-01-06T21:46:57.396Z</FechaEmision>
         <Emisor>
-            <Nombre>ANDRES FRANCISCO ZAMORA SOTO</Nombre>
+            <Nombre>Andrés Francisco Zamora Soto</Nombre>
             <Identificacion>
                 <Tipo>01</Tipo>
                 <Numero>116930114</Numero>
             </Identificacion>
-            <NombreComercial>Community hunters</NombreComercial>
+            <NombreComercial>Community Hunters</NombreComercial>
             <Ubicacion>
                 <Provincia>1</Provincia>
-                <Canton>011</Canton>
-                <Distrito>01</Distrito>
-                <OtrasSenas>residencial porton del prado casa 37d</OtrasSenas>
+                <Canton>01</Canton>
+                <Distrito>02</Distrito>
+                <OtrasSenas>Torres de Paseo Colón, Torre A, Oficina A-504.</OtrasSenas>
             </Ubicacion>
             <Telefono>
                 <CodigoPais>506</CodigoPais>
                 <NumTelefono>70945578</NumTelefono>
             </Telefono>
-            <CorreoElectronico>Andres@communityhunters.com</CorreoElectronico>
+            <CorreoElectronico>info@communityhunters.com</CorreoElectronico>
         </Emisor>
-            <Receptor>
-                <Nombre>Hansel Calderon</Nombre>
-                <Identificacion>
-                    <Tipo>01</Tipo>
-                    <Numero>304830937</Numero>
-                </Identificacion>
-                <CorreoElectronico>client@example.com</CorreoElectronico>
-            </Receptor>
-            
+        <Receptor>
+            <Nombre>HANSEL MAURICIO CALDERON CALVO</Nombre>
+            <Identificacion>
+                <Tipo>01</Tipo>
+                <Numero>304830937</Numero>
+            </Identificacion>
+            <CorreoElectronico>hansel@communityhunters.com</CorreoElectronico>
+        </Receptor>
         <CondicionVenta>01</CondicionVenta>
-        <MedioPago>02</MedioPago>
+        <MedioPago>01</MedioPago>
         <DetalleServicio>
             <LineaDetalle>
                 <NumeroLinea>1</NumeroLinea>
-                <Codigo>7211100000100</Codigo>
-                <CodigoComercial>
-                    <Tipo>04</Tipo>
-                    <Codigo>A001</Codigo>
-                </CodigoComercial>
-                <Cantidad>1.00</Cantidad>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>2</Cantidad>
                 <UnidadMedida>Unid</UnidadMedida>
-                <Detalle>casa grande</Detalle>
-                <PrecioUnitario>100000</PrecioUnitario>
-                <MontoTotal>113000</MontoTotal>
-                <SubTotal>113000</SubTotal>
+                <Detalle>Galleta Maria</Detalle>
+                <PrecioUnitario>1350</PrecioUnitario>
+                <MontoTotal>2700</MontoTotal>
+                <SubTotal>2700</SubTotal>
                 <Impuesto>
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>13.00</Tarifa>
-                    <Monto>1469000</Monto>
+                    <Monto>351</Monto>
                 </Impuesto>
-                <MontoTotalLinea>100000</MontoTotalLinea>
+                <MontoTotalLinea>3051</MontoTotalLinea>
             </LineaDetalle>
-        </DetalleServicio>
-        <ResumenFactura>
-            <CodigoTipoMoneda>
-                <CodigoMoneda>CRC</CodigoMoneda>
-                <TipoCambio>1</TipoCambio>
-            </CodigoTipoMoneda>
-            <TotalServGravados>13000</TotalServGravados>
-            <TotalMercanciasGravadas>100000</TotalMercanciasGravadas>
-            <TotalGravado>00</TotalGravado>
-            <TotalVenta>113000</TotalVenta>
-            <TotalVentaNeta>00</TotalVentaNeta>
-            <TotalImpuesto>13000</TotalImpuesto>
-            <TotalOtrosCargos>00</TotalOtrosCargos>
-            <TotalComprobante>126000</TotalComprobante>
-        </ResumenFactura></FacturaElectronica>
+            <LineaDetalle>
+                <NumeroLinea>2</NumeroLinea>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>3</Cantidad>
+                <UnidadMedida>Unid</UnidadMedida>
+                <Detalle>Leche Dos pinos 1.5 lts</Detalle>
+                <PrecioUnitario>1545</PrecioUnitario>
+                <MontoTotal>4635</MontoTotal>
+                <SubTotal>4635</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>08</CodigoTarifa>
+                    <Tarifa>13.00</Tarifa>
+                    <Monto>602.5500000000001</Monto>
+                </Impuesto>
+                <MontoTotalLinea>5237.55</MontoTotalLinea>
+            </LineaDetalle>
+            <LineaDetalle>
+                <NumeroLinea>3</NumeroLinea>
+                <Codigo>0111100009900</Codigo>
+                <Cantidad>1</Cantidad>
+                <UnidadMedida>Unid</UnidadMedida>
+                <Detalle>Atun Calvo</Detalle>
+                <PrecioUnitario>900</PrecioUnitario>
+                <MontoTotal>900</MontoTotal>
+                <SubTotal>900</SubTotal>
+                <Impuesto>
+                    <Codigo>01</Codigo>
+                    <CodigoTarifa>08</CodigoTarifa>
+                    <Tarifa>13.00</Tarifa>
+                    <Monto>117</Monto>
+                </Impuesto>
+                <MontoTotalLinea>1017</MontoTotalLinea>
+            </LineaDetalle></DetalleServicio>
+    <ResumenFactura>
+        <CodigoTipoMoneda>
+            <CodigoMoneda>CRC</CodigoMoneda>
+            <TipoCambio>1</TipoCambio>
+        </CodigoTipoMoneda>
+        <TotalServGravados>0</TotalServGravados> <!-- Ajustar según corresponda -->
+        <TotalMercanciasGravadas>8235.00</TotalMercanciasGravadas>
+        <TotalGravado>8235.00</TotalGravado>
+        <TotalVenta>8235.00</TotalVenta>
+        <TotalVentaNeta>8235.00</TotalVentaNeta>
+        <TotalImpuesto>1070.55</TotalImpuesto>
+        <TotalOtrosCargos>0.00</TotalOtrosCargos>
+        <TotalComprobante>9305.55</TotalComprobante>
+    </ResumenFactura>
+</FacturaElectronica>

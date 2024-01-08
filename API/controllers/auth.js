@@ -144,7 +144,6 @@ const login = (req, res) => {
               .status(500)
               .json({ error: "Error interno del servidor" });
           }
-          console.log(user);
           let userInfoQuery;
           // Consulta SQL para obtener los datos del usuario desde la vista user_view
           if (user.user_type == 0) {
@@ -417,7 +416,7 @@ const sendInvoiceByEmail = async (comercialName, email, nombre, xmlFilePath, pdf
         path: xmlFilePath // La ruta al archivo XML de la factura
       },
       {
-        filename: 'factura.pdf',
+        filename: 'Factura de Ventas .pdf',
         path: pdfFilePath // La ruta al archivo PDF de la factura
       },
       {

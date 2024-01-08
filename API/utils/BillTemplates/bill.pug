@@ -7,25 +7,19 @@ html(lang="es")
     style.
       #{css}
   body
-    header
-      h1 #{Emisor.NombreComercial}
+    header.center-items
+      p.fontM #{Emisor.NombreComercial}
       p #{Emisor.nombre}
       p Ced Jur: #{Emisor.tipoDeIdentificacion} #{Emisor.identificacion}
-      p #{Emisor.Provincia}, #{Emisor.Canton}, #{Emisor.Distrito}, #{Emisor.direccionExacta}
-      p #{Emisor.codigoTelefono} #{Emisor.Telefono}
+      p #{Emisor.Provincia}, #{Emisor.direccionExacta}
+      p +#{Emisor.codigoTelefono} #{Emisor.Telefono}
       p #{Emisor.correo}
-    //- section
-    //-   h2 Datos del Cliente
-    //-   p #{Cliente.nombre}
-    //-   p Cédula: #{Cliente.tipoIdentificacion} #{Cliente.identificacion}
-    //-   p Email: #{Cliente.email}
-    section
-      h2 Detalles de la Factura
-      p Clave Única: #{KeyXml}
-      p Número Consecutivo: #{Consecutivo}
-      p Fecha y Hora: #{Fecha}
-      p Condición de Venta: #{CondicionDeVenta}
-      p Medio de Pago: #{MedioDePago}
+    section.center-items
+      h4 Datos del Cliente
+      p #{Cliente.nombre}
+      p Cédula: #{Cliente.identificacion}
+      p Email: #{Cliente.email}
+    section.center-items
     section
       div.table 
         div.thead 
@@ -50,24 +44,35 @@ html(lang="es")
               div.td(style="width: 35%;") #{item.price}
               div.td(style="width: 15%;") x#{item.quantity}
               div.td(style="width: 35%;") #{(item.quantity * item.price).toFixed(2)}
-              div.td(style="width: 15%;") #{item.tax_rate}
-
-    footer
+              div.td(style="width: 15%;") #{item.tax_rate}%
+            div.sep2
+          div.total
+            div.row
+              span.label SUBTOTAL
+              span.value #{subtotal}
+            div.row
+              span.label I.V.A
+              span.value #{totalIVA}
+            div.row
+              span.label TOTAL A PAGAR
+              span.value #{totalPagar}
+    section.center-items
+      p #{Fecha}
+      p Medio de Pago: #{MedioDePago}
+      p.fontXs Tiquete Electronico: #{KeyXml}
+      p.fontXs Número Consecutivo: #{Consecutivo}
+    footer.center-items
       if OtrosCargos
         h3 Otros Cargos
         // Implementa la lógica para otros cargos aquí
-      p.center Emitida conforme lo establecido por la resoliución NO DGT-R-033-2019 del 27 de junio del 2019
-      p.center Version 4.3
+      p.fontXs.my-3 Emitida conforme lo establecido por la resoliución NO DGT-R-033-2019 del 27 de junio del 2019
+      p.fontXs Version 4.3
       // Mensajes opcionales y otros elementos de pie de página
-
-
-
-// como crear pfs
-// darle formato al pdf html
-
-// crear tabla para personalizacion de factura x company
-// crear vista donde puede personalizar
-
-
-// Factura electronica    Tiquete electronico nota de credito nota de debito 
+      if optional_message1 && optional_message1 !== ''
+        p #{optional_message1}
+      if optional_message2 && optional_message2 !== ''
+        p #{optional_message2}
+      if optional_message3 && optional_message3 !== ''
+        p #{optional_message3}
+      p.bottom-fixed Powered by CommunityHunters.com
 

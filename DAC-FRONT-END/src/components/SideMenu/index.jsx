@@ -57,7 +57,7 @@ const SideMenu = () => {
         <SideBarLogo />
         <h4 className="text-white mt-8">{user.name}</h4>
         <h4 className="text-white mt-2">{user.role}</h4>
-        <h4 className="text-white mt-2">{user.company_name}</h4>
+        <h4 className="text-white mt-2 text-center">{user.company_name}</h4>
       </div>
       <div className="flex flex-col justify-start w-52 px-2">
         {accessibleModules.map((module) => {

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const connection = require("../config/db"); // Ajusta la ruta según la ubicación de tu archivo de conexión
-
+const pool = require("../config/db2");
 
 
 const getCompanyCredentialsByCompanyId = (req, res) => {
@@ -188,5 +188,16 @@ const getCompanyData = (req, res) => {
     );
 };
 
-
-module.exports = { updateCompanyInfo, createCompanyCredentials,getCompanyCredentialsByCompanyId, getCompanyData  };
+async function getInvoiceParameters(companyId) {
+    try {
+      const [rows] = await pool.query(
+        'SELECT optional_message1, optional_message2, optional_message3, include_logo, logo_url FROM invoice_parameters WHERE company_id = ?',
+        [companyId]
+      );
+      return rows[0]; // Asumiendo que siempre hay una entrada por compañía
+    } catch (error) {
+      console.error('Se produjo un error al obtener los parámetros de la factura:', error);
+      throw error;
+    }
+  }
+module.exports = { updateCompanyInfo, createCompanyCredentials,getCompanyCredentialsByCompanyId, getCompanyData,getInvoiceParameters  };

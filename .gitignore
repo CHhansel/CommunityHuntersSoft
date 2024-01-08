@@ -1,8 +1,9 @@
 # Archivos y carpetas generados por Node.js y npm
 node_modules/
 package-lock.json
-
+APi/fileSystem
 # Archivos de configuración local
 .env
 notas-estilos.html
 notas.txt
+.xml

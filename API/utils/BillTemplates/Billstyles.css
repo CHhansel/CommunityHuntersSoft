@@ -1,23 +1,80 @@
-body{
-    font-size: 12px;
-    padding: 5px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-size: 12px;
+  padding: 5px;
+  height: fit-content;
 }
 
-.th{
-    font-weight: bold;
+.th {
+  font-weight: bold;
 }
-  .thead, .tbody {
-    display: contents;
-  }
-  
-  .tr {
-    display: flex;
-  }
-  
+.thead,
+.tbody {
+  display: contents;
+}
 
-  .sep{
-    height: 1px;
-    width:100%;
-    margin: 2px 0;
-    border-bottom: 1px dashed black;
-   }
+.tr {
+  display: flex;
+}
+.fontXs{
+  font-size: 10px;
+}
+.fontS{
+  font-size: 12px;
+}
+.fontM{
+  font-size: 14px;
+  font-weight: bold;
+}
+.sep {
+  height: 1px;
+  width: 100%;
+  margin: 2px 0;
+  border-bottom: 1px dashed black;
+}
+.sep2 {
+  height: 0.7px;
+  width: 90%;
+  margin: auto;
+  border-bottom: 1px dotted black;
+}
+.center-items {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.total {
+  /* Opcional: si quieres que la sección total sea más ancha que los otros elementos */
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px; /* Espacio entre filas */
+}
+
+.label {
+  /* Alineación a la izquierda y negrita para las etiquetas */
+  text-align: left;
+  font-weight: bold;
+}
+
+.value {
+  /* Alineación a la derecha para los valores */
+  text-align: right;
+}
+.my-3{
+  margin: 3px 0 3px 0;
+}
+.bottom-fixed {
+  position: absolute;
+  bottom: 0; 
+  width: 100%; 
+}

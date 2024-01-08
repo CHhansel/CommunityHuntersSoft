@@ -18,13 +18,25 @@ const ClientData = ({ clientData, setClient }) => {
     exactAddress: "",
     dni_type_id: "",
   });
+  const [errores, setErrores] = useState({
+    name: "",
+    lastname: "",
+    dni: "",
+    email: "",
+    province: "",
+    canton: "",
+    district: "",
+    exactAddress: "",
+    dni_type_id: "",
+  });
   const [dniTypes, setDniTypes] = useState([]); // Estado para almacenar los tipos de DNI
 
   const { token } = useSelector(selectUser);
+
+  
   useEffect(() => {
     if (clientData) {
       setFormData(clientData);
-      console.log("cliente recibido es ", clientData);
     }
     // Obtener tipos de DNI
     const loadDniTypes = async () => {
@@ -36,7 +48,7 @@ const ClientData = ({ clientData, setClient }) => {
       }
     };
     loadDniTypes();
-  }, [clientData]);
+  }, [clientData, token]);
 
   const [isPopUpOpen, setPopUpOpen] = useState(false);
 
@@ -53,29 +65,48 @@ const ClientData = ({ clientData, setClient }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (value.length >= 9) {
-      haciendaService
-        .getDNIinfo(value)
+      haciendaService.getDNIinfo(value)
         .then((data) => {
-          const dniTypeCode = dniTypes.find(
-            (dniType) => dniType.tipoIdentificacion === data.tipoIdentificacion
-          )?.codigo;
-
-          setFormData((prev) => ({
-            ...prev,
-            name: data.nombre,
-            dni_type_id: data.tipoIdentificacion,
-            customer_dni :value
-          }));
-          setClient((prev) => ({
-            ...prev,
-            name: data.nombre,
-            dni_type_id: data.tipoIdentificacion,
-            customer_dni: value
-          }));
+          if (data && data.nombre && data.tipoIdentificacion) {
+            // Actualiza los estados solo si la respuesta contiene los datos necesarios
+            setFormData((prev) => ({
+              ...prev,
+              name: data.nombre,
+              dni_type_id: data.tipoIdentificacion,
+              customer_dni: value
+            }));
+            setClient((prev) => ({
+              ...prev,
+              name: data.nombre,
+              dni_type_id: data.tipoIdentificacion,
+              customer_dni: value
+            }));
+          } else {
+            // Manejar el caso en que los datos no son los esperados
+            setFormData((prev) => ({ ...prev, dni: value }));
+            setClient((prev) => ({ ...prev, customer_dni: value }));
+            console.error("La respuesta de la API no contiene los datos esperados.");
+          }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          // Aquí manejas el error
+          if (error.response) {
+            // Errores que vienen con una respuesta del servidor
+            console.error("Error en la respuesta del servidor", error.response);
+          } else if (error.request) {
+            // Errores que ocurrieron al hacer la solicitud pero no se recibió respuesta
+            console.error("La solicitud fue hecha pero no se recibió respuesta", error.request);
+            if (error.code === 'ECONNABORTED') {
+              // Manejo específico para el error de timeout
+              console.error("La solicitud ha excedido el tiempo de espera. La API de Hacienda puede estar caída o muy lenta.");
+            }
+          } else {
+            // Errores generados durante la configuración de la solicitud
+            console.error("Error en la configuración de la solicitud", error.message);
+          }
+        });
     }
-    console.log(formData);
+    
   };
 
   return (
@@ -139,3 +170,5 @@ const ClientData = ({ clientData, setClient }) => {
 };
 
 export default ClientData;
+
+

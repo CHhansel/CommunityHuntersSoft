@@ -19,6 +19,7 @@
   }
   .break-number {
     word-break: break-word;
+    line-break: anywhere;
   }
   .invoice-preview h1,
   .invoice-preview h2 {
@@ -64,6 +65,7 @@
   }
   .invoice-preview .center {
     text-align: center;
+    line-break: anywhere;
   }
   
   /* Botones y otros elementos interactivos */
@@ -78,5 +80,14 @@
   
   .invoice-preview button:hover {
     background-color: #45a049;
+  }
+  .totals {
+  
+  }
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 1px 0;
   }
   
