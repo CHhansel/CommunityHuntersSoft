@@ -1,0 +1,22 @@
+[
+	{
+		"id" : 1,
+		"tipoIdentificacion" : "Cédula Física",
+		"codigo" : "01"
+	},
+	{
+		"id" : 2,
+		"tipoIdentificacion" : "Cédula Jurídica",
+		"codigo" : "02"
+	},
+	{
+		"id" : 3,
+		"tipoIdentificacion" : "DIMEX",
+		"codigo" : "03"
+	},
+	{
+		"id" : 4,
+		"tipoIdentificacion" : "NITE",
+		"codigo" : "04"
+	}
+]

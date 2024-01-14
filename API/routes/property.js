@@ -3,19 +3,19 @@ const { Router } = require("express");
 
 
 const verifyPermissions = require('../middlewares/authenticateToken');
-const { createProperty, updateProperty, deleteProperty, updatePropertyContract } = require('../controllers/Property');
-const { getPropertiesByCompanyId } = require("../controllers/propierties");
+const { deleteProperty, updatePropertyContract } = require('../controllers/Property');
+const { getPropertiesByCompanyId, insertProperty, updateProperty } = require("../controllers/properties");
 
 
 const router = Router();
 
 
 
-router.post('/create-property', createProperty);
+router.post('/create-property', insertProperty);
 router.patch('/update-property/', updateProperty);
 router.patch('/update-property-contract/', updatePropertyContract);
 router.delete('/delete-property/:id', verifyPermissions, deleteProperty);
-router.get('/get-properties/', getPropertiesByCopanyId);
+router.get('/get-properties/', getPropertiesByCompanyId);
 
 
 

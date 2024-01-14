@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { TablaDinamica } from "../Table";
 import Pagination from "../pagination/pagination";
-import { CustomerService } from "../../services/CustomerService";
+import { CustomerService } from "../../services/CustomerServices";
 import { selectUser } from "../../store/authSlice";
 import { useSelector } from "react-redux";
 

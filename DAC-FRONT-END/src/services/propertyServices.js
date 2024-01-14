@@ -5,10 +5,10 @@ import { handleApiError } from '../api/errorHandler';
 
 
 export const PropertyService = {
-    getPropertiesByCompanyId: async (companyId, page, itemsPerPage) => {
+    getPropertiesByCompanyId: async (company_id, page, itemsPerPage) => {
         try {
             const response = await DAC_API.get('/property/get-properties/', { 
-                params: { companyId, page, itemsPerPage },
+                params: { company_id, page, itemsPerPage },
             });
             return response.data;
         } catch (error) {
@@ -19,11 +19,21 @@ export const PropertyService = {
     },
     createProperty: async (propertyData) => {
         try {
-            const response = await DAC_API.post('/property/create', propertyData);
+            const response = await DAC_API.post('/property/create-property', propertyData);
             return response.data;
         } catch (error) {
             const errorMessage = handleApiError(error);
             console.error('Error al crear la propiedad:', errorMessage);
+            throw new Error(errorMessage);
+        }
+    },
+    updateProperty: async (propertyData) => {
+        try {
+            const response = await DAC_API.patch('/property/update-property', propertyData);
+            return response.data;
+        } catch (error) {
+            const errorMessage = handleApiError(error);
+            console.error('Error al actualizar la propiedad:', errorMessage);
             throw new Error(errorMessage);
         }
     },

@@ -8,6 +8,7 @@ import { useFetchProperties } from "../../hooks/properties/useFetchProperties";
 import { useState } from "react";
 import { resumeData } from "../../utils/resumesForTable";
 import { useAlert } from "../../components/Notifications/MySwalNotification";
+import { Loading } from "../../components/loading";
 
 const Property = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
@@ -17,6 +18,7 @@ const Property = () => {
   const { user } = useSelector(selectUser);
   const [page, setPage] = useState(1);
   const showToast = useAlert();
+  // Traer las propiedades de la BD.
   const {
     propertyData: { properties, totalProperties },
     isLoading,
@@ -24,24 +26,19 @@ const Property = () => {
   } = useFetchProperties(user.company_id, page, 10);
 
   if (isLoading) {
-    return <div>Cargando propiedades...</div>;
+    return <div className="h-80 "><Loading/></div>
     
   }
-
+  
   if (error) {
     showToast('error', error);
-    return <div>Error: {error}</div>;
+    return <div className="h-80 "><Loading/></div>;
   }
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };
-
-  if (isLoading) {
-    return <div>Cargando Propiedades ...</div>;
-  }
+  
   const updateTable = () => {};
-
-
   // propiedades Resumidas para la tabla
   const propertiesResume = resumeData(properties,'Properties');
 

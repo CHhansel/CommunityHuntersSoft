@@ -19,8 +19,8 @@ export function handleApiError(error) {
         // Algo más causó un error al hacer la solicitud
         errorMessage = error.message;
     }
-
-    // Aquí puedes añadir lógica adicional, como logging o mostrar notificaciones
+    
+ 
 
     return errorMessage;
 }

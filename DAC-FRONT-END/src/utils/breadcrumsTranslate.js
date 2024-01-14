@@ -6,7 +6,7 @@ const translations = {
     admin: "Administración",
     employees: "Empleados",
     roles: "Roles",
-    bills: "Facturas",
+    invoice: "Facturas",
     "company-settings": "Ajustes de Compañía",
     "atv-settings": "Ajustes de ATV"
     // ... puedes agregar más traducciones aquí en el futuro
@@ -32,3 +32,9 @@ export function translateRoutes(routes) {
         name: translate(route.name)
     }));
 }
+
+
+/*
+ membrecias
+
+*/

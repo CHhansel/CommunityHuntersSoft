@@ -1,52 +1,32 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 import { TablaDinamica } from "../../components/Table/index";
 
 import { selectUser } from "../../store/authSlice";
 
-import { fetchCustomers } from "../../actions/customer";
+
 import Pagination from "../../components/pagination/pagination";
 import { CustomerDetails } from "./CustomerDetails";
 import { CustomerCreate } from "./CustomerCreate";
-import { CustomerService } from "../../services/customerService";
+
+import { useFetchCustomers } from "../../hooks/customers/useFetchCustomers";
+import { resumeData } from "../../utils/resumesForTable";
 
 const Customer = () => {
-  const [customers, setCustomers] = useState([]);
-  const [customersSimplified, setCustomersSimplified] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { user, token } = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCustomers, setTotalCustomers] = useState(0);
+  const { customers, totalCustomers, loading, error } = useFetchCustomers(
+    user.company_id,
+    currentPage,
+    10
+  );
+
+  const customersResume = resumeData(customers,'Customers');
+ console.log(customersResume);
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
   const [createCustomerActive, setCreateCustomerActive] = useState(false);
 
 
-
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      setLoading(true);
-      try {
-        const data = await CustomerService.getCustomers(token, user.company_id, currentPage, 10);
-        setCustomers(data.customers);
-        setTotalCustomers(data.totalCustomers);
-        setCustomersSimplified(data.customers.map(customer => ({
-          nombre: customer.name,
-          apellido: customer.lastname,
-          dni: customer.dni,
-          email: customer.email
-        })))
-        setLoading(false);
-      } catch (error) {
-        console.error('Error al obtener los clientes:', error);
-        setError(error);
-        setLoading(false);
-      }
-    };
-
-    fetchCustomers();
-
-  }, [currentPage, user.company_id, token]);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -66,10 +46,10 @@ const Customer = () => {
           AGREGAR
         </button>
       </div>
-      { customers && customers.length > 0 &&
+      {customers && customers.length > 0 && (
         <>
           <TablaDinamica
-            datos={customersSimplified}
+            datos={customersResume}
             setFilaSeleccionada={setFilaSeleccionada}
             dataType="Customers"
           />
@@ -80,9 +60,15 @@ const Customer = () => {
             onPageChange={handlePageChange}
           />
         </>
-      }
-      { !customers && <div className="w-full h-full bg-slate-500 flex justify-center"><p>No posee Clientes Registrados</p></div>}
-      {filaSeleccionada >= 0 && <CustomerDetails fila={customers[filaSeleccionada]} />}
+      )}
+      {!customers && (
+        <div className="w-full h-full bg-slate-500 flex justify-center">
+          <p>No posee Clientes Registrados</p>
+        </div>
+      )}
+      {filaSeleccionada >= 0 && (
+        <CustomerDetails fila={customers[filaSeleccionada]} />
+      )}
       {createCustomerActive && filaSeleccionada == -1 && <CustomerCreate />}
     </div>
   );

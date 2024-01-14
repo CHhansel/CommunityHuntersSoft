@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { PropertyService } from '../../services/propertyServices';
 
-export const useFetchProperties = (companyId, page, itemsPerPage) => {
+export const useFetchProperties = (company_id, page, itemsPerPage) => {
     const [propertyData, setPropertyData] = useState({ properties: [], totalProperties: 0 });
 
     const [isLoading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ export const useFetchProperties = (companyId, page, itemsPerPage) => {
         setError(null);
         try {
             const data = await PropertyService.getPropertiesByCompanyId(
-                companyId, page, itemsPerPage
+                company_id, page, itemsPerPage
             );
             setPropertyData({ properties: data.properties, totalProperties: data.totalProperties });
 
@@ -23,7 +23,7 @@ export const useFetchProperties = (companyId, page, itemsPerPage) => {
         } finally {
             setLoading(false);
         }
-    }, [companyId, page, itemsPerPage]);
+    }, [company_id, page, itemsPerPage]);
 
     useEffect(() => {
         fetchProperties();

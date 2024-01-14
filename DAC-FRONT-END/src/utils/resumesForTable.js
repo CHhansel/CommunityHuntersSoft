@@ -1,13 +1,13 @@
 
 
-export function resumeData(properties, dataType) {
+export function resumeData(completeData, dataType) {
     let  data;
     switch (dataType) {
       case "Properties":
-       data = resumePropertyData(properties);
+       data = resumePropertyData(completeData);
         break;
       case "Customers":
-       // data = parseCustomerColumnNames(data);
+       data = resumeCustomerData(completeData);
         break;
       case "Contracts":
        // data = parseContractColumnNames(data);
@@ -25,31 +25,27 @@ export function resumeData(properties, dataType) {
   }
 
 
-  const resumePropertyData = (properties)=>{
-    const propertiesResume = JSON.parse(JSON.stringify(properties));
-    console.log("es ");
-    propertiesResume.forEach((property) => {
-        delete property.customer_id;
-        delete property.start_date;
-        delete property.start_date;
-        delete property.end_date;
-        delete property.start_date;
-        delete property.deposit_amount;
-        delete property.rent_amount;
-        delete property.tax_amount;
-        delete property.total_amount;
-        delete property.payment_method;
-        delete property.payment_date;
-        delete property.contract_file;
-        delete property.payment_method;
-        delete property.creation_date;
-        delete property.company_id;
-        delete property.exact_address;
-        delete property.antiquity;
-        delete property.description;
-        delete property.customer_dni;
-        delete property.dni_type_description;
-      });
-      
-      return propertiesResume;
-  }
+  const resumePropertyData = (properties) => {
+    return properties.map((property) => ({
+      Id: property.internal_code,
+      name: property.name,
+      exact_address: property.exact_address,
+      state: property.state,
+    }));
+  };
+  
+  const resumeCustomerData = (customers) => {
+
+    return customers.map((customer) => ({
+      dni: customer.dni,
+      name: customer.name + " " + customer.lastname,
+      province: customer.province,
+      exact_address: customer.exact_address,
+    }));
+  };
+  
+  
+
+
+
+  

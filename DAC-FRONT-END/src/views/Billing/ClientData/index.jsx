@@ -4,7 +4,7 @@ import CustomerSearch from "../../../components/CustomerSelect";
 import { selectUser } from "../../../store/authSlice";
 import { useSelector } from "react-redux";
 import { haciendaService } from "../../../services/billingServices";
-import { DniTypeService } from "../../../services/CustomerService";
+import { DniTypeService } from "../../../services/CustomerServices";
 
 const ClientData = ({ clientData, setClient }) => {
   const [formData, setFormData] = useState({

@@ -1,62 +1,99 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
-import { createPropertyAction } from "../../../actions/properties";
-import {
-  getProvincias,
-  getCantones,
-  getDistritos,
-} from "../../../utils/GeoService";
+
+import { useCreateProperty } from "../../../hooks/properties/useCreateProperty";
+import { propertyModuleCabys } from "../../../utils/cabysByModule";
+import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect";
+import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
+import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect";
+import { useAlert } from "../../../components/Notifications/MySwalNotification";
+import Swal from "sweetalert2";
 
 // eslint-disable-next-line react/prop-types
-export const PropertyCreate = ( {updateTable}) => {
-  const { user, token } = useSelector(selectUser);
+export const PropertyCreate = ({ updateTable }) => {
+  const { user } = useSelector(selectUser);
+  const { createProperty, isLoading, error } = useCreateProperty();
+  const showToast = useAlert();
   const [formData, setFormData] = useState({
+    internal_code: "",
     name: "",
     description: "",
-    state: "Disponible",
-    province: "San José",
-    canton: "",
-    district: "",
+    price: "",
+    quantity: "1",
+    cabys_code: "",
+    unit_of_measure: "Alc",
+    tax_rate: "",
+    company_id: user.company_id, 
+    tax_included: true, 
     exact_address: "",
-    antiquity: "",
-    company_id: user.company_id,
-    user_id: user.id,
+    province_code: "1", 
+    canton_code: "",
+    district_code: "",
+    state: "Disponible", 
+    antiquity: "", 
   });
-  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  formData.province;
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(createPropertyAction({ data: formData, token }));
-      alert("Propiedad creada con éxito!");
-      updateTable();
-    } catch (error) {
-      console.error("Hubo un error al crear la propiedad:", error);
-      alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
+  const handleCabys = (e) => {
+    const { value } = e.target;
+
+    // Encuentra el elemento Cabys seleccionado
+    const selectedCabys = propertyModuleCabys.find(
+      (item) => item.code === value
+    );
+
+    if (selectedCabys) {
+      setFormData((prevState) => ({
+        ...prevState,
+        cabys_code: selectedCabys.code,
+        tax_rate: selectedCabys.tax, // Establece el tax_rate basado en la selección
+      }));
+    } else {
+      // En caso de que se seleccione la opción "Seleccione un Código Cabys"
+      setFormData((prevState) => ({
+        ...prevState,
+        cabys_code: "",
+        tax_rate: "",
+      }));
     }
   };
-  const [cantones, setCantones] = useState([]);
-  const [distritos, setDistritos] = useState([]);
 
-  useEffect(() => {
-    if (formData.province) {
-      setCantones(getCantones(formData.province));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Muestra el SweetAlert y espera a que el usuario confirme
+    const result = await Swal.fire({
+      title: "Desea crear esta propiedad?",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+  
+    if (result.isConfirmed) {
+      // El usuario confirmó, procede a guardar
+      try {
+        await createProperty(formData);
+        showToast("success", "Propiedad creada con éxito!");
+        updateTable();
+      } catch (err) {
+        console.error("Hubo un error al crear la propiedad:", err);
+        alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
+      }
+    } else if (result.isDenied) {
+      // El usuario no confirmó, muestra un mensaje
+      Swal.fire("Changes are not saved", "", "info");
     }
-  }, [formData.province]);
+  };
+  
 
-  useEffect(() => {
-    if (formData.canton) {
-      setDistritos(getDistritos(formData.province, formData.canton));
-    }
-  }, [formData.canton]);
   return (
     <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Propiedad</h2>
@@ -65,6 +102,20 @@ export const PropertyCreate = ( {updateTable}) => {
         onSubmit={handleSubmit}
         className=" flex justify-between flex-wrap items-start gap-5 w-full"
       >
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="internal_code">
+            Código Interno
+          </label>
+          <input
+            className="input-text"
+            type="text"
+            name="internal_code"
+            placeholder="Código Interno"
+            value={formData.internal_code}
+            onChange={handleChange}
+            required
+          />
+        </div>
         <div className="flex flex-col gap-3">
           <label className="text-lg " htmlFor="name">
             Nombre
@@ -76,7 +127,6 @@ export const PropertyCreate = ( {updateTable}) => {
             placeholder="Nombre de la propiedad"
             value={formData.name}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -90,7 +140,6 @@ export const PropertyCreate = ( {updateTable}) => {
             placeholder="Descripción"
             value={formData.description}
             onChange={handleChange}
-            required
           ></textarea>
         </div>
 
@@ -110,6 +159,21 @@ export const PropertyCreate = ( {updateTable}) => {
           </select>
         </div>
         <div className="flex flex-col gap-3">
+          <label className="text-lg" htmlFor="unit_of_measure">
+            Tipo de alquiler
+          </label>
+          <select
+            className="input-text"
+            name="unit_of_measure"
+            value={formData.unit_of_measure}
+            onChange={handleChange}
+            required
+          >
+            <option value="Al">Alquiler de uso habitacional</option>
+            <option value="Alc">Alquiler de uso comercial</option>
+          </select>
+        </div>
+        <div className="flex flex-col gap-3">
           <label className="text-lg" htmlFor="antiquity">
             Antigüedad:
           </label>
@@ -119,67 +183,52 @@ export const PropertyCreate = ( {updateTable}) => {
             value={formData.antiquity}
             className="input-text"
             onChange={handleChange}
-            required
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label className="text-lg " htmlFor="province">
-            Provincia
+          <label className="text-lg " htmlFor="cabys_code">
+            Código Cabys
           </label>
           <select
             className="input-text"
-            name="province"
-            value={formData.province}
-            onChange={handleChange}
+            name="cabys_code"
+            value={formData.cabys_code}
+            onChange={handleCabys}
+            required
           >
-            {getProvincias().map((provincia) => (
-              <option key={provincia} value={provincia}>
-                {provincia}
+            <option value="">Seleccione un Código Cabys</option>
+            {propertyModuleCabys.map((item) => (
+              <option key={item.code} value={item.code}>
+                {item.code} {item.description} - {item.tax}%
               </option>
             ))}
           </select>
         </div>
-
         <div className="flex flex-col gap-3">
-          <label className="text-lg " htmlFor="canton">
-            Cantón
+          <label className="text-xl" htmlFor="price">
+            Precio:
           </label>
-          <select
-            className="input-text"
-            name="canton"
-            value={formData.canton}
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
             onChange={handleChange}
-            disabled={!cantones.length}
-          >
-            <option value="">Seleccione un cantón</option>
-            {cantones.map((canton) => (
-              <option key={canton} value={canton}>
-                {canton}
-              </option>
-            ))}
-          </select>
+            className={`input-text`}
+            required
+          />
         </div>
-
-        <div className="flex flex-col gap-3">
-          <label className="text-lg " htmlFor="district">
-            Distrito
-          </label>
-          <select
-            className="input-text"
-            name="district"
-            value={formData.district}
-            onChange={handleChange}
-            disabled={!distritos.length}
-          >
-            <option value="">Seleccione un distrito</option>
-            {distritos.map((distrito) => (
-              <option key={distrito} value={distrito}>
-                {distrito}
-              </option>
-            ))}
-          </select>
-        </div>
-
+        <ProvinceSelect
+          value={formData.province}
+          onChange={handleChange}
+        ></ProvinceSelect>
+        <CantonSelect
+          formData={formData}
+          onChange={handleChange}
+        ></CantonSelect>
+        <DistrictSelect
+          formData={formData}
+          onChange={handleChange}
+        ></DistrictSelect>
         <div className="flex flex-col gap-3">
           <label className="text-lg " htmlFor="exact_address">
             Dirección exacta
