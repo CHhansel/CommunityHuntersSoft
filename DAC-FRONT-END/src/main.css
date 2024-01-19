@@ -24,16 +24,16 @@ html {
     @apply border p-2 rounded-main w-72 focus:outline-main-blue focus:outline-1 text-xs shadow-sm mr-1;
   }
   .button-success {
-    @apply bg-main-blue text-white px-5 py-2 border rounded-main hover:bg-main-blue-hover text-sm ease-out duration-500 mx-2;
+    @apply bg-[#6c9bcf] text-white px-5 py-2 border rounded-main hover:bg-main-blue-hover text-sm ease-out duration-500 mx-2;
   }
   .button-delete {
-    @apply bg-main-red text-white px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow mx-2;
+    @apply bg-[#ff0060] text-white px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow mx-2;
   }
   .button-cancel {
-    @apply bg-slate-400 text-white px-5 py-2 border rounded-main hover:bg-slate-700 text-sm ease-out duration-500 shadow mx-2;
+    @apply bg-[#888686] text-white px-5 py-2 border rounded-main hover:bg-slate-700 text-sm ease-out duration-500 shadow mx-2;
   }
   .button-main-menu {
-    @apply bg-main-red text-white px-5 py-2 border rounded-main hover:bg-opacity-70 text-xs ease-out duration-500 mx-2;
+    @apply bg-[#FD1F55] text-white px-5 py-2 border rounded-main hover:bg-opacity-70 text-xs ease-out duration-500 mx-2;
   }
   .h-desktop{
     @apply fit-content

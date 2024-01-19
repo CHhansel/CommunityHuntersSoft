@@ -52,7 +52,7 @@ const SideMenu = () => {
     });
   };
   return (
-    <div className="sidebar bg-black flex flex-col justify-between min-h-screen  items-center">
+    <div className="sidebar bg-secondary-color flex flex-col justify-between min-h-screen  items-center">
       <div className="my-12 flex flex-col items-center">
         <SideBarLogo />
         <h4 className="text-white mt-8">{user.name}</h4>
@@ -79,7 +79,7 @@ const SideMenu = () => {
           );
         })}
       </div>
-      <div className="w-[200px] h-14 bg-red-900 flex items-center justify-center pointer">
+      <div className="w-[200px] h-14 bg-[#78222d] flex items-center justify-center pointer">
         <button
           className="text-white w-48 h-10 text-lg "
           onClick={handleLogout}

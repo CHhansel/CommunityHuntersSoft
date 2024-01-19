@@ -39,8 +39,7 @@ export function resumeData(completeData, dataType) {
     return customers.map((customer) => ({
       dni: customer.dni,
       name: customer.name + " " + customer.lastname,
-      province: customer.province,
-      exact_address: customer.exact_address,
+      email: customer.email
     }));
   };
   

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { updatePropertyAction } from "../../../actions/properties";
 import { selectUser } from "../../../store/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ContractDetail } from "../ContractDetails";
 import { ContractCreate } from "../ContractCreate";
 import { propertyModuleCabys } from "../../../utils/cabysByModule";
@@ -12,11 +11,14 @@ import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect
 import { useUpdateProperty } from "../../../hooks/properties/useUpdateProperty";
 import Swal from "sweetalert2";
 import { useAlert } from "../../../components/Notifications/MySwalNotification";
+import { useDeleteProperty } from "../../../hooks/properties/useDeleteProperty";
 
 // eslint-disable-next-line react/prop-types
 export const PropertyDetail = ({ fila, updateTable }) => {
   const { user } = useSelector(selectUser);
-  const { updateProperty, isLoading, error } = useUpdateProperty();
+  const { updateProperty, isLoading: isLoadingUpdate, error: errorUpdate } = useUpdateProperty();
+  const { deleteProperty, isLoading: isLoadingDelete, error: errorDelete } = useDeleteProperty();
+  
   const [isEditable, setIsEditable] = useState(false);
   const showToast = useAlert();
   // eslint-disable-next-line react/prop-types
@@ -70,9 +72,31 @@ export const PropertyDetail = ({ fila, updateTable }) => {
     setIsEditable(false);
     setFormData(fila);
   };
-  const handleDelete = () => {
-    setIsEditable(false);
-    setFormData(fila);
+
+  const handleDelete = async () => {
+    // Muestra el SweetAlert y espera a que el usuario confirme
+    if(formData.state !== 'Disponible'){
+      console.log("holaa");
+      showToast("warning", "La propiedad tiene un contrato vigente, debe terminarlo primero!");
+      return
+    }
+    const result = await Swal.fire({
+      title: "Desea borrar esta propiedad?",
+      text: "Esta acción no es reversible!",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteProperty(formData.product_id);
+        console.log("Propiedad eliminada con éxito");
+        showToast("success", "Propiedad Borrada con éxito!");
+        updateTable();
+      } catch (err) {
+        console.error("Error al eliminar la propiedad:", err);
+      }
+    }
   };
   const handleSave = async () => {
     // Muestra el SweetAlert y espera a que el usuario confirme
@@ -226,17 +250,17 @@ export const PropertyDetail = ({ fila, updateTable }) => {
           <ProvinceSelect
             value={formData.province}
             onChange={handleChange}
-            isEditable = {isEditable}
+            isEditable={isEditable}
           ></ProvinceSelect>
           <CantonSelect
             formData={formData}
             onChange={handleChange}
-            isEditable = {isEditable}
+            isEditable={isEditable}
           ></CantonSelect>
           <DistrictSelect
             formData={formData}
             onChange={handleChange}
-            isEditable = {isEditable}
+            isEditable={isEditable}
           ></DistrictSelect>
           <div className="flex flex-col gap-3">
             <label className="text-lg " htmlFor="exact_address">
@@ -273,10 +297,10 @@ export const PropertyDetail = ({ fila, updateTable }) => {
             </div>
           ) : (
             <div className="">
-              <button onClick={handleDelete} className="button-cancel">
+              <button onClick={handleDelete} className="button-delete">
                 Borrar
               </button>
-              <button onClick={handleCancelEdit} className="button-delete">
+              <button onClick={handleCancelEdit} className=" button-cancel">
                 Cancelar
               </button>
               <button onClick={handleSave} className="button-success">

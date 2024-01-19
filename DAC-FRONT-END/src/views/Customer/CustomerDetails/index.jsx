@@ -1,9 +1,25 @@
 import { useEffect, useState } from "react";
+import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect";
+import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
+import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect";
+import { DniTypeSelect } from "../../../components/inputs/Select/DniSelect";
+import { useDeleteCustomer } from "../../../hooks/customers/useDeleteCustomer ";
+import Swal from "sweetalert2";
+import { useAlert } from "../../../components/Notifications/MySwalNotification";
+import { useUpdateCustomer } from "../../../hooks/customers/useUpdateCustomer";
 
 // eslint-disable-next-line react/prop-types
-export const CustomerDetails = ({ fila }) => {
+export const CustomerDetails = ({ fila, updateTable }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [formData, setFormData] = useState(fila);
+  const { updateCustomer, isLoading, error } = useUpdateCustomer();
+  const {
+    deleteCustomer,
+    isLoading: isLoadingDelete,
+    error: errorDelete,
+  } = useDeleteCustomer();
+
+  const showToast = useAlert();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -28,14 +44,53 @@ export const CustomerDetails = ({ fila }) => {
     setFormData(fila);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setIsEditable(false);
     setFormData(fila);
+    const result = await Swal.fire({
+      title: "Desea borrar este Cliente?",
+      text: "Esta acción no es reversible!",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+    if (result.isConfirmed) {
+      try {
+        await deleteCustomer(formData.customer_id);
+        console.log("Cliente eliminado con éxito");
+        showToast("success", "Cliente Borrado con éxito!");
+        updateTable();
+      } catch (err) {
+        console.error("Error al eliminar el Cliente:", err);
+      }
+    }
   };
 
-  const handleSave = () => {
-    // Aquí puedes hacer la llamada a la API para actualizar los datos
-    // Por ejemplo: updateCustomerInDatabase(formData);
+  const handleSave = async () => {
+    const result = await Swal.fire({
+      title: "Desea actualizar este cliente?",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Intenta actualizar el cliente y espera la respuesta
+        await updateCustomer(formData);
+        // Si la actualización es exitosa, muestra un mensaje de éxito
+        showToast("success", "Cliente Actualizado con éxito!");
+        // Aquí podrías llamar a updateTable() si todo fue bien
+        updateTable();
+      } catch (error) {
+        // Si hay un error durante la actualización, muestra un mensaje de error
+        console.error("Hubo un error al actualizar el cliente:", error);
+        showToast(
+          "warning",
+          "Error al actualizar cliente. Por favor, inténtalo de nuevo."
+        );
+      }
+    }
 
     setIsEditable(false);
   };
@@ -70,6 +125,11 @@ export const CustomerDetails = ({ fila }) => {
             className={`input-text `}
           />
         </div>
+        <DniTypeSelect
+          value={formData.dni_type_id}
+          onChange={handleInputChange}
+          isEditable={isEditable}
+        ></DniTypeSelect>
         <div className="flex flex-col gap-3">
           <label className="text-xl" htmlFor="dni">
             Identificación:
@@ -96,66 +156,22 @@ export const CustomerDetails = ({ fila }) => {
             className={`input-text `}
           />
         </div>
-        <div className="flex flex-col gap-3">
-          <label className="text-xl" htmlFor="company_name">
-            Nombre de la Empresa:
-          </label>
-          <input
-            type="text"
-            name="company_name"
-            value={formData.company_name}
-            onChange={handleInputChange}
-            disabled={!isEditable}
-            className={`input-text `}
-          />
-        </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="province">
-              Provincia:
-            </label>
-            <select
-              name="state"
-              value={formData.province}
-              onChange={handleInputChange}
-              disabled={!isEditable}
-              className={`input-text $`}
-            >
-              <option value="San José">San José</option>
-              <option value="Alajuela">Alajuela</option>
-              <option value="Cartago">Cartago</option>
-              <option value="Heredia">Heredia</option>
-              <option value="Guanacaste">Guanacaste</option>
-              <option value="Puntarenas">Puntarenas</option>
-              <option value="Limón">Limón</option>
-            </select>
-          </div>
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="canton">
-              Cantón:
-            </label>
-            <input
-              type="text"
-              name="canton"
-              value={formData.canton}
-              onChange={handleInputChange}
-              disabled={!isEditable}
-              className={`input-text `}
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <label className="text-xl" htmlFor="district">
-              Distrito:
-            </label>
-            <input
-              type="text"
-              name="district"
-              value={formData.district}
-              onChange={handleInputChange}
-              disabled={!isEditable}
-              className={`input-text `}
-            />
-          </div>
+          <ProvinceSelect
+            value={formData.province}
+            onChange={handleInputChange}
+            isEditable={isEditable}
+          ></ProvinceSelect>
+          <CantonSelect
+            formData={formData}
+            onChange={handleInputChange}
+            isEditable={isEditable}
+          ></CantonSelect>
+          <DistrictSelect
+            formData={formData}
+            onChange={handleInputChange}
+            isEditable={isEditable}
+          ></DistrictSelect>
           <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="exact_address">
               Dirección Exacta:
@@ -168,20 +184,19 @@ export const CustomerDetails = ({ fila }) => {
               disabled={!isEditable}
             />
           </div>
-
         </div>
         <div className="flex flex-col gap-3">
-            <label className="text-xl" htmlFor="note">
-              Nota:
-            </label>
-            <textarea
-              className={`input-text `}
-              name="note"
-              value={formData.note}
-              onChange={handleInputChange}
-              disabled={!isEditable}
-            />
-          </div>
+          <label className="text-xl" htmlFor="note">
+            Nota:
+          </label>
+          <textarea
+            className={`input-text `}
+            name="note"
+            value={formData.note}
+            onChange={handleInputChange}
+            disabled={!isEditable}
+          />
+        </div>
       </form>
       <div className="flex justify-end gap-8 mt-5">
         {!isEditable ? (

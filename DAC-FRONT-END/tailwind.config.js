@@ -5,13 +5,13 @@ export default {
     darkMode: 'class',
     extend: {
       colors: {
-        'main-color': '#000000',
-        'secondary-color':'#FFFFFF',
-        'main-yellow':'#FBBC04',
-        'main-blue': '#0066CC',
+        'main-color': '#e8e8e8',
+        'secondary-color':'#202124',
+        'main-yellow':'#78222d',
+        'main-blue': '#7d84b2',
         'main-blue-hover': '#0046AC',
         'even-row-table': '#E8E8E8',
-        'main-red': '#FF0000',
+        'main-red': '#78222d',
         'main-red-hover': '#DF0000',
         'input':'#FAFAFA',
         'main-bg-plate':'#e7e9f6',

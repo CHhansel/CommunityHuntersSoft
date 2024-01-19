@@ -13,6 +13,7 @@ import { Loading } from "../../components/loading";
 const Property = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
   const [createPropertyActive, setCreatePropertyActive] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
 
   const { user } = useSelector(selectUser);
@@ -23,7 +24,7 @@ const Property = () => {
     propertyData: { properties, totalProperties },
     isLoading,
     error,
-  } = useFetchProperties(user.company_id, page, 10);
+  } = useFetchProperties(user.company_id, page, 10, reloadTrigger);
 
   if (isLoading) {
     return <div className="h-80 "><Loading/></div>
@@ -38,7 +39,12 @@ const Property = () => {
     setPage(pageNumber);
   };
   
-  const updateTable = () => {};
+  const updateTable = () => {
+    setFilaSeleccionada(-1);
+    setCreatePropertyActive(false);
+    setReloadTrigger(prev => prev + 1); // Incrementa el trigger para recargar
+
+  };
   // propiedades Resumidas para la tabla
   const propertiesResume = resumeData(properties,'Properties');
 

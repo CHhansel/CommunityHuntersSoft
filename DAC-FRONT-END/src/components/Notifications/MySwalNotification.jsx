@@ -11,7 +11,7 @@ export const useAlert = () => {
       position: 'bottom-end',
       showConfirmButton: false,
       showCloseButton: true,
-      timer: 3000,
+      timer: 5000,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);

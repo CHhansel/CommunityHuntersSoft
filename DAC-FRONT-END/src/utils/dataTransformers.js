@@ -20,8 +20,8 @@ export function parseProperties(properties) {
 function parseCustomerColumnNames(columns) {
   const translations = {
     Id: "ID",
-    nombre: "Nombre",
-    apellido: "Apellido",
+    name: "Nombre",
+    lastname: "Apellido",
     dni: "Identificación",
     dni_type_id: "Tipo de DNI",
     email: "Correo",

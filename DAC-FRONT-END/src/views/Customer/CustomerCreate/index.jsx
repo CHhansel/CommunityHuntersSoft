@@ -1,25 +1,32 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
-import { createCustomerAction } from "../../../actions/customer"; // Asegúrate de importar la acción correcta
+import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect";
+import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
+import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect";
+import { DniTypeSelect } from "../../../components/inputs/Select/DniSelect";
+import useCreateCustomer from "../../../hooks/customers/useCreateCustomer ";
+import Swal from "sweetalert2";
+import { useAlert } from "../../../components/Notifications/MySwalNotification";
 
-export const CustomerCreate = () => {
-  const { user, token } = useSelector(selectUser);
+export const CustomerCreate = ({updateTable}) => {
+  const { user } = useSelector(selectUser);
+  const showToast = useAlert();
+
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
     dni: "",
+    dni_type: 1,
     email: "",
-    company_name: "",
-    dni_type_id: 2,
-    note: "",
-    province: "",
-    canton: "",
-    district: "",
-    exact_address: "",
     company_id: user.company_id,
+    note: "",
+    province_code: "1",
+    canton_code: "",
+    district_code: "",
+    exact_address: "",
   });
-  const dispatch = useDispatch();
+  const { createCustomer, isLoading, error } = useCreateCustomer();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,12 +38,23 @@ export const CustomerCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(createCustomerAction({ data: formData, token }));
-      alert("Cliente creado con éxito!");
-    } catch (error) {
-      console.error("Hubo un error al crear el cliente:", error);
-      alert("Error al crear cliente. Por favor, inténtalo de nuevo.");
+    console.log(formData);
+    const result = await Swal.fire({
+      title: "Desea crear esta propiedad?",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await createCustomer(formData);
+        showToast("success", "Cliente creado con éxito!");
+        updateTable();
+      } catch (err) {
+        console.error("Hubo un error al crear la propiedad:", err);
+        alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
+      }
     }
   };
 
@@ -75,20 +93,10 @@ export const CustomerCreate = () => {
             required
           />
         </div>
-        <div className="flex flex-col gap-3 ">
-          <label className="text-xl" htmlFor="dni_type_id">
-            Tipo de Identificación
-          </label>
-          <input
-            className="input-text"
-            type="text"
-            name="dni_type_id"
-            placeholder="Tipo de indentificación"
-            value={formData.dni_type_id}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <DniTypeSelect
+          value={formData.dni_type_id}
+          onChange={handleChange}
+        ></DniTypeSelect>
         <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="dni">
             Identificación
@@ -119,86 +127,30 @@ export const CustomerCreate = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-3 ">
-          <label className="text-xl" htmlFor="company_name">
-            Nombre de la Empresa
+        <ProvinceSelect
+          value={formData.province}
+          onChange={handleChange}
+        ></ProvinceSelect>
+        <CantonSelect
+          formData={formData}
+          onChange={handleChange}
+        ></CantonSelect>
+        <DistrictSelect
+          formData={formData}
+          onChange={handleChange}
+        ></DistrictSelect>
+        <div className="flex flex-col gap-3">
+          <label className="text-lg " htmlFor="exact_address">
+            Dirección exacta
           </label>
-          <input
+          <textarea
             className="input-text"
-            type="text"
-            name="company_name"
-            placeholder="Nombre de la Empresa"
-            value={formData.company_name}
+            name="exact_address"
+            placeholder="Dirección exacta"
+            value={formData.exact_address}
             onChange={handleChange}
+            required
           />
-        </div>
-        <div className="flex flex-wrap gap-5">
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="province">
-              Provincia
-            </label>
-            <select
-              className="input-text"
-              name="province"
-              value={formData.province}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Selecciona una provincia</option>
-              <option value="San José">San José</option>
-              <option value="Alajuela">Alajuela</option>
-              <option value="Cartago">Cartago</option>
-              <option value="Heredia">Heredia</option>
-              <option value="Guanacaste">Guanacaste</option>
-              <option value="Puntarenas">Puntarenas</option>
-              <option value="Limón">Limón</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="canton">
-              Cantón
-            </label>
-            <input
-              className="input-text"
-              type="text"
-              name="canton"
-              placeholder="Cantón"
-              value={formData.canton}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="district">
-              Distrito
-            </label>
-            <input
-              className="input-text"
-              type="text"
-              name="district"
-              placeholder="Distrito"
-              value={formData.district}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="exact_address">
-              Dirección exacta
-            </label>
-            <input
-              className="input-text"
-              type="text"
-              name="exact_address"
-              placeholder="Dirección exacta"
-              value={formData.exact_address}
-              onChange={handleChange}
-              required
-            />
-          </div>
         </div>
         <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="note">
@@ -212,12 +164,12 @@ export const CustomerCreate = () => {
             onChange={handleChange}
           ></textarea>
         </div>
+        <div className="w-full flex justify-end">
+          <button className="button-success" type="submit">
+            Crear Cliente
+          </button>
+        </div>
       </form>
-      <div className="flex justify-end gap-8 mt-5">
-        <button className="button-success" type="submit">
-          Crear Cliente
-        </button>
-      </div>
     </div>
   );
 };

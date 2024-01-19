@@ -144,9 +144,23 @@ const updateProperty = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 };
+const deleteProperty = async (req, res) => {
+    const { id } = req.params; 
+    console.log(req.params);
+    const query = "CALL DeleteProperty(?)";
+    const values = [id];
 
+    try {
+        await pool.query(query, values);
+        res.json({ message: "Propiedad eliminada exitosamente" });
+    } catch (err) {
+        console.error("Error al eliminar la propiedad:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
 module.exports = {
     insertProperty,
     getPropertiesByCompanyId,
-    updateProperty
+    updateProperty,
+    deleteProperty
 };

@@ -37,4 +37,14 @@ export const PropertyService = {
             throw new Error(errorMessage);
         }
     },
+    deleteProperty: async (productId) => {
+        try {
+            const response = await DAC_API.delete(`/property/delete-property/${productId}`);
+            return response.data;
+        } catch (error) {
+            const errorMessage = handleApiError(error);
+            console.error('Error al eliminar la propiedad:', errorMessage);
+            throw new Error(errorMessage);
+        }
+    },
 };

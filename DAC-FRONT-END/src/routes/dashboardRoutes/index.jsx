@@ -13,6 +13,7 @@ import withProtectedAccess from "../../components/HOC/withProtectedAccess";
 import Employee from "../../views/Employee";
 import FontSizeAdjuster from "../../components/FontSizeAjust";
 import Billing from "../../views/Billing";
+import ThemeToggle from "../../components/ThemeToggle";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -42,6 +43,7 @@ export const DashboardRoutes = () => {
       <div className="overflow-y-auto flex flex-col w-full min-h-screen justify-between relative ">
         <div className="absolute top-0 right-[28px]">
           <FontSizeAdjuster />
+          <ThemeToggle></ThemeToggle>
         </div>
         <div className="mt-5">
         <Breadcrumb />
