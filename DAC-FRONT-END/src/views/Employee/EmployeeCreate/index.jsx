@@ -1,19 +1,25 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createEmployee } from "../../../actions/employee"; // Asegúrate de que esta ruta sea la correcta para tu configuración
+
 import { selectUser } from "../../../store/authSlice";
+import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect";
+import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
+import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect";
+import { useSelector } from "react-redux";
+import { useCreateEmployee } from "../../../hooks/employees/useCreateEmployee";
+import { useAlert } from "../../../components/Notifications/MySwalNotification";
+import Swal from "sweetalert2";
 
 export const EmployeeCreate = () => {
   const { user, token } = useSelector(selectUser);
 
-  const [error, setError] = useState(null); // Estado para manejar errores
+  const showToast = useAlert();
 
-  const dispatch = useDispatch();
+  const { createEmployee, isLoading, error } = useCreateEmployee(); // Utiliza el hook
 
   const [formData, setFormData] = useState({
     user_name: "",
     email: "",
-    role_id: "",
+    role_id: "2",
     password: "",
     employee_name: "",
     employee_lastname: "",
@@ -24,7 +30,7 @@ export const EmployeeCreate = () => {
     district: "",
     exact_address: "",
     client_id: user.id,
-    company_id: user.company_id
+    company_id: user.company_id,
   });
 
   const handleInputChange = (event) => {
@@ -36,26 +42,34 @@ export const EmployeeCreate = () => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validación de contraseñas
     if (formData.password !== formData.confirmPassword) {
       setError("Las contraseñas no coinciden.");
       return;
     }
-
-    try {
-      dispatch(createEmployee({ data: formData, token }));
-      alert("Empleado creado con éxito!");
-    } catch (error) {
-      console.error("Hubo un error al crear el empleado:", error);
-      alert("Error al crear empleado. Por favor, inténtalo de nuevo.");
+    const result = await Swal.fire({
+      title: "Desea crear este cliente?",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
+    });
+    if (result.isConfirmed) {
+      try {
+        // Llama al método createEmployee del hook
+        await createEmployee(formData);
+        alert("Empleado creado con éxito!");
+      } catch (err) {
+        console.error("Hubo un error al crear el empleado:", err);
+        alert("Error al crear empleado. Por favor, inténtalo de nuevo.");
+      }
     }
   };
 
   return (
     <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Empleado</h2>
-      <form className="m-5 flex justify-evenly flex-wrap items-start gap-y-5">
+      <form className="flex justify-between flex-wrap items-start gap-5 w-full">
         <div className="flex gap-5 flex-wrap">
           <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="user_name">
@@ -77,18 +91,6 @@ export const EmployeeCreate = () => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleInputChange}
-              className={`input-text `}
-            />
-          </div>
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="role_id">
-              ID del Rol:
-            </label>
-            <input
-              type="number"
-              name="role_id"
-              value={formData.role_id}
               onChange={handleInputChange}
               className={`input-text `}
             />
@@ -172,42 +174,18 @@ export const EmployeeCreate = () => {
           />
         </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="province">
-              Provincia:
-            </label>
-            <input
-              type="text"
-              name="province"
-              value={formData.province}
-              onChange={handleInputChange}
-              className={`input-text `}
-            />
-          </div>
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="canton">
-              Cantón:
-            </label>
-            <input
-              type="text"
-              name="canton"
-              value={formData.canton}
-              onChange={handleInputChange}
-              className={`input-text `}
-            />
-          </div>
-          <div className="flex flex-col gap-3 ">
-            <label className="text-xl" htmlFor="district">
-              Distrito:
-            </label>
-            <input
-              type="text"
-              name="district"
-              value={formData.district}
-              onChange={handleInputChange}
-              className={`input-text `}
-            />
-          </div>
+          <ProvinceSelect
+            value={formData.province}
+            onChange={handleInputChange}
+          ></ProvinceSelect>
+          <CantonSelect
+            formData={formData}
+            onChange={handleInputChange}
+          ></CantonSelect>
+          <DistrictSelect
+            formData={formData}
+            onChange={handleInputChange}
+          ></DistrictSelect>
           <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="exact_address">
               Dirección Exacta:

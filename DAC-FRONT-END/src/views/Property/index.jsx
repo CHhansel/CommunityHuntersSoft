@@ -9,6 +9,8 @@ import { useState } from "react";
 import { resumeData } from "../../utils/resumesForTable";
 import { useAlert } from "../../components/Notifications/MySwalNotification";
 import { Loading } from "../../components/loading";
+import add_icon from "../../assets/add-icon.svg";
+import SearchBar from "../../components/search-bar";
 
 const Property = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
@@ -50,14 +52,15 @@ const Property = () => {
 
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full ">
-      <div className="w-100 flex justify-end px-8">
+      <div className="flex flex-row gap-8 justify-end items-center">
+      <SearchBar></SearchBar>
         <button
           onClick={() => {
             setFilaSeleccionada(-1), setCreatePropertyActive(true);
           }}
-          className="bg-main-blue px-6 py-2 border text-white rounded-full"
+          className="flex gap-1 bg-main-blue px-6 py-2 border text-white rounded-main items-center"
         >
-          AGREGAR
+          <img src={add_icon} alt="" />AGREGAR
         </button>
       </div>
       {propertiesResume && totalProperties > 0 && (

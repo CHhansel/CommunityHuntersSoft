@@ -14,6 +14,8 @@ import Employee from "../../views/Employee";
 import FontSizeAdjuster from "../../components/FontSizeAjust";
 import Billing from "../../views/Billing";
 import ThemeToggle from "../../components/ThemeToggle";
+import Orders from "../../views/Restaurant/Orders/OrdersView";
+import TopBar from "../../components/top-bar";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -35,32 +37,34 @@ export const DashboardRoutes = () => {
   }
 
   return (
-    <div className="max-h-screen w-full flex flex-row">
-      <div className="w-52 h-full">
-        <SideMenu></SideMenu>
+    <div className="w-full mx-5 min-h-screen flex flex-col justify-between">
+      <div className="w-full ">
+        <TopBar></TopBar>
       </div>
-
-      <div className="overflow-y-auto flex flex-col w-full min-h-screen justify-between relative ">
-        <div className="absolute top-0 right-[28px]">
-          <FontSizeAdjuster />
-          <ThemeToggle></ThemeToggle>
+      <div className="w-full flex flex-row flex-grow-[5] ">
+        <div className="h-full flex justify-center">
+          <SideMenu></SideMenu>
         </div>
-        <div className="mt-5">
-        <Breadcrumb />
-          <div className="grow">
-            <Routes>
-              <Route index element={<Dashboard />} />
-              <Route path="/properties" element={<ProtectedProperty />} />
-              <Route path="/clients" element={<Customer />} />
-              <Route path="/admin/*" element={<ConfigRouter />} />
-              <Route path="/employees" element={<Employee />} />
-              <Route path="/bills" element={<Billing />} />
-            </Routes>
+
+        <div className="flex flex-col w-full max-h-[800px] justify-between overflow-y-auto">
+          <div className=" ">
+            <Breadcrumb />
+            <div className="grow">
+              <Routes>
+                <Route index element={<Dashboard />} />
+                <Route path="/properties" element={<ProtectedProperty />} />
+                <Route path="/clients" element={<Customer />} />
+                <Route path="/admin/*" element={<ConfigRouter />} />
+                <Route path="/employees" element={<Employee />} />
+                <Route path="/Orders" element={<Orders />} />
+                <Route path="/bills" element={<Billing />} />
+              </Routes>
+            </div>
           </div>
         </div>
-        <div className="mt-28">
-          <Footer />
-        </div>
+      </div>
+      <div className="">
+        <Footer />
       </div>
     </div>
   );

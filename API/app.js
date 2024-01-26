@@ -28,7 +28,7 @@ app.use("/api/customer", require("./routes/customer"));
 app.use("/api/contract", require("./routes/contract"));
 app.use("/api/address", require("./routes/address_info"));
 app.use("/api/role", require("./routes/role"));
-app.use("/api/employees", require("./routes/employee"));
+app.use("/api/employee", require("./routes/employee"));
 app.use("/api/module", require("./routes/module"));
 app.use("/api/cabys", require("./routes/cabys"));
 app.use("/api/company", require("./routes/company"));

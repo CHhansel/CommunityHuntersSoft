@@ -103,9 +103,9 @@ function parseContractColumnNames(columns) {
 function parseEmployeeColumnNames(columns) {
   const translations = {
     company_name: "Nombre de Empresa",
-    employee_name: "Nombre",
-    employee_lastname: "Apellido",
-    role_name: "Rol",
+    name: "Nombre",
+    lastname: "Apellido",
+    role: "Rol",
     dni: "DNI",
     dni_type_id: "Tipo de DNI",
     email: "Correo",

@@ -3,7 +3,7 @@ import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect
 import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
 import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect";
 import { DniTypeSelect } from "../../../components/inputs/Select/DniSelect";
-import { useDeleteCustomer } from "../../../hooks/customers/useDeleteCustomer ";
+import { useDeleteCustomer } from "../../../hooks/customers/useDeleteCustomer";
 import Swal from "sweetalert2";
 import { useAlert } from "../../../components/Notifications/MySwalNotification";
 import { useUpdateCustomer } from "../../../hooks/customers/useUpdateCustomer";
@@ -29,7 +29,7 @@ export const CustomerDetails = ({ fila, updateTable }) => {
       [name]: value,
     }));
   };
-  console.log(formData);
+
   useEffect(() => {
     setIsEditable(false);
     setFormData(fila);
@@ -205,11 +205,11 @@ export const CustomerDetails = ({ fila, updateTable }) => {
           </button>
         ) : (
           <div>
+            <button onClick={handleDelete} className="button-delete">
+              Borrar
+            </button>
             <button onClick={handleCancelEdit} className="button-cancel">
               Cancelar
-            </button>
-            <button onClick={handleDelete} className="button-delete">
-              Eliminar
             </button>
             <button onClick={handleSave} className="button-success">
               Guardar

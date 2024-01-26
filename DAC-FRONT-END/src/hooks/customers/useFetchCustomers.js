@@ -31,4 +31,3 @@ export const useFetchCustomers = (companyId, page, itemsPerPage, reloadTrigger) 
     return { customersData, loading, error };
 };
 
-export default useFetchCustomers;

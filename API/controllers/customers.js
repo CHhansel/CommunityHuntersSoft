@@ -26,12 +26,6 @@ const getCustomersByUserId = async (req, res) => {
             });
         }
 
-        // Opcional: Formatear las fechas o realizar otras transformaciones
-        customers.forEach(customer => {
-            // Por ejemplo, si tienes una fecha para formatear, puedes hacerlo aquí
-            // customer.creation_date = formatDate(customer.creation_date);
-        });
-
         res.json({ customers, totalCustomers });
     } catch (err) {
         console.error("Error al obtener los clientes:", err);

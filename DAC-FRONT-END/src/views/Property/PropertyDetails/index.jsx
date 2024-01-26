@@ -121,7 +121,7 @@ export const PropertyDetail = ({ fila, updateTable }) => {
   console.log(formData);
   return (
     <div>
-      <div className="p-10 my-5 rounded-main bg-white border shadow">
+      <div className="p-10 my-5 rounded-main bg-white">
         <h2 className="text-2xl text-main-blue mb-8">Detalles</h2>
         <form className="flex justify-between flex-wrap items-start gap-5 w-full">
           <div className="flex flex-col gap-3">

@@ -24,7 +24,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
         <thead>
           <tr className="">
             {columnsParseadas.map((col, index) => (
-              <th className="bg-[#dadae3] py-[16px] text-base first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main " key={index}>
+              <th className=" py-[16px] text-base first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main " key={index}>
                 {col}
               </th>
             ))}

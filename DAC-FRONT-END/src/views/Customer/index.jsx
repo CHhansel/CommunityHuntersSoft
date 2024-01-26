@@ -54,7 +54,6 @@ const Customer = () => {
     setReloadTrigger((prev) => prev + 1); // Incrementa el trigger para recargar
   };
 
-  //console.log(customersData, " ", totalCustomers);
   const customersResume = resumeData(customers,'Customers');
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
@@ -94,7 +93,7 @@ const Customer = () => {
       {filaSeleccionada >= 0 && (
         <CustomerDetails fila={customers[filaSeleccionada]} updateTable={updateTable} />
       )}
-      {createCustomerActive && filaSeleccionada == -1 && <CustomerCreate />}
+      {createCustomerActive && filaSeleccionada == -1 && <CustomerCreate updateTable={updateTable} />}
     </div>
   );
 };

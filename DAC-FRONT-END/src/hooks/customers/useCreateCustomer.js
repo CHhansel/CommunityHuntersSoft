@@ -14,6 +14,7 @@ export const useCreateCustomer = () => {
             return response;  
         } catch (err) {
             setError(err.message);
+            throw err; // Lanzamos el error para que pueda ser capturado por quien llama la función.
         } finally {
             setLoading(false);
         }

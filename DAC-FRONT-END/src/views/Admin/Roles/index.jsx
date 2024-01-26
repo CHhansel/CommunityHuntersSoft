@@ -1,43 +1,43 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchRoles } from "../../../actions/roles";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../../store/authSlice";
 import { TablaDinamica } from "../../../components/Table";
 import { RoleCreate } from "./RoleCreate";
 import { RoleDetails } from "./RoleDetails";
+import { useFetchRoles } from "../../../hooks/roles/useFetchRoles";
 
 const Roles = () => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
   const [createRoleActive, setCreateRoleActive] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+  const { user } = useSelector(selectUser);
+  const [page, setPage] = useState(1);
+  // Utiliza el hook useFetchRoles para obtener los roles
+  const { rolesData, isLoading, error } = useFetchRoles(
+    user.company_id,
+    page,
+    10,
+    reloadTrigger 
+  );
 
-  const { user, token } = useSelector(selectUser);
-  const dispatch = useDispatch();
+  const { roles, totalRoles } = rolesData;
 
-  const totalRoles = useSelector((state) => state.roles.totalRoles);
-  useEffect(() => {
-    dispatch(
-      fetchRoles({
-        user_id: user.id,
-        company_id: user.company_id,
-        page: 1,
-        itemsPerPage: 10,
-        token,
-      })
-    );
-  }, [dispatch, user.id, token, totalRoles]);
-  const roles = useSelector((state) => state.roles.roles);
-  const status = useSelector((state) => state.roles.status);
-  if (status === "loading" || status === "idle") {
-    return <div>Cargando Roles ... {status}</div>;
+  if (isLoading) {
+    return <div>Cargando Roles...</div>;
   }
-    // propiedades Resumidas para la tabla
-    const rolesResume = JSON.parse(JSON.stringify(roles));
-    rolesResume.forEach((rol) => {
-      delete rol.company_id;
-    });
+
+  if (error) {
+    return <div>Error al cargar los roles: {error}</div>;
+  }
+
+  // // propiedades Resumidas para la tabla
+  // const rolesResume = JSON.parse(JSON.stringify(roles));
+  // rolesResume.forEach((rol) => {
+  //   delete rol.company_id;
+  // });
+
   return (
     <div className="w-full px-16 flex flex-col justify-start h-full">
-
       <div className="w-100 flex justify-end px-8">
         <button
           onClick={() => {
@@ -48,19 +48,20 @@ const Roles = () => {
           AGREGAR
         </button>
       </div>
-      <TablaDinamica
-        datos={rolesResume}
-        setFilaSeleccionada={setFilaSeleccionada}
-        dataType="Properties"
-      />
+      {roles && (
+        <TablaDinamica
+          datos={roles}
+          setFilaSeleccionada={setFilaSeleccionada}
+          dataType="Properties"
+        />
+      )}
       {filaSeleccionada >= 0 && (
         <RoleDetails
           key={roles[filaSeleccionada].id}
           fila={roles[filaSeleccionada]}
         />
       )}
-      {createRoleActive &&  <RoleCreate></RoleCreate>}
-      
+      {createRoleActive && <RoleCreate></RoleCreate>}
     </div>
   );
 };

@@ -1,96 +1,80 @@
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSignHanging } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignHanging } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useResolvedPath } from "react-router-dom";
 import SideBarLogo from "./Logo/index";
-import exit_icon from "../../assets/logout_icon_white.svg";
+import properties_module_icon from "../../assets/properties-module-icon.svg";
+import clients_module_icon from "../../assets/clients-module-icon.svg";
+import admin_module_icon from "../../assets/admin-module-icon.svg";
+import employee_module_icon from "../../assets/employee-module-icon.svg";
+import push_pin from "../../assets/push_pin_black.svg";
+import push_pin_filled from "../../assets/push_pin_black_filled.svg";
 import { useLocation } from "react-router-dom";
 import { resetAuthState, selectUser } from "../../store/authSlice";
-import { resetModulesState } from "../../store/modulesSlice";
+import { useState } from "react";
 
 const SideMenu = () => {
   const location = useLocation();
   const url = useResolvedPath("").pathname;
+  const [fixedMenu, setfixedMenu] = useState(false);
   const accessibleModules = useSelector(
     (state) => state.modules.accessibleModules.accessModules
   );
-  const { user } = useSelector(selectUser);
-
+  const [pinIcon, setPinIcon] = useState(push_pin);
   const allModules = {
-    1: { name: "Propiedades", path: "properties" },
-    2: { name: "Clientes", path: "clients"},
-    3: { name: "Administración", path: "admin" },
-    4: { name: "Facturas", path: "bills" },
-    5: { name: "Empleados", path: "employees" },
-    6: { name: "Ordenes", path: "orders" },
+    1: {
+      name: "Propiedades",
+      path: "properties",
+      icon: properties_module_icon,
+    },
+    2: { name: "Clientes", path: "clients", icon: clients_module_icon },
+    3: { name: "Administración", path: "admin", icon: admin_module_icon },
+    4: { name: "Facturas", path: "bills", icon: employee_module_icon },
+    5: { name: "Empleados", path: "employees", icon: properties_module_icon },
+    6: { name: "Ordenes", path: "orders", icon: properties_module_icon },
     // Agrega más módulos según sea necesario
   };
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    Swal.fire({
-      title: "Desea Salir?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        //Borrar la información del localStorage
-        localStorage.removeItem("auth");
-        localStorage.removeItem("token");
-        localStorage.removeItem("accessibleModules");
-        // Resetear el estado de Redux
-        dispatch(resetAuthState());
-        dispatch(resetModulesState());
-        // Redirige al usuario a la página de inicio de sesión
-        navigate("/login"); // Asegúrate de que esta es la ruta correcta para tu página de inicio de sesión
-      }
-    });
+  const onclickPin = () => {
+    setPinIcon(pinIcon === push_pin ? push_pin_filled : push_pin);
+    setfixedMenu(!fixedMenu);
   };
   return (
-    <div className="sidebar bg-secondary-color flex flex-col justify-between min-h-screen  items-center">
-      <div className="my-12 flex flex-col items-center">
-        <SideBarLogo />
-        <h4 className="text-white mt-8">{user.name}</h4>
-        <h4 className="text-white mt-2">{user.role}</h4>
-        <h4 className="text-white mt-2 text-center">{user.company_name}</h4>
-      </div>
-      <div className="flex flex-col justify-start w-52 px-2">
-        {accessibleModules.map((module) => {
-          const { name, path: modulePath } = allModules[module.module_id];
-          const isActive = location.pathname.includes(modulePath);
-          return (
-            
-            <Link
-              key={module.module_id}
-              to={`${url}/${modulePath}`}
-              className={`ease-out duration-500  my-1 w-full py-[6px] px-[12px] border-[0.1px] border-zinc-700 rounded-lg text-center ${
-                isActive
-                  ? "bg-white text-black"
-                  : "text-white hover:bg-white hover:text-black"
-              }`}
-            >
-            {name}
-            </Link>
-          );
-        })}
-      </div>
-      <div className="w-[200px] h-14 bg-[#78222d] flex items-center justify-center pointer">
-        <button
-          className="text-white w-48 h-10 text-lg "
-          onClick={handleLogout}
+    <div className=" flex flex-col justify-center">
+      <div className="rounded-main bg-white flex flex-col justify-between items-center p-3">
+        {/* <div className="flex flex-col gap-7 justify-start w-14 hover:w-52 overflow-hidden duration-300"> */}
+        <div
+          className={`flex flex-col gap-7 justify-start ${
+            fixedMenu ? "w-52" : "w-14 hover:w-52"
+          }   overflow-hidden duration-300`}
         >
-          {" "}
-          <span>
-            {" "}
-            <img src={exit_icon} alt="exit_icon" className="inline w-10" />{" "}
-          </span>{" "}
-          Salir
-        </button>
+          <div className="flex justify-start">
+            <button onClick={onclickPin}>
+              <img src={pinIcon} alt="" />
+            </button>
+          </div>
+          {accessibleModules.map((module) => {
+            const {
+              name,
+              path: modulePath,
+              icon,
+            } = allModules[module.module_id];
+            const isActive = location.pathname.includes(modulePath);
+            return (
+              <Link
+                key={module.module_id}
+                to={`${url}/${modulePath}`}
+                className={`flex items-center gap-3 rounded-main ease-out duration-500  my-1 w-full py-[6px] px-[12px]  text-center ${
+                  isActive
+                    ? "bg-main-blue text-white"
+                    : "text-black bg-white hover:bg-main-blue hover:text-black"
+                }`}
+              >
+                <img className="w-9 h-9" src={icon} alt={name} /> {name}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

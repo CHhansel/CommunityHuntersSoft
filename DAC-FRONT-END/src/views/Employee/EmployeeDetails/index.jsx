@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateEmployee } from "../../../actions/employee"; // Asegúrate de que esta ruta sea la correcta para tu configuración
 import { selectUser } from "../../../store/authSlice";
 import { fetchRoles } from "../../../actions/roles";
+import useUpdateEmployee from "../../../hooks/employees/useUpdateEmployee";
 
 // eslint-disable-next-line react/prop-types
 export const EmployeeDetails = ({ fila }) => {
   const { user, token } = useSelector(selectUser);
   const [isEditable, setIsEditable] = useState(false);
-  const [error] = useState(null); // Estado para manejar errores
-
+  const { updateEmployee, isLoading, error } = useUpdateEmployee();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({ ...fila, user_id: user.id });
@@ -59,12 +59,11 @@ export const EmployeeDetails = ({ fila }) => {
     setFormData(fila);
   };
   return (
-    <div className="border border-black p-5 my-5">
+    <div className="p-10 my-5 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Editar Empleado</h2>
-      <form className="m-5 flex flex-col justify-evenly gap-8 flex-wrap items-start">
+      <form className="flex justify-between flex-wrap items-start gap-5 w-full">
         <div className="flex gap-5 flex-wrap">
-
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="user_name">
               Usuario:
             </label>
@@ -74,10 +73,10 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.user_name}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="email">
               Email:
             </label>
@@ -87,10 +86,11 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.email}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+        </div>
+        <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="role_id">
               Rol:
             </label>
@@ -99,7 +99,7 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.role_id}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text`}
             >
               <option value="" disabled>
                 Elige un rol
@@ -112,38 +112,9 @@ export const EmployeeDetails = ({ fila }) => {
               ))}
             </select>
           </div>
-        </div>
-        <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
-            <label className="text-xl" htmlFor="password">
-              Contraseña:
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              disabled={!isEditable}
-              onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
-            />
-          </div>
 
-          <div className="flex flex-col gap-3 w-[300px]">
-            <label className="text-xl" htmlFor="confirmPassword">
-              Repita Contraseña:
-            </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              disabled={!isEditable}
-              onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
-            />
-          </div>
-        </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="employee_name">
               Nombre:
             </label>
@@ -153,10 +124,10 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.employee_name}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="employee_lastname">
               Apellido:
             </label>
@@ -166,11 +137,11 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.employee_lastname}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="phone_number">
             Número de Teléfono:
           </label>
@@ -180,10 +151,10 @@ export const EmployeeDetails = ({ fila }) => {
             value={formData.phone_number}
             disabled={!isEditable}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full `}
+            className={`input-text `}
           />
         </div>
-        <div className="flex flex-col gap-3 w-[300px]">
+        <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="salary">
             Salario:
           </label>
@@ -193,11 +164,11 @@ export const EmployeeDetails = ({ fila }) => {
             value={formData.salary}
             disabled={!isEditable}
             onChange={handleInputChange}
-            className={`border p-2 rounded-lg w-full `}
+            className={`input-text `}
           />
         </div>
         <div className="flex gap-5 flex-wrap">
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="province">
               Provincia:
             </label>
@@ -207,10 +178,10 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.province}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="canton">
               Cantón:
             </label>
@@ -220,10 +191,10 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.canton}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="district">
               Distrito:
             </label>
@@ -233,10 +204,10 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.district}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
-          <div className="flex flex-col gap-3 w-[300px]">
+          <div className="flex flex-col gap-3 ">
             <label className="text-xl" htmlFor="exact_address">
               Dirección Exacta:
             </label>
@@ -245,7 +216,7 @@ export const EmployeeDetails = ({ fila }) => {
               value={formData.exact_address}
               disabled={!isEditable}
               onChange={handleInputChange}
-              className={`border p-2 rounded-lg w-full `}
+              className={`input-text `}
             />
           </div>
         </div>

@@ -5,7 +5,7 @@ import { DistrictSelect } from "../../../components/inputs/Select/DistrictSelect
 import { CantonSelect } from "../../../components/inputs/Select/CantonSelect";
 import { ProvinceSelect } from "../../../components/inputs/Select/ProvinceSelect";
 import { DniTypeSelect } from "../../../components/inputs/Select/DniSelect";
-import useCreateCustomer from "../../../hooks/customers/useCreateCustomer ";
+import useCreateCustomer from "../../../hooks/customers/useCreateCustomer";
 import Swal from "sweetalert2";
 import { useAlert } from "../../../components/Notifications/MySwalNotification";
 
@@ -40,7 +40,7 @@ export const CustomerCreate = ({updateTable}) => {
     e.preventDefault();
     console.log(formData);
     const result = await Swal.fire({
-      title: "Desea crear esta propiedad?",
+      title: "Desea crear este cliente?",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
       confirmButtonText: "Aceptar",
@@ -51,10 +51,12 @@ export const CustomerCreate = ({updateTable}) => {
         await createCustomer(formData);
         showToast("success", "Cliente creado con éxito!");
         updateTable();
-      } catch (err) {
-        console.error("Hubo un error al crear la propiedad:", err);
-        alert("Error al crear propiedad. Por favor, inténtalo de nuevo.");
-      }
+      } catch (error) {
+        console.error("Hubo un error al crear el cliente:", error);
+        showToast(
+          "warning",
+          "Error al actualizar cliente. Por favor, inténtalo de nuevo."
+        );      }
     }
   };
 
