@@ -25,11 +25,11 @@ export const AppRouter = () => {
     }
   }, [dispatch]);
   return (
-    <div className="h-screen flex flex-col bg-[#F7F7F9]">
+    <div className="h-screen flex flex-col bg-[#F7F7F9] ">
       <div className="flex flex-grow">
         <Routes>
           <Route
-            path="/dashboard/*"
+            path="/*"
             element={
               <ProtectedRoute>
                 <DashboardRoutes />

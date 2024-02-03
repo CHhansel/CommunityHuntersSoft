@@ -5,17 +5,19 @@ export default {
     darkMode: 'class',
     extend: {
       colors: {
-        'main-color': '#e8e8e8',
+        'main-color': '#FF0060',
+        'main-bg-color': '#e8e8e8',
         'secondary-color':'#202124',
         'main-yellow':'#78222d',
-        'main-blue': '#7d84b2',
-        'main-blue-hover': '#0046AC',
+        'main-blue': '#6C9BCF',  // 7d84b2
+        'main-blue-hover': '#DCE4EE',
         'even-row-table': '#E8E8E8',
         'main-red': '#78222d',
         'main-red-hover': '#DF0000',
         'input':'#FAFAFA',
         'main-bg-plate':'#e7e9f6',
         'color-disabled':'#f5f5f5',
+        'bg-dark-main':'#202528',
 
       },
       fontFamily: {

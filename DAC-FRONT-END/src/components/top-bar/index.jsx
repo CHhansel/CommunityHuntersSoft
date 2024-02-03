@@ -33,7 +33,7 @@ const TopBar = () => {
     });
   };
   return (
-    <div className="w-full flex flex-row p-3 justify-between">
+    <div className="w-full flex flex-row p-3 justify-between ">
       <SideBarLogo />
       <div className="flex flex-row items-center gap-10">
         <ThemeToggle></ThemeToggle>

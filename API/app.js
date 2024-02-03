@@ -4,7 +4,6 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 
 
-
 const app = express();
 const port = 3000;
 app.use(express.json());
@@ -34,7 +33,16 @@ app.use("/api/cabys", require("./routes/cabys"));
 app.use("/api/company", require("./routes/company"));
 app.use("/api/atv", require("./routes/MHRequest"));
 app.use("/api/billing", require("./routes/billing"));
+app.use('/api/product', require("./routes/products"));
+app.use('/api/categories', require("./routes/categories"));
+app.use('/api/upload', require("./routes/multer_router"));
 // Resto de tus rutas y lógica de la API
+
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'fileSystem/imgs')));
+
+
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Iniciar el servidor

@@ -16,6 +16,8 @@ import Billing from "../../views/Billing";
 import ThemeToggle from "../../components/ThemeToggle";
 import Orders from "../../views/Restaurant/Orders/OrdersView";
 import TopBar from "../../components/top-bar";
+//import ProductCreate from "../../views/Restaurant/Food";
+import Menu from "../../views/Restaurant/Menu";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -37,7 +39,7 @@ export const DashboardRoutes = () => {
   }
 
   return (
-    <div className="w-full mx-5 min-h-screen flex flex-col justify-between">
+    <div className="w-full  min-h-screen flex flex-col justify-between">
       <div className="w-full ">
         <TopBar></TopBar>
       </div>
@@ -52,12 +54,13 @@ export const DashboardRoutes = () => {
             <div className="grow">
               <Routes>
                 <Route index element={<Dashboard />} />
-                <Route path="/properties" element={<ProtectedProperty />} />
-                <Route path="/clients" element={<Customer />} />
-                <Route path="/admin/*" element={<ConfigRouter />} />
-                <Route path="/employees" element={<Employee />} />
-                <Route path="/Orders" element={<Orders />} />
-                <Route path="/bills" element={<Billing />} />
+                <Route path="/propiedades" element={<ProtectedProperty />} />
+                <Route path="/clientes" element={<Customer />} />
+                <Route path="/administracion/*" element={<ConfigRouter />} />
+                <Route path="/empleados" element={<Employee />} />
+                <Route path="/ordenes" element={<Orders />} />
+                <Route path="/facturas" element={<Billing />} />
+                <Route path="/comidas" element={<Menu />} />
               </Routes>
             </div>
           </div>

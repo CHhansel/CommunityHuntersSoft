@@ -4,26 +4,10 @@ function PopUp({ children, isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-4 rounded shadow-lg ">
-        <div className='w-100  flex justify-between px-5'>
-        <button 
-          onClick={onClose} 
-          className="button-success"
-        >
-          Seleccionar
-        </button>
-        <button 
-          onClick={onClose} 
-          className="text-red-500 hover:text-red-700 mb-2 size text-3xl"
-        >
-          x
-        </button>
-
-        </div>
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center duration-1000">
+      <div className="w-11/12 bg-white  rounded-main shadow-lg popup-enter background-fadeIn">
         {children}
       </div>
-
     </div>
   );
 }

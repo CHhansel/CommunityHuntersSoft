@@ -29,11 +29,14 @@ html {
   .button-delete {
     @apply bg-[#ff0060] text-white px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow mx-2;
   }
-  .button-cancel {
-    @apply bg-[#888686] text-white px-5 py-2 border rounded-main hover:bg-slate-700 text-sm ease-out duration-500 shadow mx-2;
-  }
   .button-main-menu {
     @apply bg-[#FD1F55] text-white px-5 py-2 border rounded-main hover:bg-opacity-70 text-xs ease-out duration-500 mx-2;
+  }
+  .button-cancel {
+    @apply border-[#202528] text-[#202528] pl-[15px] pr-[20px] py-2 border rounded-main  text-xs ease-out mx-2 flex gap-1 items-center hover:scale-110 transition-transform duration-300 ;
+  }
+  .button-add {
+    @apply border-main-blue text-main-blue pl-[15px] pr-[20px] py-2 border rounded-main text-xs ease-out mx-2 flex gap-1 items-center hover:scale-110 transition-transform duration-300 ;
   }
   .h-desktop{
     @apply fit-content
@@ -86,4 +89,42 @@ select:disabled {
   background-color: var(--secondary);
   border-radius: 14px;
   border: 3px solid var(--primary);
+}
+
+.w-14 {
+  width: 3.5rem; /* o el ancho que necesites */
+}
+
+.w-52 {
+  width: 13rem; /* o el ancho que necesites */
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.25);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-enter {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.background-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+/* Agrega estas clases en tu archivo CSS */
+.button-add img,
+.button-delete img,
+.button-cancel img {
+  transition: transform 0.3s ease;
+}
+
+.button-add:hover img,
+.button-delete:hover img,
+.button-cancel:hover img {
+  transform: scale(1.1); /* Ajusta el valor de escala según lo que desees */
 }
