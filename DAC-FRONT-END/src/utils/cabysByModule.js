@@ -25,3 +25,10 @@ export const propertyModuleCabys = [
 		"code" : "7211200000300"
 	}
 ]
+export const restaurantModuleCabys = [
+	{
+		"description" : "Suministro de comida, servicio de restaurante con mesero",
+		"tax" : 13,
+		"code" : "6331000000000"
+	}
+]

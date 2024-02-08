@@ -1,19 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../../../components/buttons/Button";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../../store/authSlice";
 
-const CategoryCreateForm = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    image_url: "",
-    active: 1, // Valor predeterminado '1'
-    sort_order: null, // Valor predeterminado 'null'
-  });
+const CategoryCreateForm = ({ onClose, selectedCategory }) => {
+  const { user } = useSelector(selectUser);
+  const [categoryData, setCategory] = useState(selectedCategory);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (selectedCategory == null) {
+      setCategory({
+        name: "",
+        description: "",
+        image_url: "",
+        active: 1, // Valor predeterminado '1'
+        sort_order: null, // Valor predeterminado 'null'
+        company_id: user.company_id,
+      });
+    } else {
+      setCategory(selectedCategory);
+    }
+    setLoading(false);
+  }, [selectedCategory]);
   const [selectedFile, setSelectedFile] = useState(null); // Nuevo estado para el archivo seleccionado
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setCategory((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -25,13 +39,19 @@ const CategoryCreateForm = ({ onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Aquí puedes realizar la lógica para enviar los datos del formulario al servidor
-    console.log("Form data:", formData);
+    
   };
-
+  if (loading) {
+    return <div>Cargando</div>;
+  }
   return (
     <div className="p-10 rounded-main bg-white border shadow">
-      <h2 className="text-2xl text-main-blue mb-8">Crear Categoría</h2>
-      <form onSubmit={handleSubmit} className=" flex justify-between flex-wrap items-start gap-5 w-full">
+            <h2 className="text-2xl text-main-blue mb-8">
+        {selectedCategory == null
+          ? " Crear Categoria"
+          : " Ver/Modificar Categoria"}
+      </h2>
+      <form onSubmit={handleSubmit} className=" flex justify-start flex-wrap items-start gap-5 w-full">
       <div className="flex flex-col gap-3">
 
           <label>Nombre:</label>
@@ -39,7 +59,7 @@ const CategoryCreateForm = ({ onClose }) => {
           className="input-text"
             type="text"
             name="name"
-            value={formData.name}
+            value={categoryData.name}
             onChange={handleChange}
             required
           />
@@ -50,27 +70,26 @@ const CategoryCreateForm = ({ onClose }) => {
           <textarea
           className="input-text"
             name="description"
-            value={formData.description}
+            value={categoryData.description}
             onChange={handleChange}
             required
           ></textarea>
         </div>
-        <div className="flex flex-col gap-3">
-          <label>Image:</label>
-          <input
-            className="input-text"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            required
-          />
-        </div>
+
 
         <div className="w-full flex justify-end">
 
+        <div className="w-full flex justify-end">
           <Button type="CANCEL" onClick={onClose} />
-          <Button type="ADD" onClick={handleSubmit} />
+          {selectedCategory == null ? (
+            <Button type="ADD" onClick={handleSubmit} text={"MESA"} />
+          ) : (
+            <>
+              <Button type="DELETE" onClick={handleSubmit} text={"MESA"} />
+              <Button type="UPDATE" onClick={handleSubmit} text={"MESA"} />
+            </>
+          )}
+        </div>
         </div>
       </form>
     </div>

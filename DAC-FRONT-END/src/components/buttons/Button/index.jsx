@@ -1,25 +1,33 @@
 
 import add_icon from "../../../assets/add-icon-blue.svg";
+import cancel_icon from "../../../assets/cancel-icon.svg";
+import update_icon from "../../../assets/update-icon-blue.svg";
+import delete_icon from "../../../assets/delete-icon.svg";
 const buttonConfigs = {
     ADD: {
       text: 'AGREGAR',
       icon: add_icon, // Reemplaza con el path de tu icono
       className: 'button-add'
     },
+    UPDATE: {
+      text: 'ACTUALIZAR',
+      icon: update_icon, // Reemplaza con el path de tu icono
+      className: 'button-add'
+    },
     DELETE: {
       text: 'BORRAR',
-      icon: add_icon, // Reemplaza con el path de tu icono
+      icon: delete_icon, // Reemplaza con el path de tu icono
       className: 'button-delete'
     },
     CANCEL: {
         text: 'CANCELAR',
-        icon: add_icon, // Reemplaza con el path de tu icono
+        icon: cancel_icon, // Reemplaza con el path de tu icono
         className: 'button-cancel'
       },
     // Agrega más tipos y configuraciones según sea necesario
   };
 
-const Button = ({ type, onClick }) => {
+const Button = ({ type, onClick, text }) => {
     // Si el tipo no está definido en buttonConfigs, establece valores predeterminados o retorna null
     const config = buttonConfigs[type] || null;
   
@@ -35,7 +43,7 @@ const Button = ({ type, onClick }) => {
           type="button"
         >
           {config.icon && <img src={config.icon} className="inline-block" alt={`${config.text} icon`} />}
-          {config.text}
+          {config.text} {text}
         </button>
       );
   };

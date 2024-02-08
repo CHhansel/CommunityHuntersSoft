@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import CategoryService from "../../services/categories";
+import CategoryService from "../../services/categoryServices";
 
 export const useFetchCategories = (company_id, reloadTrigger) => {
   const [categoriesData, setCategoriesData] = useState({

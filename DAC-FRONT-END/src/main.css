@@ -23,11 +23,17 @@ html {
   .input-text {
     @apply border p-2 rounded-main w-72 focus:outline-main-blue focus:outline-1 text-xs shadow-sm mr-1;
   }
+  .input-text-sm {
+    @apply border p-2 rounded-main w-52 focus:outline-main-blue focus:outline-1 text-xs shadow-sm mr-1;
+  }
+  .input-text-xs {
+    @apply border p-2 rounded-main w-28 focus:outline-main-blue focus:outline-1 text-xs shadow-sm mr-1;
+  }
   .button-success {
     @apply bg-[#6c9bcf] text-white px-5 py-2 border rounded-main hover:bg-main-blue-hover text-sm ease-out duration-500 mx-2;
   }
-  .button-delete {
-    @apply bg-[#ff0060] text-white px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow mx-2;
+  .button-delete2 {
+    @apply border-main-color text-main-color px-5 py-2 border rounded-main hover:bg-main-red-hover text-sm ease-out duration-500 shadow mx-2;
   }
   .button-main-menu {
     @apply bg-[#FD1F55] text-white px-5 py-2 border rounded-main hover:bg-opacity-70 text-xs ease-out duration-500 mx-2;
@@ -37,6 +43,9 @@ html {
   }
   .button-add {
     @apply border-main-blue text-main-blue pl-[15px] pr-[20px] py-2 border rounded-main text-xs ease-out mx-2 flex gap-1 items-center hover:scale-110 transition-transform duration-300 ;
+  }
+  .button-delete {
+    @apply border-main-color text-main-color pl-[15px] pr-[20px] py-2 border rounded-main text-xs ease-out mx-2 flex gap-1 items-center hover:scale-110 transition-transform duration-300 ;
   }
   .h-desktop{
     @apply fit-content

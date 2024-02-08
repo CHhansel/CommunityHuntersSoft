@@ -1,6 +1,6 @@
 
 
-const AddButton = ({ onClick, icon, altText }) => {
+const AddButton = ({ onClick, icon, altText, textAdditional }) => {
   return (
     <button
       onClick={onClick}

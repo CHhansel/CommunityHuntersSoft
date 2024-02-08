@@ -4,32 +4,31 @@ const pool = require("../config/db2");
 
 const insertProduct = async (req, res) => {
     const {
-        _internal_code,
-        _name,
-        _description,
-        _price,
-        _quantity,
-        _cabys_code,
-        _unit_of_measure,
-        _tax_rate,
-        _company_id,
-        _tax_included,
-        img_url
+        internal_code,
+        name,
+        description,
+        price,
+        quantity,
+        cabys_code,
+        unit_of_measure,
+        tax_rate,
+        company_id,
+        tax_included,
+        image_url
     } = req.body;
-
     const query = "CALL InsertProduct(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
-        _internal_code,
-        _name,
-        _description,
-        _price,
-        _quantity,
-        _cabys_code,
-        _unit_of_measure,
-        _tax_rate,
-        _company_id,
-        _tax_included,
-        img_url
+        internal_code,
+        name,
+        description,
+        price,
+        quantity,
+        cabys_code,
+        unit_of_measure,
+        tax_rate,
+        company_id,
+        tax_included,
+        image_url
     ];
 
     try {

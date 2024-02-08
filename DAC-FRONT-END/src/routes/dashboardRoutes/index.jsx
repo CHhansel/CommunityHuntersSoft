@@ -18,6 +18,7 @@ import Orders from "../../views/Restaurant/Orders/OrdersView";
 import TopBar from "../../components/top-bar";
 //import ProductCreate from "../../views/Restaurant/Food";
 import Menu from "../../views/Restaurant/Menu";
+import Tables from "../../views/Restaurant/Tables";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -61,6 +62,7 @@ export const DashboardRoutes = () => {
                 <Route path="/ordenes" element={<Orders />} />
                 <Route path="/facturas" element={<Billing />} />
                 <Route path="/comidas" element={<Menu />} />
+                <Route path="/Mesas" element={<Tables />} />
               </Routes>
             </div>
           </div>

@@ -5,8 +5,14 @@ import { parseData } from "../../utils/dataTransformers";
 // eslint-disable-next-line react/prop-types
 export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
   const [filaActiva, setFilaActiva] = useState(null);
-  const columnas = Object.keys(datos[0]);
-  const columnsParseadas = parseData(columnas, dataType);
+  let  columnsParseadas;
+  let columnas;
+  try {
+    columnas = Object.keys(datos[0]);
+    columnsParseadas = parseData(columnas, dataType);
+  } catch (error) {
+     return(<div>Sin Datos</div>)
+  }
 
   const handleClick = (index) => {
     setFilaSeleccionada(index);
@@ -43,6 +49,7 @@ export const TablaDinamica = ({ datos, setFilaSeleccionada, dataType }) => {
               }  `}
             >
               {columnas.map((col, colIndex) => (
+                
                 <td key={colIndex} className=" text-center pointer p-[8px] first:rounded-tl-main first:rounded-bl-main last:rounded-br-main last:rounded-tr-main">
                   { (fila[col] !== null )?truncateText(fila[col], 200): "vacio"}
                 </td>

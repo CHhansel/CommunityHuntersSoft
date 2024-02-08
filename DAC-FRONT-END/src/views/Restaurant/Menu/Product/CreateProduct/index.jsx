@@ -1,225 +1,255 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateProduct } from "../../../../../hooks/products/useCreateProduct";
 import { useFileUpload } from "../../../../../hooks/files/useFileUpload"; // Asegúrate de proporcionar la ruta correcta
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../store/authSlice";
 import Swal from "sweetalert2";
 import Button from "../../../../../components/buttons/Button";
+import { restaurantModuleCabys } from "../../../../../utils/cabysByModule";
 
-const ProductCreate = ({ onClose }) => {
+const ProductCreate = ({ onClose, selectedProduct }) => {
   const { user } = useSelector(selectUser);
-  const [formData, setFormData] = useState({
-    internal_code: "",
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    cabys_code: "",
-    unit_of_measure: "",
-    tax_rate: "",
-    company_id: user.company_id,
-    tax_included: "",
-    img_url: "",
-  });
+  const [productData, setProductData] = useState(selectedProduct);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (selectedProduct == null) {
+      setProductData({
+        internal_code: "",
+        name: "",
+        description: "",
+        price: "",
+        quantity: "1",
+        cabys_code: "",
+        unit_of_measure: "",
+        tax_rate: "",
+        company_id: user.company_id,
+        tax_included: "1",
+        image_url: "http://localhost:3000/uploads/default-product-image.webp",
+      });
+    } else {
+      setProductData(selectedProduct);
+    }
+    setLoading(false);
+  }, [selectedProduct]);
+
   const [selectedFile, setSelectedFile] = useState(null); // Nuevo estado para el archivo seleccionado
+
+  const [previewUrl, setPreviewUrl] = useState(productData.image_url);
 
   const { imageUrl, uploadFile } = useFileUpload(); // Usa tu hook personalizado
   const { createProduct, isLoading, error } = useCreateProduct();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setSelectedFile(file); // Actualiza el estado con el archivo seleccionado
+    if (file) {
+      setSelectedFile(file); // Actualiza el estado con el archivo seleccionado
+      const url = URL.createObjectURL(file); // Crea una URL para el archivo
+      setPreviewUrl(url); // Actualiza el estado de la URL de vista previa
+    }
   };
+  const handleCabys = (e) => {
+    const { value } = e.target;
 
+    // Encuentra el elemento Cabys seleccionado
+    const selectedCabys = restaurantModuleCabys.find(
+      (item) => item.code === value
+    );
+
+    if (selectedCabys) {
+      setProductData((prevState) => ({
+        ...prevState,
+        cabys_code: selectedCabys.code,
+        tax_rate: selectedCabys.tax, // Establece el tax_rate basado en la selección
+      }));
+    } else {
+      // En caso de que se seleccione la opción "Seleccione un Código Cabys"
+      setProductData((prevState) => ({
+        ...prevState,
+        cabys_code: "",
+        tax_rate: "",
+      }));
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await Swal.fire({
-      title: "Desea crear esta propiedad?",
+      title: "¿Desea crear este producto?",
       showCancelButton: true,
       cancelButtonText: "Cancelar",
       confirmButtonText: "Aceptar",
     });
     if (result.isConfirmed) {
-      // El usuario confirmó, procede a guardar
       try {
-      } catch (err) {}
+        let productDataToUpdate = { ...productData }; // Copia del estado actual
+        if (selectedFile) {
+          // Crear un objeto FormData y añadir el archivo
+          const formData = new FormData();
+          formData.append("myFile", selectedFile);
+
+          // Llamar a uploadFile con el objeto FormData
+          const { path } = await uploadFile(formData);
+          productDataToUpdate.image_url = path; // Actualizar la copia del estado con la nueva URL de imagen
+        }
+
+        // Llama a createProduct con la data actualizada
+        const response = await createProduct(productDataToUpdate);
+        console.log("Product created successfully:", response);
+      } catch (err) {
+        console.error("Error creating product:", err);
+      }
     } else if (result.isDenied) {
-      // El usuario no confirmó, muestra un mensaje
-      Swal.fire("Changes are not saved", "", "info");
+      Swal.fire("Los cambios no se guardaron", "", "info");
     }
-    // if (selectedFile) {
-    //   // Crear un objeto FormData y añadir el archivo
-    //   const formData = new FormData();
-    //   formData.append('myFile', selectedFile);
 
-    //   // Llamar a uploadFile con el objeto FormData
-    //   const imageUrl = await uploadFile(formData);
-    //   setFormData((prevState) => ({
-    //     ...prevState,
-    //     img_url: imageUrl.path,
-    //   }));
-    // }
-
-    // try {
-    //   const response = await createProduct(formData);
-    //   // Handle success and show a success message
-    //   console.log("Product created successfully:", response);
-    // } catch (err) {
-    //   // Handle error and show an error message
-    //   console.error("Error creating product:", err);
-    // }
     onClose(true);
   };
 
+  if (loading) {
+    return <div>Cargando</div>;
+  }
   return (
     <div className="p-10 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Producto</h2>
       <form
         onSubmit={handleSubmit}
-        className=" flex justify-between flex-wrap items-start gap-5 w-full"
+        className=" flex justify-between flex-wrap items-center gap-5 w-full"
       >
+        <div className="w-[300px]">
+          {previewUrl && (
+            <img
+              className="w-full border border-main-color"
+              src={previewUrl}
+              alt="Vista previa"
+            />
+          )}
+          <div className="flex flex-col gap-3">
+            <input
+              className="file:mr-4 file:py-2 file:px-4 mt-3
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-violet-50 file:text-main-color
+            hover:file:bg-violet-100 cursor-pointer"
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-3">
-          <label>Internal Code:</label>
+          <label>Código interno:</label>
           <input
             className="input-text"
             type="text"
             name="internal_code"
-            value={formData.internal_code}
+            value={productData.internal_code}
             onChange={handleChange}
             required
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label>Name:</label>
+          <label>Nombre:</label>
           <input
             className="input-text"
             type="text"
             name="name"
-            value={formData.name}
+            value={productData.name}
             onChange={handleChange}
             required
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label>Description:</label>
+          <label>Descripción:</label>
           <textarea
             className="input-text"
             name="description"
-            value={formData.description}
+            value={productData.description}
             onChange={handleChange}
             required
           ></textarea>
         </div>
         <div className="flex flex-col gap-3">
-          <label>Price:</label>
+          <label>Precio:</label>
           <input
             className="input-text"
             type="number"
             name="price"
-            value={formData.price}
+            value={productData.price}
             onChange={handleChange}
             required
           />
         </div>
+
         <div className="flex flex-col gap-3">
-          <label>Quantity:</label>
-          <input
+          <label className="text-lg " htmlFor="cabys_code">
+            Código Cabys
+          </label>
+          <select
             className="input-text"
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Cabys Code:</label>
-          <input
-            className="input-text"
-            type="text"
             name="cabys_code"
-            value={formData.cabys_code}
-            onChange={handleChange}
+            value={productData.cabys_code}
+            onChange={handleCabys}
             required
-          />
+          >
+            <option value="">Seleccione un Código Cabys</option>
+            {restaurantModuleCabys.map((item) => (
+              <option key={item.code} value={item.code}>
+                {item.code} {item.description} - {item.tax}%
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-3">
-          <label>Unit of Measure:</label>
-          <input
-            className="input-text"
-            type="text"
-            name="unit_of_measure"
-            value={formData.unit_of_measure}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Tax Rate:</label>
+          <label>Impuesto %:</label>
           <input
             className="input-text"
             type="number"
             name="tax_rate"
-            value={formData.tax_rate}
+            value={productData.tax_rate}
             onChange={handleChange}
             required
+            disabled
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label>Company ID:</label>
-          <input
-            className="input-text"
-            type="number"
-            name="company_id"
-            value={formData.company_id}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Tax Included:</label>
-          <input
-            className="input-text"
-            type="number"
-            name="tax_included"
-            value={formData.tax_included}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Image URL:</label>
+          <label>Unidad De Medida:</label>
           <input
             className="input-text"
             type="text"
-            name="img_url"
-            value={formData.img_url}
+            name="unit_of_measure"
+            value={productData.unit_of_measure}
             onChange={handleChange}
             required
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label>Image:</label>
-          <input
+          <label>Impuesto Incluido:</label>
+          <select
             className="input-text"
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
+            name="tax_included"
+            value={productData.tax_included}
+            onChange={handleChange}
             required
-          />
+          >
+            <option value="1">Sí</option>
+            <option value="0">No</option>
+          </select>
         </div>
         <div className="w-full flex justify-end">
-
           <Button type="CANCEL" onClick={onClose} />
-          <Button type="ADD" onClick={handleSubmit} />
+          {selectedProduct == null ? (
+            <Button type="ADD" onClick={handleSubmit} />
+          ) : (
+            <Button type="UPDATE" onClick={handleSubmit} />
+          )}
         </div>
       </form>
     </div>

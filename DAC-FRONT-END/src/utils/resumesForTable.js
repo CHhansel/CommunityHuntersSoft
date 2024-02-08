@@ -16,6 +16,9 @@ export function resumeData(completeData, dataType) {
     case "Cabys":
       // data = parseCabysColumnNames(data);
       break;
+    case "Tables":
+      data = resumeTableData(completeData);
+      break;
     default:
       break;
   }
@@ -36,13 +39,21 @@ const resumeCustomerData = (customers) => {
     dni: customer.dni,
     name: customer.name + " " + customer.lastname,
     email: customer.email,
-
   }));
 };
 const resumeEmployeeData = (employees) => {
   return employees.map((employee) => ({
     name: employee.employee_name + " " + employee.employee_lastname,
     email: employee.email,
-    role: employee.role_name
+    role: employee.role_name,
+  }));
+};
+const resumeTableData = (tables) => {
+  return tables.map((table) => ({
+    id: table.id,
+    number: table.number,
+    reserved: table.reserved,
+    in_use: table.in_use,
+    max_capacity: table.max_capacity
   }));
 };

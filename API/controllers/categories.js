@@ -29,6 +29,41 @@ const insertProductCategory = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+const deleteProductCategoryAndRelationsById = async (req, res) => {
+  // Extraer el ID de la categoría de producto a eliminar de los parámetros de la solicitud
+  const { categoryId } = req.params;
+
+  try {
+    // Iniciar una transacción
+    await pool.query("START TRANSACTION");
+
+    // Eliminar las relaciones de producto-categoría correspondientes a la categoría a eliminar
+    await pool.query("DELETE FROM product_category_relation WHERE category_id = ?", [categoryId]);
+
+    // Eliminar la categoría de producto por su ID
+    const deleteCategoryQuery = "DELETE FROM product_categories WHERE id = ?";
+    const [categoryResult] = await pool.query(deleteCategoryQuery, [categoryId]);
+
+    // Verificar si la categoría de producto fue encontrada y eliminada
+    if (categoryResult.affectedRows === 0) {
+      // Hacer rollback si la categoría no fue encontrada
+      await pool.query("ROLLBACK");
+      return res.status(404).json({ error: "La categoría de producto no fue encontrada" });
+    }
+
+    // Confirmar la transacción si todo se ejecutó correctamente
+    await pool.query("COMMIT");
+
+    // Enviar una respuesta de éxito
+    res.json({ message: "Categoría de producto y relaciones eliminadas exitosamente" });
+  } catch (err) {
+    // Hacer rollback en caso de error
+    await pool.query("ROLLBACK");
+
+    console.error("Error al eliminar la categoría de producto y sus relaciones:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
 const getCategoriesByCompanyId = async (req, res) => {
   const { company_id } = req.query;
 
@@ -61,6 +96,22 @@ const getCategoriesByCompanyId = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+const updateProductCategory = async (req, res) => {
+  const { id, company_id, name, description, image_url, active, sort_order } = req.body;
+
+  try {
+    const query = "CALL UpdateProductCategory(?, ?, ?, ?, ?, ?, ?)";
+    const values = [id, company_id, name, description, image_url, active, sort_order];
+
+    await pool.query(query, values);
+
+    res.json({ message: "Categoría de producto actualizada exitosamente" });
+  } catch (err) {
+    console.error("Error al actualizar la categoría de producto:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
 // Controlador para insertar una nueva relación producto-categoría
 const insertProductCategoryRelation = async (req, res) => {
   // Extraer los datos de la solicitud
@@ -91,27 +142,22 @@ const insertProductCategoryRelation = async (req, res) => {
 
 const getRelationsByCompanyId = async (req, res) => {
   // Extraer el company_id de la solicitud
-  const { company_id } = req.params; // Asumiendo que se pasa como parámetro en la URL
-
+  const { company_id } = req.query; // Asumiendo que se pasa como parámetro en la URL
   try {
     // Consulta que selecciona las relaciones pertenecientes a una compañía específica
     const query = `
-            SELECT pcr.*, p.name AS product_name, pc.name AS category_name
-            FROM product_category_relation pcr
-            JOIN product p ON pcr.product_id = p.id
-            JOIN product_categories pc ON pcr.category_id = pc.id
-            WHERE p.company_id = ?;
+            SELECT *
+            FROM product_category_relation
+            WHERE company_id = ?;
         `;
     const values = [company_id];
 
     const [relations] = await pool.query(query, values);
 
     if (relations.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message: "No se encontraron relaciones para la compañía especificada",
-        });
+      return res.status(404).json({
+        message: "No se encontraron relaciones para la compañía especificada",
+      });
     }
 
     // Enviar una respuesta con las relaciones encontradas
@@ -125,6 +171,8 @@ const getRelationsByCompanyId = async (req, res) => {
 module.exports = {
   insertProductCategory,
   getCategoriesByCompanyId,
+  deleteProductCategoryAndRelationsById,
+  updateProductCategory,
   insertProductCategoryRelation,
   getRelationsByCompanyId,
 };

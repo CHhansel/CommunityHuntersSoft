@@ -54,6 +54,9 @@ export function parseData(data, dataType) {
     case "Cabys":
       data = parseCabysColumnNames(data);
       break;
+    case "Table":
+      data = parseTableColumnNames(data);
+      break;
     default:
       break;
   }
@@ -132,6 +135,19 @@ function parseCabysColumnNames(columns) {
     cat8desc: "Categoría 8",
     code: "Código",
     tax: "Impuesto %",
+    description: "Descripción",
+    district: "Distrito",
+    exact_address: "Dirección Exacta",
+  };
+
+  return columns.map((column) => translations[column] || column);
+}
+function parseTableColumnNames(columns) {
+  const translations = {
+    number: "Número",
+    max_capacity: "Capacidad",
+    reserved: "Reservada",
+    in_use: "En uso",
     description: "Descripción",
     district: "Distrito",
     exact_address: "Dirección Exacta",
