@@ -43,9 +43,10 @@ export const CategoryService = {
     }
   },
 
-  deleteProductCategoryById: async (categoryId) => {
+  deleteProductCategoryById: async (id) => {
+    console.log(id);
     try {
-      const response = await DAC_API.delete(`/categories/delete-category/${categoryId}`);
+      const response = await DAC_API.delete(`/categories/delete-category/${id}`);
       return response.data;
     } catch (error) {
       const errorMessage = handleApiError(error);

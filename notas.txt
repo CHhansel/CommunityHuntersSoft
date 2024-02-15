@@ -321,4 +321,12 @@ crear tabla, facturaspedientes
 validaciones datos hacienda
 
 
+dar formato a inputs number
+crear componente input number y input currency, la diferencia es el icono de colones o dolares
+se va a manejar precios es $$$$?
+unidad de medida de productos de restaurante es fija o cambia
 
+
+
+
+guardar ordenes en desarrollo, localstorage   

@@ -31,18 +31,18 @@ const insertProductCategory = async (req, res) => {
 };
 const deleteProductCategoryAndRelationsById = async (req, res) => {
   // Extraer el ID de la categoría de producto a eliminar de los parámetros de la solicitud
-  const { categoryId } = req.params;
+  const { id } = req.params;
 
   try {
     // Iniciar una transacción
     await pool.query("START TRANSACTION");
 
     // Eliminar las relaciones de producto-categoría correspondientes a la categoría a eliminar
-    await pool.query("DELETE FROM product_category_relation WHERE category_id = ?", [categoryId]);
+    await pool.query("DELETE FROM product_category_relation WHERE category_id = ?", [id]);
 
     // Eliminar la categoría de producto por su ID
     const deleteCategoryQuery = "DELETE FROM product_categories WHERE id = ?";
-    const [categoryResult] = await pool.query(deleteCategoryQuery, [categoryId]);
+    const [categoryResult] = await pool.query(deleteCategoryQuery, [id]);
 
     // Verificar si la categoría de producto fue encontrada y eliminada
     if (categoryResult.affectedRows === 0) {
@@ -50,7 +50,8 @@ const deleteProductCategoryAndRelationsById = async (req, res) => {
       await pool.query("ROLLBACK");
       return res.status(404).json({ error: "La categoría de producto no fue encontrada" });
     }
-
+    
+    console.log("no borro");
     // Confirmar la transacción si todo se ejecutó correctamente
     await pool.query("COMMIT");
 
@@ -97,11 +98,11 @@ const getCategoriesByCompanyId = async (req, res) => {
   }
 };
 const updateProductCategory = async (req, res) => {
-  const { id, company_id, name, description, image_url, active, sort_order } = req.body;
+  const { id, name, description, active, sort_order } = req.body;
 
   try {
-    const query = "CALL UpdateProductCategory(?, ?, ?, ?, ?, ?, ?)";
-    const values = [id, company_id, name, description, image_url, active, sort_order];
+    const query = "CALL UpdateProductCategory(?, ?, ?, ?, ?)";
+    const values = [id, name, description, active, sort_order];
 
     await pool.query(query, values);
 

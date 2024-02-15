@@ -4,7 +4,7 @@ import PopUp from "../../../../components/popUp";
 import Button from "../../../../components/buttons/Button";
 import CategoryLabel from "../../../../components/categories";
 
-const Categories = ({ categories, selectedCategory, setSelectedCategory }) => {
+const Categories = ({ categories, selectedCategory, setSelectedCategory, handleReloadCategories }) => {
   const [isPopUpOpen, setPopUpOpen] = useState(false);
 
   const togglePopUp = () => {
@@ -27,7 +27,7 @@ const Categories = ({ categories, selectedCategory, setSelectedCategory }) => {
           <Button type="ADD" onClick={createCategory} text={"CATEGORIA"} />
         </div>
       </div>
-      <div className="flex mt-5 gap-4 w-full  px-5 overflow-x-scroll h-[80px] items-center scrollbar-thin scrollbar-thumb-main-color scrollbar-track-main-bg-color scrollbar-rounded-[40px]">
+      <div className="flex mt-5 gap-4 w-full pb-5 px-5 overflow-x-scroll h-[86px] items-center scrollbar-thin scrollbar-thumb-main-color scrollbar-track-main-bg-color scrollbar-rounded-[40px]">
         <div onClick={() => setSelectedCategory(null)}>
           <CategoryLabel
             name={"Todos"}
@@ -46,7 +46,7 @@ const Categories = ({ categories, selectedCategory, setSelectedCategory }) => {
       </div>
       <div className="w-80">
         <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
-          <CategoryCreateForm onClose={togglePopUp} selectedCategory={selectedCategory}></CategoryCreateForm>
+          <CategoryCreateForm onClose={togglePopUp} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} handleReloadCategories={handleReloadCategories}></CategoryCreateForm>
         </PopUp>
       </div>
     </div>

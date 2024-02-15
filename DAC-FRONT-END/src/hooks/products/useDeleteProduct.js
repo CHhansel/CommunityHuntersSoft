@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { CategoryService } from "../../services/categoryServices";
+import { ProductService } from "../../services/productServices";
 
-export const useDeleteProductCategory = () => {
+export const useDeleteProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteProductCategoryById = async (categoryId) => {
+  const deleteProductById = async (productId) => {
     setIsLoading(true);
     try {
-      const response = await CategoryService.deleteProductCategoryById(categoryId);
+      const response = await ProductService.deleteProductById(productId);
       setIsLoading(false);
       return response;
     } catch (error) {
@@ -18,6 +18,5 @@ export const useDeleteProductCategory = () => {
     }
   };
 
-  return { deleteProductCategoryById, isLoading, error };
+  return { deleteProductById, isLoading, error };
 };
-

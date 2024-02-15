@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCreateProduct } from "../../../../../hooks/products/useCreateProduct";
+import { useDeleteProduct } from "../../../../../hooks/products/useDeleteProduct"; // Importa el hook
+import { useUpdateProduct } from "../../../../../hooks/products/useUpdateProduct";
 import { useFileUpload } from "../../../../../hooks/files/useFileUpload"; // Asegúrate de proporcionar la ruta correcta
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../store/authSlice";
@@ -7,10 +9,18 @@ import Swal from "sweetalert2";
 import Button from "../../../../../components/buttons/Button";
 import { restaurantModuleCabys } from "../../../../../utils/cabysByModule";
 
-const ProductCreate = ({ onClose, selectedProduct }) => {
+const ProductCreate = ({
+  onClose,
+  selectedProduct,
+  category,
+  handleReloadCategories,
+}) => {
   const { user } = useSelector(selectUser);
   const [productData, setProductData] = useState(selectedProduct);
   const [loading, setLoading] = useState(true);
+  const [previewUrl, setPreviewUrl] = useState(
+    "http://localhost:3000/uploads/default-product-image.webp"
+  );
   useEffect(() => {
     if (selectedProduct == null) {
       setProductData({
@@ -20,31 +30,74 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
         price: "",
         quantity: "1",
         cabys_code: "",
-        unit_of_measure: "",
+        unit_of_measure: "Unid",
         tax_rate: "",
         company_id: user.company_id,
         tax_included: "1",
+        category_id: category.id,
         image_url: "http://localhost:3000/uploads/default-product-image.webp",
       });
     } else {
       setProductData(selectedProduct);
+      setPreviewUrl(selectedProduct.image_url);
     }
     setLoading(false);
   }, [selectedProduct]);
 
   const [selectedFile, setSelectedFile] = useState(null); // Nuevo estado para el archivo seleccionado
 
-  const [previewUrl, setPreviewUrl] = useState(productData.image_url);
-
   const { imageUrl, uploadFile } = useFileUpload(); // Usa tu hook personalizado
   const { createProduct, isLoading, error } = useCreateProduct();
+  const {
+    deleteProductById,
+    isLoading: isDeleting,
+    error: deleteError,
+  } = useDeleteProduct(); // Usa el hook
+  const {
+    updateProduct,
+    isLoading: isUpdating,
+    error: updateError,
+  } = useUpdateProduct(); // Usa el hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(productData);
     setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+  };
+  const handleUpdate = async () => {
+    console.log("updatre");
+    try {
+      const result = await Swal.fire({
+        title: "¿Desea actualizar este producto?",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Aceptar",
+      });
+      if (result.isConfirmed) {
+        let productDataToUpdate = { ...productData };
+        if (selectedFile) {
+          const formData = new FormData();
+          formData.append("myFile", selectedFile);
+          const { path } = await uploadFile(formData);
+          productDataToUpdate.image_url = path;
+          handleReloadCategories();
+          onClose();
+        }
+        const response = await updateProduct(
+          productDataToUpdate.id,
+          productDataToUpdate
+        );
+        console.log("Product updated successfully:", response);
+      } else if (result.isDenied) {
+        Swal.fire("Los cambios no se guardaron", "", "info");
+      }
+    } catch (err) {
+      console.error("Error updating product:", err);
+      // Handle error if needed
+    }
   };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -96,6 +149,8 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
           // Llamar a uploadFile con el objeto FormData
           const { path } = await uploadFile(formData);
           productDataToUpdate.image_url = path; // Actualizar la copia del estado con la nueva URL de imagen
+          handleReloadCategories();
+          onClose();
         }
 
         // Llama a createProduct con la data actualizada
@@ -110,7 +165,32 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
 
     onClose(true);
   };
-
+  const handleDelete = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Desea eliminar este producto?",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Aceptar",
+      });
+      if (result.isConfirmed) {
+        await deleteProductById(selectedProduct.id);
+        handleReloadCategories();
+        onClose();
+      } else if (result.isDenied) {
+        Swal.fire("Operación cancelada", "", "info");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el producto:", error);
+      // Manejar el error si es necesario
+    }
+  };
+  const handleActiveChange = (e) => {
+    setProductData((prevData) => ({
+      ...prevData,
+      active: e.target.checked ? 1 : 0, // Si el checkbox está marcado, active es 1, de lo contrario es 0
+    }));
+  };
   if (loading) {
     return <div>Cargando</div>;
   }
@@ -119,7 +199,7 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
       <h2 className="text-2xl text-main-blue mb-8">Crear Producto</h2>
       <form
         onSubmit={handleSubmit}
-        className=" flex justify-between flex-wrap items-center gap-5 w-full"
+        className=" flex justify-start flex-wrap items-center gap-5 w-full"
       >
         <div className="w-[300px]">
           {previewUrl && (
@@ -220,17 +300,6 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
           />
         </div>
         <div className="flex flex-col gap-3">
-          <label>Unidad De Medida:</label>
-          <input
-            className="input-text"
-            type="text"
-            name="unit_of_measure"
-            value={productData.unit_of_measure}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
           <label>Impuesto Incluido:</label>
           <select
             className="input-text"
@@ -243,12 +312,41 @@ const ProductCreate = ({ onClose, selectedProduct }) => {
             <option value="0">No</option>
           </select>
         </div>
+        <div className="flex flex-col items-center gap-3">
+        <label>Producto Activo:</label>
+          <label htmlFor="active" className="flex items-center cursor-pointer">
+            <div className="relative">
+              <input
+                id="active"
+                type="checkbox"
+                className="sr-only" // Mantiene el checkbox accesible pero no visible
+                checked={productData.active === 1}
+                onChange={handleActiveChange}
+              />
+              <div className="block border w-14 h-8 rounded-full"></div>
+              <div
+                className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
+                  productData.active === 1
+                    ? "transform translate-x-full bg-blue-400"
+                    : "bg-slate-500"
+                }`}
+              ></div>
+            </div>
+            <div className="ml-3 text-gray-700 font-medium">
+              {productData.active === 1 ? "Activo" : "Oculto"}
+            </div>
+          </label>
+        </div>
+
         <div className="w-full flex justify-end">
           <Button type="CANCEL" onClick={onClose} />
           {selectedProduct == null ? (
             <Button type="ADD" onClick={handleSubmit} />
           ) : (
-            <Button type="UPDATE" onClick={handleSubmit} />
+            <>
+              <Button type="DELETE" onClick={handleDelete} text={"PRODUCTO"} />
+              <Button type="UPDATE" onClick={handleUpdate} text={"PRODUCTO"} />
+            </>
           )}
         </div>
       </form>

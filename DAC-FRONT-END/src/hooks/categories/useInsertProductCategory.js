@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { CategoryService } from "../../services/categoryServices";
 
-export const useUpdateProductCategory = () => {
+export const useInsertProductCategory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const updateProductCategory = async (categoryId, categoryData) => {
+  const insertProductCategory = async (categoryData) => {
     setIsLoading(true);
     try {
-      const response = await CategoryService.updateProductCategory(categoryId, categoryData);
+      const response = await CategoryService.insertProductCategory(categoryData);
       setIsLoading(false);
       return response;
     } catch (error) {
@@ -18,5 +18,5 @@ export const useUpdateProductCategory = () => {
     }
   };
 
-  return { updateProductCategory, isLoading, error };
+  return { insertProductCategory, isLoading, error };
 };

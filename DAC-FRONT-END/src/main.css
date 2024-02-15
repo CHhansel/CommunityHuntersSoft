@@ -137,3 +137,12 @@ select:disabled {
 .button-cancel:hover img {
   transform: scale(1.1); /* Ajusta el valor de escala según lo que desees */
 }
+.parrafo-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em; /* Ajusta esto según el tamaño de línea que desees */
+  max-height: 3.6em; /* Esto debe ser line-height x 'n' líneas que quieras mostrar */
+}

@@ -35,7 +35,9 @@ const Menu = () => {
     loading: isLoadingRelations,
     error: relationsError,
   } = useFetchRelationsProductCategory(user.company_id, reloadTrigger);
-
+  const handleReloadCategories = () => {
+    setReloadTrigger((prev) => !prev); // Esto recargará las mesas cuando se llame
+  };
   useEffect(() => {
     if (selectedCategory && relations && products) {
       const filteredProductIds = relations
@@ -53,18 +55,22 @@ const Menu = () => {
     }
   }, [selectedCategory, relations, products]);
 
-  console.log(products);
   return (
     <div className="px-16">
       <div>
         <Categories
           categories={categories}
-          selectedCategory= {selectedCategory}
+          selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
+          handleReloadCategories={handleReloadCategories}
         ></Categories>
       </div>
       <div className="mt-5">
-        <Products products={filteredProducts}></Products>
+        <Products
+          products={filteredProducts}
+          category={selectedCategory}
+          handleReloadCategories={handleReloadCategories}
+        ></Products>
       </div>
     </div>
   );
