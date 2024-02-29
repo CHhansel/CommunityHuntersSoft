@@ -83,11 +83,10 @@ const SideMenu = () => {
           {accessibleModules.map((module) => {
             const icon = icons[module.icon_name]; // Accede al icono usando el nombre
             const isActive = location.pathname.includes(module.url);
-
             return (
               <Link
                 key={module.module_id}
-                to={`/${module.module_name}`}
+                to={`/${module.module_url}`}
                 className={`flex items-center gap-3 rounded-main ease-out duration-500  my-1 w-full py-[6px] px-[12px]  text-center ${
                   isActive
                     ? "bg-main-blue text-white"

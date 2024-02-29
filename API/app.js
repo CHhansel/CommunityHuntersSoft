@@ -36,6 +36,7 @@ app.use("/api/billing", require("./routes/billing"));
 app.use('/api/product', require("./routes/products"));
 app.use('/api/categories', require("./routes/categories"));
 app.use('/api/tables', require("./routes/tables"));
+app.use('/api/orders', require("./routes/orders"));
 app.use('/api/upload', require("./routes/multer_router"));
 // Resto de tus rutas y lógica de la API
 

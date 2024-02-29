@@ -11,15 +11,15 @@ import Customer from "../../views/Customer";
 import ConfigRouter from "../ConfigRouter";
 import withProtectedAccess from "../../components/HOC/withProtectedAccess";
 import Employee from "../../views/Employee";
-import FontSizeAdjuster from "../../components/FontSizeAjust";
-import Billing from "../../views/Billing";
-import ThemeToggle from "../../components/ThemeToggle";
-import Orders from "../../views/Restaurant/Orders/OrdersView";
+import Billing from "../../views/Billing"; 
 import TopBar from "../../components/top-bar";
 //import ProductCreate from "../../views/Restaurant/Food";
 import Menu from "../../views/Restaurant/Menu";
 import Tables from "../../views/Restaurant/Tables";
 import CreateOrders from "../../views/Restaurant/Orders/CreateOrder";
+import OrdersView from "../../views/Restaurant/Orders/OrdersView";
+import KitchenView from "../../views/Restaurant/Kitchen";
+import EditOrderProducts from "../../views/Restaurant/Orders/OrdersView/EditOrderProducts";
 //import { useSelector } from 'react-redux';
 
 export const DashboardRoutes = () => {
@@ -60,11 +60,13 @@ export const DashboardRoutes = () => {
                 <Route path="/clientes" element={<Customer />} />
                 <Route path="/administracion/*" element={<ConfigRouter />} />
                 <Route path="/empleados" element={<Employee />} />
-                <Route path="/ordenes" element={<CreateOrders />} />
-                <Route path="/crear-orden" element={<CreateOrders />} />
+                <Route path="/nueva-orden" element={<CreateOrders />} />
+                <Route path="/editar-orden/:ordenId" element={<EditOrderProducts />} />
+                <Route path="/ordenes" element={<OrdersView />} />
                 <Route path="/facturas" element={<Billing />} />
-                <Route path="/comidas" element={<Menu />} />
+                <Route path="/Productos" element={<Menu />} />
                 <Route path="/Mesas" element={<Tables />} />
+                <Route path="/Cocina" element={<KitchenView />} />
               </Routes>
             </div>
           </div>

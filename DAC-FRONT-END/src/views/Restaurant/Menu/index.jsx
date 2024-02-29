@@ -35,8 +35,10 @@ const Menu = () => {
     loading: isLoadingRelations,
     error: relationsError,
   } = useFetchRelationsProductCategory(user.company_id, reloadTrigger);
+
   const handleReloadCategories = () => {
-    setReloadTrigger((prev) => !prev); // Esto recargará las mesas cuando se llame
+    
+    setReloadTrigger((prev) => !prev); // Esto recargará las categorias cuando se llame
   };
   useEffect(() => {
     if (selectedCategory && relations && products) {
@@ -69,6 +71,8 @@ const Menu = () => {
         <Products
           products={filteredProducts}
           category={selectedCategory}
+          categories={categories}
+          relations={relations}
           handleReloadCategories={handleReloadCategories}
         ></Products>
       </div>

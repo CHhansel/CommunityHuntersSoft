@@ -19,6 +19,9 @@ export function resumeData(completeData, dataType) {
     case "Tables":
       data = resumeTableData(completeData);
       break;
+    case "Orders":
+      data = resumeOrderData(completeData);
+      break;
     default:
       break;
   }
@@ -50,10 +53,48 @@ const resumeEmployeeData = (employees) => {
 };
 const resumeTableData = (tables) => {
   return tables.map((table) => ({
-    id: table.id,
     number: table.number,
-    reserved: table.reserved,
+    Disponibilidad: table.reserved,
     in_use: table.in_use,
-    max_capacity: table.max_capacity
+    Capacidad: table.max_capacity,
+  }));
+};
+const resumeOrderData = (orders) => {
+  // Función para mapear el valor numérico del tipo a la descripción correspondiente
+  const mapTypeToDescription = (type) => {
+    switch (type) {
+      case 1:
+        return "Express";
+      case 2:
+        return "Para Llevar";
+      case 3:
+        return "Comer Acá";
+      default:
+        return "Tipo Desconocido"; // En caso de recibir un valor no esperado
+    }
+  };
+  // Función para mapear el valor numérico del estado a la descripción correspondiente
+  const mapStateToDescription = (state) => {
+    switch (state) {
+      case 0:
+        return "Esperando";
+      case 1:
+        return "En cocina";
+      case 2:
+        return "Entregado";
+      case 3:
+        return "Facturado";
+      default:
+        return "Estado Desconocido"; // En caso de recibir un valor no esperado
+    }
+  };
+  return orders.map((order) => ({
+    order_number: order.order_number,
+    state: mapStateToDescription(order.pagado),
+    // Usamos la función mapTypeToDescription para obtener la descripción del tipo
+    type: mapTypeToDescription(order.type),
+    customer_address: order.customer_address,
+    customer_name: order.customer_name,
+    customer_phone: order.customer_phone,
   }));
 };

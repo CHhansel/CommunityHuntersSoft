@@ -7,6 +7,7 @@ const translations = {
     employees: "Empleados",
     roles: "Roles",
     invoice: "Facturas",
+    mesas: "Mesas",
     "company-settings": "Ajustes de Compañía",
     "atv-settings": "Ajustes de ATV"
     // ... puedes agregar más traducciones aquí en el futuro

@@ -163,5 +163,35 @@ const getEmployeesByCompanyId = async (req, res) => {
     }
 };
 
+const getEmployeesByModuleAndCompany = async (req, res) => {
+    const { module_id, company_id } = req.query; // Asume que los parámetros vienen en la query de la URL
 
-module.exports = { createEmployee, deleteEmployee, updateEmployee, getEmployeesByCompanyId };
+    // Verifica que ambos parámetros estén presentes
+    if (!module_id || !company_id) {
+        return res.status(400).json({ error: "Faltan parámetros requeridos: module_id y company_id" });
+    }
+
+    try {
+        // Prepara la llamada al procedimiento almacenado
+        const query = 'CALL GetEmployeesByModuleAndCompany(?, ?)';
+        const values = [module_id, company_id];
+
+        // Ejecuta la consulta en la base de datos
+        const [result] = await pool.query(query, values);
+
+        // El procedimiento puede devolver múltiples conjuntos de resultados, el primero contiene los empleados
+        const employees = result[0];
+
+        if (employees.length === 0) {
+            return res.status(404).json({ message: "No se encontraron empleados para los criterios dados." });
+        }
+
+        // Devuelve los empleados encontrados
+        res.json({ message: "Empleados obtenidos exitosamente", employees });
+    } catch (err) {
+        console.error("Error al obtener empleados:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+module.exports = { createEmployee, deleteEmployee, updateEmployee, getEmployeesByCompanyId, getEmployeesByModuleAndCompany };

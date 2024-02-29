@@ -3,6 +3,9 @@ import add_icon from "../../../assets/add-icon-blue.svg";
 import cancel_icon from "../../../assets/cancel-icon.svg";
 import update_icon from "../../../assets/update-icon-blue.svg";
 import delete_icon from "../../../assets/delete-icon.svg";
+import kitchen_icon from "../../../assets/kitchen-icon.svg";
+import undo_icon from "../../../assets/undo-icon.svg";
+
 const buttonConfigs = {
     ADD: {
       text: 'AGREGAR',
@@ -22,6 +25,21 @@ const buttonConfigs = {
     CANCEL: {
         text: 'CANCELAR',
         icon: cancel_icon, // Reemplaza con el path de tu icono
+        className: 'button-cancel'
+      },
+      SEND: {
+        text: 'ENVIAR',
+        icon: kitchen_icon, // Reemplaza con el path de tu icono
+        className: 'button-delete'
+      },
+      CONFIRM: {
+        text: 'CONFIRMAR',
+        icon: kitchen_icon, // Reemplaza con el path de tu icono
+        className: 'button-delete'
+      },
+      UNDO: {
+        text: 'REGRESAR',
+        icon: undo_icon, // Reemplaza con el path de tu icono
         className: 'button-cancel'
       },
     // Agrega más tipos y configuraciones según sea necesario

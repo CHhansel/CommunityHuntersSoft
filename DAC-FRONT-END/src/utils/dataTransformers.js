@@ -57,6 +57,9 @@ export function parseData(data, dataType) {
     case "Table":
       data = parseTableColumnNames(data);
       break;
+    case "Order":
+      data = parseOrderColumnNames(data);
+      break;
     default:
       break;
   }
@@ -145,12 +148,28 @@ function parseCabysColumnNames(columns) {
 function parseTableColumnNames(columns) {
   const translations = {
     number: "Número",
-    max_capacity: "Capacidad",
-    reserved: "Reservada",
+    employee: "Empleado",
+    order_number: "Número de orden",
     in_use: "En uso",
     description: "Descripción",
     district: "Distrito",
     exact_address: "Dirección Exacta",
+  };
+
+  return columns.map((column) => translations[column] || column);
+}
+function parseOrderColumnNames(columns) {
+  const translations = {
+    order_number: "Número",
+    state: "Estado",
+    in_use: "En uso",
+    description: "Descripción",
+    district: "Distrito",
+    type: "Tipo",
+    exact_address: "Dirección Exacta",
+    customer_address: "Dirección Cliente",
+    customer_name: "Nombre Cliente",
+    customer_phone: "Teléfono Cliente",
   };
 
   return columns.map((column) => translations[column] || column);

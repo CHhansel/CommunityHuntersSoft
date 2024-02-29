@@ -13,7 +13,6 @@ export const DistrictSelect = ({ formData, onChange, isEditable = true }) => {
         distritosDelCanton = distritosDelCanton.slice(1);
       }
       setDistritos(distritosDelCanton);
-      console.log("son   ", distritosDelCanton);
     }
   }, [formData.province_code, formData.canton_code]); // Este efecto se ejecuta cuando idProvincia o idCanton cambia
 

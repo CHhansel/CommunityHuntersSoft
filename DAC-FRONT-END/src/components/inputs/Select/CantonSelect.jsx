@@ -14,7 +14,6 @@ export const CantonSelect = ({ formData, onChange, isEditable = true }) => {
         cantonesDeLaProvincia = cantonesDeLaProvincia.slice(1);
       }
       setCantones(cantonesDeLaProvincia);
-      console.log("son   ", cantonesDeLaProvincia);
     }
   }, [formData.province_code]); // Este efecto se ejecuta cuando idProvincia cambia
 

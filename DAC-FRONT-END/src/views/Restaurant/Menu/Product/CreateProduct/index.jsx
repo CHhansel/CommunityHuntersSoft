@@ -9,10 +9,13 @@ import Swal from "sweetalert2";
 import Button from "../../../../../components/buttons/Button";
 import { restaurantModuleCabys } from "../../../../../utils/cabysByModule";
 
+import DropdownOptions from "../../../../../components/MultiSelectAlert";
+
 const ProductCreate = ({
   onClose,
   selectedProduct,
-  category,
+  categories,
+  relations,
   handleReloadCategories,
 }) => {
   const { user } = useSelector(selectUser);
@@ -21,6 +24,8 @@ const ProductCreate = ({
   const [previewUrl, setPreviewUrl] = useState(
     "http://localhost:3000/uploads/default-product-image.webp"
   );
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
   useEffect(() => {
     if (selectedProduct == null) {
       setProductData({
@@ -34,7 +39,6 @@ const ProductCreate = ({
         tax_rate: "",
         company_id: user.company_id,
         tax_included: "1",
-        category_id: category.id,
         image_url: "http://localhost:3000/uploads/default-product-image.webp",
       });
     } else {
@@ -47,28 +51,54 @@ const ProductCreate = ({
   const [selectedFile, setSelectedFile] = useState(null); // Nuevo estado para el archivo seleccionado
 
   const { imageUrl, uploadFile } = useFileUpload(); // Usa tu hook personalizado
-  const { createProduct, isLoading, error } = useCreateProduct();
-  const {
-    deleteProductById,
-    isLoading: isDeleting,
-    error: deleteError,
-  } = useDeleteProduct(); // Usa el hook
-  const {
-    updateProduct,
-    isLoading: isUpdating,
-    error: updateError,
-  } = useUpdateProduct(); // Usa el hook
+  const { createProduct } = useCreateProduct();
+  const { deleteProductById } = useDeleteProduct(); // Usa el hook
+  const { updateProduct } = useUpdateProduct(); // Usa el hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(productData);
     setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
+
+  const productRelations = (productId, data) => {
+    console.log(productId, data);
+    const relations = [];
+    for (const item of data) {
+      if (item.product_id === productId) {
+        // Encuentra la categoría que coincide con el category_id del item
+        const category = categories.find(
+          (category) => category.id === item.category_id
+        );
+        // Agrega el nombre de la categoría al objeto si la categoría existe
+        if (category) {
+          relations.push({
+            // ...item,
+            id: category.id,
+            name: category.name, // Agrega el nombre de la categoría
+          });
+        } else {
+          // Si no encuentra la categoría, agrega el item sin modificar
+          relations.push(item);
+        }
+      }
+    }
+    return relations;
+  };
+
+  useEffect(() => {
+    if (productData && categories) {
+      // Aquí asumo que productRelations es una función que determina las opciones seleccionadas
+      // basado en el ID del producto actual y las categorías disponibles.
+      const newSelectedOptions = productRelations(productData.id, relations);
+      console.log("categorias son", newSelectedOptions);
+      setSelectedOptions(newSelectedOptions);
+    }
+  }, [productData, relations, setSelectedOptions]); // Dependencias del efecto
+
   const handleUpdate = async () => {
-    console.log("updatre");
     try {
       const result = await Swal.fire({
         title: "¿Desea actualizar este producto?",
@@ -78,18 +108,23 @@ const ProductCreate = ({
       });
       if (result.isConfirmed) {
         let productDataToUpdate = { ...productData };
+        productDataToUpdate.category_ids = selectedOptions.map(
+          (option) => option.id
+        );
+
         if (selectedFile) {
           const formData = new FormData();
           formData.append("myFile", selectedFile);
           const { path } = await uploadFile(formData);
+
           productDataToUpdate.image_url = path;
-          handleReloadCategories();
-          onClose();
         }
         const response = await updateProduct(
           productDataToUpdate.id,
           productDataToUpdate
         );
+        handleReloadCategories();
+        onClose();
         console.log("Product updated successfully:", response);
       } else if (result.isDenied) {
         Swal.fire("Los cambios no se guardaron", "", "info");
@@ -98,6 +133,7 @@ const ProductCreate = ({
       console.error("Error updating product:", err);
       // Handle error if needed
     }
+    onClose(true);
   };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -141,6 +177,9 @@ const ProductCreate = ({
     if (result.isConfirmed) {
       try {
         let productDataToUpdate = { ...productData }; // Copia del estado actual
+        productDataToUpdate.category_ids = selectedOptions.map(
+          (option) => option.id
+        );
         if (selectedFile) {
           // Crear un objeto FormData y añadir el archivo
           const formData = new FormData();
@@ -184,6 +223,7 @@ const ProductCreate = ({
       console.error("Error al eliminar el producto:", error);
       // Manejar el error si es necesario
     }
+    onClose(true);
   };
   const handleActiveChange = (e) => {
     setProductData((prevData) => ({
@@ -197,147 +237,195 @@ const ProductCreate = ({
   return (
     <div className="p-10 rounded-main bg-white border shadow">
       <h2 className="text-2xl text-main-blue mb-8">Crear Producto</h2>
-      <form
-        onSubmit={handleSubmit}
-        className=" flex justify-start flex-wrap items-center gap-5 w-full"
-      >
-        <div className="w-[300px]">
-          {previewUrl && (
-            <img
-              className="w-full border border-main-color"
-              src={previewUrl}
-              alt="Vista previa"
-            />
-          )}
-          <div className="flex flex-col gap-3">
-            <input
-              className="file:mr-4 file:py-2 file:px-4 mt-3
+      <form onSubmit={handleSubmit} className="">
+        <div className="flex mb-5">
+          <div className="flex justify-start flex-wrap items-center gap-5 w-full">
+            <div className="w-[300px]">
+              {previewUrl && (
+                <img
+                  className="w-full border border-main-color"
+                  src={previewUrl}
+                  alt="Vista previa"
+                />
+              )}
+              <div className="flex flex-col gap-3">
+                <input
+                  className="file:mr-4 file:py-2 file:px-4 mt-3
             file:rounded-full file:border-0
             file:text-sm file:font-semibold
             file:bg-violet-50 file:text-main-color
             hover:file:bg-violet-100 cursor-pointer"
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleImageChange}
-              required
-            />
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <label>Código interno:</label>
+              <input
+                className="input-text"
+                type="text"
+                name="internal_code"
+                value={productData.internal_code}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <label>Nombre:</label>
+              <input
+                className="input-text"
+                type="text"
+                name="name"
+                value={productData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <label>Descripción:</label>
+              <textarea
+                className="input-text"
+                name="description"
+                value={productData.description}
+                onChange={handleChange}
+                required
+              ></textarea>
+            </div>
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-3">
+                <label>Precio:</label>
+                <input
+                  className="input-text"
+                  type="number"
+                  name="price"
+                  value={productData.price}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <label>Precio De comparación:</label>
+                <input
+                  className="input-text"
+                  type="number"
+                  name="comparison_price"
+                  value={productData.comparison_price}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <label className="text-lg " htmlFor="cabys_code">
+                Código Cabys
+              </label>
+              <select
+                className="input-text"
+                name="cabys_code"
+                value={productData.cabys_code}
+                onChange={handleCabys}
+                required
+              >
+                <option value="">Seleccione un Código Cabys</option>
+                {restaurantModuleCabys.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.code} {item.description} - {item.tax}%
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-3">
+              <label>Impuesto %:</label>
+              <input
+                className="input-text"
+                type="number"
+                name="tax_rate"
+                value={productData.tax_rate}
+                onChange={handleChange}
+                required
+                disabled
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <label>Impuesto Incluido:</label>
+              <select
+                className="input-text"
+                name="tax_included"
+                value={productData.tax_included}
+                onChange={handleChange}
+                required
+              >
+                <option value="1">Sí</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <label>Producto Activo:</label>
+              <label
+                htmlFor="active"
+                className="flex items-center cursor-pointer"
+              >
+                <div className="relative">
+                  <input
+                    id="active"
+                    type="checkbox"
+                    className="sr-only" // Mantiene el checkbox accesible pero no visible
+                    checked={productData.active === 1}
+                    onChange={handleActiveChange}
+                  />
+                  <div className="block border w-14 h-8 rounded-full"></div>
+
+                  <div
+                    className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
+                      productData.active === 1
+                        ? "transform translate-x-full bg-blue-400"
+                        : "bg-slate-500"
+                    }`}
+                  ></div>
+                </div>
+                <div className="ml-3 text-gray-700 font-medium">
+                  {productData.active === 1 ? "Activo" : "Oculto"}
+                </div>
+              </label>
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-col items-center ">
+              <div className="w-52">
+                <DropdownOptions
+                  options={categories}
+                  initialSelectedOptions={selectedOptions}
+                  setSelectedOptions={setSelectedOptions} // Pasa la función para actualizar las opciones seleccionadas
+                />
+              </div>
+
+              {/* Mostrar las opciones seleccionadas */}
+              <div className="">
+                <h2 className="text-lg font-semibold ">Categorias:</h2>
+                <div className="w-[200px] flex flex-row flex-wrap">
+                  {selectedOptions.map((option, index) => (
+                    <p
+                      key={index}
+                      className="text-sm border px-3 py-1 mr-4 mb-2 rounded-main whitespace-nowrap"
+                    >
+                      {option.name}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <label>Código interno:</label>
-          <input
-            className="input-text"
-            type="text"
-            name="internal_code"
-            value={productData.internal_code}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Nombre:</label>
-          <input
-            className="input-text"
-            type="text"
-            name="name"
-            value={productData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Descripción:</label>
-          <textarea
-            className="input-text"
-            name="description"
-            value={productData.description}
-            onChange={handleChange}
-            required
-          ></textarea>
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Precio:</label>
-          <input
-            className="input-text"
-            type="number"
-            name="price"
-            value={productData.price}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <label className="text-lg " htmlFor="cabys_code">
-            Código Cabys
-          </label>
-          <select
-            className="input-text"
-            name="cabys_code"
-            value={productData.cabys_code}
-            onChange={handleCabys}
-            required
-          >
-            <option value="">Seleccione un Código Cabys</option>
-            {restaurantModuleCabys.map((item) => (
-              <option key={item.code} value={item.code}>
-                {item.code} {item.description} - {item.tax}%
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Impuesto %:</label>
-          <input
-            className="input-text"
-            type="number"
-            name="tax_rate"
-            value={productData.tax_rate}
-            onChange={handleChange}
-            required
-            disabled
-          />
-        </div>
-        <div className="flex flex-col gap-3">
-          <label>Impuesto Incluido:</label>
-          <select
-            className="input-text"
-            name="tax_included"
-            value={productData.tax_included}
-            onChange={handleChange}
-            required
-          >
-            <option value="1">Sí</option>
-            <option value="0">No</option>
-          </select>
-        </div>
-        <div className="flex flex-col items-center gap-3">
-        <label>Producto Activo:</label>
-          <label htmlFor="active" className="flex items-center cursor-pointer">
-            <div className="relative">
-              <input
-                id="active"
-                type="checkbox"
-                className="sr-only" // Mantiene el checkbox accesible pero no visible
-                checked={productData.active === 1}
-                onChange={handleActiveChange}
-              />
-              <div className="block border w-14 h-8 rounded-full"></div>
-              <div
-                className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
-                  productData.active === 1
-                    ? "transform translate-x-full bg-blue-400"
-                    : "bg-slate-500"
-                }`}
-              ></div>
-            </div>
-            <div className="ml-3 text-gray-700 font-medium">
-              {productData.active === 1 ? "Activo" : "Oculto"}
-            </div>
-          </label>
-        </div>
-
+<div>
+  <p>*<span className="line-through"> Precio de comparación </span>/ Precio</p>
+  <p>Ejemplo:</p>
+  <p><span className="line-through mx-3">₡ 20.500,00</span>₡ 12.000,00</p>
+  <p>Sino desea agregar descuento, solo agregue el precio y deje en blanco el precio de comparación</p>
+</div>
         <div className="w-full flex justify-end">
           <Button type="CANCEL" onClick={onClose} />
           {selectedProduct == null ? (

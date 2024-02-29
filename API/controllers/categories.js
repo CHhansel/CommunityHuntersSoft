@@ -51,7 +51,6 @@ const deleteProductCategoryAndRelationsById = async (req, res) => {
       return res.status(404).json({ error: "La categoría de producto no fue encontrada" });
     }
     
-    console.log("no borro");
     // Confirmar la transacción si todo se ejecutó correctamente
     await pool.query("COMMIT");
 

@@ -218,7 +218,6 @@ const enviarFacturaHacienda = async (
       // Llamada a tu función para guardar el XML en un archivo
 
       const pdfPath = await generarFacturaPDF(data, pdfFilePath);
-       console.log("comprobante es ", comprobantePath);
       sendInvoiceByEmail(
         data.Emisor.NombreComercial,
         data.Cliente.email,

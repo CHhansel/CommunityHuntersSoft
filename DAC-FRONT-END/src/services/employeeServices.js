@@ -58,6 +58,19 @@ export const EmployeeService = {
       throw new Error(errorMessage);
     }
   },
+  // Método para obtener empleados por ID de módulo y compañía
+  getEmployeesByModuleAndCompany: async (module_id, company_id) => {
+    try {
+      const response = await DAC_API.get("/employee/get-employees-by-module/", {
+        params: { module_id, company_id },
+      });
+      return response.data.employees;
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      console.error("Error al obtener los empleados por módulo y compañía:", errorMessage);
+      throw new Error(errorMessage);
+    }
+  },
 };
 
 export default EmployeeService;

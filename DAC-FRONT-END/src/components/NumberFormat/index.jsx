@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormattedCurrency = ({ amount }) => {
+const FormattedCurrency = ({ amount, styles="" }) => {
   // Función para formatear el número a un formato de moneda específico
   const formatCurrency = (amount) => {
     // Asumiendo que no necesitas decimales para colones y quieres usar comas para los miles
@@ -15,7 +15,7 @@ const FormattedCurrency = ({ amount }) => {
   };
 
   return (
-    <p>{formatCurrency(amount)}</p>
+    <p className={styles}>{formatCurrency(amount)}</p>
   );
 };
 
