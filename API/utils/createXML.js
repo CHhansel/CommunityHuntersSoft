@@ -64,23 +64,23 @@ function createXML(datosFactura) {
             <LineaDetalle>
                 <NumeroLinea>${index + 1}</NumeroLinea>
                 <Codigo>${linea.cabys_code}</Codigo>
-                <Cantidad>${linea.quantity}</Cantidad>
+                <Cantidad>${linea.quantityInOrder}</Cantidad>
                 <UnidadMedida>${linea.unit_of_measure}</UnidadMedida>
                 <Detalle>${linea.description}</Detalle>
                 <PrecioUnitario>${linea.price}</PrecioUnitario>
-                <MontoTotal>${linea.price * linea.quantity}</MontoTotal>
-                <SubTotal>${linea.price * linea.quantity}</SubTotal>
+                <MontoTotal>${linea.price * linea.quantityInOrder}</MontoTotal>
+                <SubTotal>${linea.price * linea.quantityInOrder}</SubTotal>
                 <Impuesto>
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>${linea.tax_rate}.00</Tarifa>
                     <Monto>${
-                      linea.price * linea.quantity * (linea.tax_rate / 100)
+                      linea.price * linea.quantityInOrder * (linea.tax_rate / 100)
                     }</Monto>
                 </Impuesto>
                 <MontoTotalLinea>${
-                  linea.price * linea.quantity +
-                  linea.price * linea.quantity * (linea.tax_rate / 100)
+                  linea.price * linea.quantityInOrder +
+                  linea.price * linea.quantityInOrder * (linea.tax_rate / 100)
                 }</MontoTotalLinea>
             </LineaDetalle>`;
   });

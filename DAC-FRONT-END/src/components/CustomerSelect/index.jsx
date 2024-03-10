@@ -4,6 +4,7 @@ import Pagination from "../pagination/pagination";
 import { CustomerService } from "../../services/CustomerServices";
 import { selectUser } from "../../store/authSlice";
 import { useSelector } from "react-redux";
+import { useFetchCustomers } from "../../hooks/customers/useFetchCustomers";
 
 const CustomerSearch = ({ setCustomer }) => {
   const { user, token } = useSelector(selectUser);
@@ -16,11 +17,17 @@ const CustomerSearch = ({ setCustomer }) => {
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  
+  const { customersData: { customers, totalCustomers }} = useFetchCustomers(
+    user.company_id,
+    1,
+    1000,
+    reloadTrigger
+  );
   const handleSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
       setResults([]);

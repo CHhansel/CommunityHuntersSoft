@@ -33,14 +33,15 @@ const TopBar = () => {
     });
   };
   return (
-    <div className="w-full flex flex-row p-3 justify-between ">
-      <SideBarLogo />
+    <div className="w-full flex flex-row h-full justify-between items-center px-5">
+      <div>
+        <SideBarLogo />
+      </div>
       <div className="flex flex-row items-center gap-10">
         <ThemeToggle></ThemeToggle>
         <div>
-        <h2 className="text-black ">{user.name}</h2>
-        <h4 className="text-black text-xs ">{user.role}</h4>
-
+          <h2 className="text-black ">{user.name}</h2>
+          <h4 className="text-black text-xs ">{user.role}</h4>
         </div>
         <button className="text-black " onClick={handleLogout}>
           {" "}

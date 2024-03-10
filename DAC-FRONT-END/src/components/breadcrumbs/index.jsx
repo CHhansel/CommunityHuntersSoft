@@ -16,7 +16,7 @@ const Breadcrumb = () => {
   const bread = getBreadcrumbs(location.pathname);
   const breadcrumbs = translateRoutes(bread)
   return (
-    <nav className='flex px-14 py-3'>
+    <nav className='flex flex-row  items-center px-14 h-full'>
       <img src={home} className='w-4 mx-2'></img>
       {breadcrumbs.map((breadcrumb, index) => (
         <span key={breadcrumb.path} className='text-sm flex items-center'> 

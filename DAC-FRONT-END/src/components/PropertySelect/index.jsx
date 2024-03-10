@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { TablaDinamica } from "../Table";
 import Pagination from "../pagination/pagination";
-import { PropertyService } from "../../services/propertyServices"; // Servicio de propiedades
 import { selectUser } from "../../store/authSlice";
 import { useSelector } from "react-redux";
+import { useFetchProperties } from "../../hooks/properties/useFetchProperties";
 
-const PropertySearch = ({ setPropertyData,setProperty }) => {
-  const { user, token } = useSelector(selectUser);
+const PropertySearch = ({ setProperty }) => {
+  const { user } = useSelector(selectUser);
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,13 +14,16 @@ const PropertySearch = ({ setPropertyData,setProperty }) => {
   const [filaSeleccionada, setFilaSeleccionada] = useState(-1);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  
+  const [filteredProperties, setFilteredProperties] = useState([]);
+
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  
+  const {
+    propertyData: { properties, totalProperties }
+  } = useFetchProperties(user.company_id, 1, itemsPerPage, reloadTrigger);
   const handleSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
       setResults([]);
@@ -29,17 +32,6 @@ const PropertySearch = ({ setPropertyData,setProperty }) => {
   
     setLoading(true);
     setError(null);
-  
-    try {
-      const data = await PropertyService.getPropertiesByCompanyId(token, user.company_id, currentPage, itemsPerPage);
-      // Filtrar los resultados para incluir solo propiedades con estado "Ocupado"
-      const filteredProperties = data.properties.filter(property => property.state === "Ocupado");
-      setResults(filteredProperties);
-    } catch (err) {
-      setError("Error al buscar propiedades. Por favor, inténtalo de nuevo.");
-    } finally {
-      setLoading(false);
-    }
   };
   
   useEffect(() => {
@@ -47,30 +39,36 @@ const PropertySearch = ({ setPropertyData,setProperty }) => {
   }, [currentPage]); // Reaccionar al cambio de página
   
   useEffect(() => {
-    if (filaSeleccionada >= 0 && results[filaSeleccionada]) {
-      setPropertyData(results[filaSeleccionada]);
-      setProperty(results[filaSeleccionada]);
+    if (filaSeleccionada >= 0) {
+      setProperty(properties[filaSeleccionada]);
     }
-  }, [filaSeleccionada, setPropertyData, results]);
+  }, [filaSeleccionada, results]);
   
   const handleChange = (e) => {
     setTerm(e.target.value);
     handleSearch(e.target.value);
   };
-  
+
+  useEffect(() => {
+    // Si hay un término de búsqueda, filtre las propiedades. De lo contrario, muestre todas.
+    const filteredResults = term
+      ? properties.filter((property) =>
+          property.internal_code.toLowerCase().includes(term.toLowerCase()) ||
+          property.name.toLowerCase().includes(term.toLowerCase())
+        )
+      : properties;
   // Crear un resumen de propiedades con solo los campos deseados
-  const propertySummary = results.map(({ Id,name, customer_dni, province, canton }) => ({
-    Id,
-    name,
-    cliente: customer_dni,
-    province,
-    canton
+  const propertySummary = filteredResults.map(({ internal_code,name }) => ({
+    "Código interno":internal_code,
+     name
   }));
+    setFilteredProperties(propertySummary);
+  }, [term, properties, currentPage]);
+
   
-  const currentItems = propertySummary.slice(startIndex, endIndex);
   
   return (
-    <div className="p-10 m-5 rounded-main bg-white border shadow min-h-[688px]">
+    <div className="p-10">
       <h2>Buscar Propiedades</h2>
       <input
         type="text"
@@ -79,12 +77,11 @@ const PropertySearch = ({ setPropertyData,setProperty }) => {
         placeholder="Buscar propiedad..."
         className="input-text"
       />
-      {loading && <p>Buscando...</p>}
       {error && <p className="error">{error}</p>}
-      {results && results.length > 0 && (
+      {properties && properties.length > 0 && (
         <>
           <TablaDinamica
-            datos={currentItems}
+            datos={filteredProperties}
             setFilaSeleccionada={setFilaSeleccionada}
             dataType="Properties"
           />

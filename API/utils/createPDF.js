@@ -31,12 +31,13 @@ const generarFacturaPDF = async (datosFactura, outputDirectory) => {
   };
   completeData.Fecha = fechaObjeto.toLocaleDateString("es", opciones);
   // Calcular subtotal, total de IVA y total a pagar
+
   let subtotal = datosFactura.LineaDeDetalle.reduce((acc, item) => {
-    return acc + item.price * item.quantity;
+    return acc + item.price * item.quantityInOrder;
   }, 0);
 
   let totalIVA = datosFactura.LineaDeDetalle.reduce((acc, item) => {
-    return acc + item.price * item.quantity * (item.tax_rate / 100);
+    return acc + item.price * item.quantityInOrder * (item.tax_rate / 100);
   }, 0);
 
   let totalPagar = subtotal + totalIVA;
@@ -73,7 +74,6 @@ const generarFacturaPDF = async (datosFactura, outputDirectory) => {
   });
   await browser.close();
   // Retornar la ruta del archivo PDF
-  console.log("la ruta es ",pdfPath );
   return pdfPath;
 };
 // Función para convertir el código de provincia a su nombre

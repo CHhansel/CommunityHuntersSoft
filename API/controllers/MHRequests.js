@@ -8,6 +8,7 @@ const firmarXml = require("../utils/FirmadorDos");
 const { createXML } = require("../utils/createXML");
 const { sendInvoiceByEmail } = require("./auth");
 const { generarFacturaPDF } = require("../utils/createPDF");
+const { log } = require("console");
 
 /** Obtener token */
 async function getToken(company_id) {
@@ -136,8 +137,6 @@ function saveXMLToFileInPath(xmlString, filename, directory) {
       console.error("Error al guardar el archivo XML:", err);
       throw err; // O manejar el error de la manera que prefieras
     }
-    console.log(`El archivo XML ha sido guardado en: ${filePath}`);
-    
   });
   return filePath; // Retorna la ruta completa del archivo
 }
@@ -160,7 +159,6 @@ function saveXMLToFile(xmlString, filename) {
       console.error("Error al guardar el archivo XML:", err);
       throw err; // O manejar el error de la manera que prefieras
     }
-    console.log(`El archivo XML ha sido guardado en: ${filePath}`);
   });
 }
 
@@ -174,7 +172,7 @@ const enviarFacturaHacienda = async (
   pdfFilePath
 ) => {
   const token = await getToken(companyId);
-  // aca es valido 
+  // aca es valido
   try {
     const xmlBase64 = Buffer.from(signedXml).toString("base64");
     const jsonBody = {
@@ -190,6 +188,7 @@ const enviarFacturaHacienda = async (
       },
       comprobanteXml: xmlBase64,
     };
+
     const response = await axios.post(
       "https://api-sandbox.comprobanteselectronicos.go.cr/recepcion/v1/recepcion/",
       jsonBody,
@@ -207,16 +206,19 @@ const enviarFacturaHacienda = async (
       console.log("factura enviada con exito");
       // Esperar 5 segundos
       // esperar 2 sec pedirla, si retorna procesando, 5 veces
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       const respuestaConsulta = await verificarRecepcionFactura(
         data.KeyXml,
         token
       );
       const base64Xml = respuestaConsulta["respuesta-xml"]; // Reemplaza con tu variable adecuada
       const xmlString = Buffer.from(base64Xml, "base64").toString("utf8");
-      const comprobantePath = saveXMLToFileInPath(xmlString, `comprobante-${data.KeyXml}.xml`, dgtPath);
+      const comprobantePath = saveXMLToFileInPath(
+        xmlString,
+        `comprobante-${data.KeyXml}.xml`,
+        dgtPath
+      );
       // Llamada a tu función para guardar el XML en un archivo
-
       const pdfPath = await generarFacturaPDF(data, pdfFilePath);
       sendInvoiceByEmail(
         data.Emisor.NombreComercial,
@@ -227,14 +229,13 @@ const enviarFacturaHacienda = async (
         comprobantePath
       );
       // guardar en bd
-      // Insertar la factura en la base de datos
+      //Insertar la factura en la base de datos
+
       await insertarFacturaEnBD(
         data, // Aquí asumimos que 'data' tiene la estructura correcta para 'datosFactura'
-        data.LineaDeDetalle, // La línea de detalle para 'detallesFactura'
-        data.Emisor, // Los datos del emisor para 'datosEmisor'
-        data.Cliente, // Los datos del receptor para 'datosReceptor'
         companyId // El ID de la compañía
       );
+      return pdfPath;
     } else {
       // Manejar respuestas inesperadas
       throw new Error(
@@ -243,11 +244,7 @@ const enviarFacturaHacienda = async (
       );
     }
   } catch (error) {
-    console.error(
-      "Error al enviar la factura:",
-      error.response.headers.status,
-      error.response.headers.statusText
-    );
+    console.error("Error al enviar la factura:", error);
     return error;
     //throw error;
   }
@@ -256,7 +253,7 @@ const enviarFacturaHacienda = async (
 const createInvoice = async (req, res) => {
   try {
     const invoiceData = req.body;
-
+    console.log(invoiceData);
     // Determinar el tipo de documento
     let headDocument, footerDocument;
     let typeDocument = "01";
@@ -264,29 +261,33 @@ const createInvoice = async (req, res) => {
     switch (typeDocument) {
       case "01":
         typeDocument = "FE";
-        headDocument = 'FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+        headDocument =
+          'FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
         footerDocument = "FacturaElectronica";
         break;
       case "02":
         typeDocument = "ND";
-        headDocument = 'NotaDebitoElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/notaDebitoElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+        headDocument =
+          'NotaDebitoElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/notaDebitoElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
         footerDocument = "NotaDebitoElectronica";
         break;
       case "03":
         typeDocument = "NC";
-        headDocument = 'NotaCreditoElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/notaCreditoElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+        headDocument =
+          'NotaCreditoElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/notaCreditoElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
         footerDocument = "NotaCreditoElectronica";
         break;
       case "04":
         typeDocument = "TE";
-        headDocument = 'TiqueteElectronico xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/tiqueteElectronico" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
+        headDocument =
+          'TiqueteElectronico xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/tiqueteElectronico" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
         footerDocument = "TiqueteElectronico";
         break;
-
     }
-  console.log(invoiceData);
     const companyData = await getCompanyData(invoiceData.company_id);
+
     const invoiceKeyData = await generateInvoiceKey(companyData, "FE");
+
     const xmlData = prepareXMLData(companyData, invoiceData, invoiceKeyData);
     // Crear la ruta para los directorios
     const dateFolder = formatDate(new Date()); // Asumiendo que invoiceData tiene un campo de fecha
@@ -297,9 +298,14 @@ const createInvoice = async (req, res) => {
       `Comprobantes-${typeDocument}`,
       dateFolder
     );
-    const pdfPath = createDirectoryIfNotExist(path.join(routeFiles, `PDF-${typeDocument}`));
-    const dgtPath = createDirectoryIfNotExist(path.join(routeFiles, 'XML-DGT'));
-    const XMLsigned = createDirectoryIfNotExist(path.join(routeFiles, 'XML-Firmado'));
+    console.log("aca ok----------------- 1");
+    const pdfPath = createDirectoryIfNotExist(
+      path.join(routeFiles, `PDF-${typeDocument}`)
+    );
+    const dgtPath = createDirectoryIfNotExist(path.join(routeFiles, "XML-DGT"));
+    const XMLsigned = createDirectoryIfNotExist(
+      path.join(routeFiles, "XML-Firmado")
+    );
 
     const xml = createXML(xmlData);
     const xmlFilename = `factura${invoiceKeyData.consecutivo}.xml`; // El nombre del archivo que deseas guardar
@@ -307,13 +313,15 @@ const createInvoice = async (req, res) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const xmlInputPath = path.join(__dirname, "..", "files", "factura.xml");
-    const xmlOutputPath = path.join(XMLsigned, `xmlFirmado${invoiceKeyData.consecutivo}.xml`);
+    const xmlOutputPath = path.join(
+      XMLsigned,
+      `xmlFirmado${invoiceKeyData.consecutivo}.xml`
+    );
 
     const pfxPath = path.join(__dirname, "..", "files", "011693011422.p12");
     // Guarda temporalmente el XML antes de firmarlo
     fs.writeFileSync(xmlInputPath, xml, "utf8");
     // Firma el XML
- 
     try {
       firmarXml(pfxPath, "5050", xmlInputPath, xmlOutputPath);
     } catch (error) {
@@ -323,8 +331,10 @@ const createInvoice = async (req, res) => {
         .json({ error: "Error interno del servidor al firmar la factura" });
     }
     // Leer el XML firmado
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const signedXml = fs.readFileSync(xmlOutputPath, "utf8");
-    const response = enviarFacturaHacienda(
+
+    const response = await enviarFacturaHacienda(
       xmlData,
       invoiceData.company_id,
       signedXml,
@@ -333,7 +343,21 @@ const createInvoice = async (req, res) => {
       pdfPath
     );
 
-    res.status(200).json(response);
+    // En lugar de devolver JSON, devolvemos el archivo PDF
+    // Asegúrate de que pdfPath es la ruta absoluta al archivo PDF que quieres enviar
+
+    // Asegurarse de que el archivo existe antes de intentar enviarlo
+    if (await fs.existsSync(xmlOutputPath)) {
+      return res.sendFile(xmlOutputPath, (err) => {
+        if (err) {
+          console.error("Error al enviar el archivo PDF:", err);
+          return res.status(500).send("Error al enviar el archivo PDF.");
+        }
+      });
+    } else {
+      throw new Error("El archivo PDF no se encontró.");
+    }
+    res.status(200).json("ok");
   } catch (error) {
     console.error("Error en la creación de la factura:");
     res.status(500).json({ error: error.message });
@@ -409,6 +433,7 @@ const generateInvoiceKey = async (companyData, documentType) => {
     consecutivoActual,
     codigoSeguridadAleatorio
   );
+
   return { clave, consecutivo };
 };
 
@@ -519,19 +544,20 @@ function transformarDatosParaProcedimiento(jsonInput) {
     Codigo: item.internal_code,
     TipoCodigoComercial: item.product_type, // Asumiendo que esta es la correcta correspondencia
     CodigoComercial: item.cabys_code,
-    Cantidad: item.quantity,
+    Cantidad: item.quantityInOrder,
     UnidadMedida: item.unit_of_measure,
     Descripcion: item.description,
     PrecioUnitario: item.price,
-    MontoTotal: item.price * item.quantity,
-    SubTotal: item.price * item.quantity, // Asumiendo que no hay descuentos
-    MontoTotalLinea: item.price * item.quantity * (1 + item.tax_rate / 100), // Incluyendo impuesto
+    MontoTotal: item.price * item.quantityInOrder,
+    SubTotal: item.price * item.quantityInOrder, // Asumiendo que no hay descuentos
+    MontoTotalLinea:
+      item.price * item.quantityInOrder * (1 + item.tax_rate / 100), // Incluyendo impuesto
     Impuesto: {
       // Asumiendo que cada línea solo tiene un tipo de impuesto
       Codigo: "01", // El código de impuesto, necesitarás ajustar esto según tu lógica de negocio
       CodigoTarifa: "08", // La tarifa de impuesto, necesitarás ajustar esto según tu lógica de negocio
       Tarifa: item.tax_rate,
-      Monto: item.price * item.quantity * (item.tax_rate / 100),
+      Monto: item.price * item.quantityInOrder * (item.tax_rate / 100),
     },
   }));
 
@@ -549,28 +575,22 @@ function transformarDatosParaProcedimiento(jsonInput) {
     idCompania,
   };
 }
-async function insertarFacturaEnBD(
-  datosFactura,
-  detallesFactura,
-  datosEmisor,
-  datosReceptor,
-  idCompania
-) {
+async function insertarFacturaEnBD(datosFactura, idCompania) {
   try {
     // Transformar los datos para el procedimiento almacenado
     const datosTransformados = transformarDatosParaProcedimiento(datosFactura);
     // Llamar al procedimiento almacenado 'CrearFacturaCompleta'
-    const [result] = await pool.query(
-      "CALL CrearFacturaCompleta(?, ?, ?, ?, ?)",
-      [
-        JSON.stringify(datosTransformados.datosFactura),
-        JSON.stringify(datosTransformados.detallesFactura),
-        JSON.stringify(datosTransformados.datosEmisor),
-        JSON.stringify(datosTransformados.datosReceptor),
-        idCompania,
-      ]
+    console.log(
+      "----------------------------------------------------------------------------"
     );
-    return result;
+    await pool.query("CALL CrearFacturaCompleta(?, ?, ?, ?, ?)", [
+      JSON.stringify(datosTransformados.datosFactura),
+      JSON.stringify(datosTransformados.detallesFactura),
+      JSON.stringify(datosTransformados.datosEmisor),
+      JSON.stringify(datosTransformados.datosReceptor),
+      idCompania,
+    ]);
+    return true;
   } catch (error) {
     console.error("Error al insertar la factura en la BD:", error);
     throw error;
@@ -587,7 +607,6 @@ function createDirectoryIfNotExist(dir) {
   }
   return dir; // Retorna la ruta del directorio
 }
-
 
 // Función para formatear fechas
 function formatDate(date) {

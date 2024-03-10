@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento</title>
+
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+
+    .miFormulario-container {
+        max-width: 600px;
+    }
+
+    .miFormulario input {
+        padding: 8px 15px;
+    }
+
+    .miFormulario {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .wf-50 {
+        width: 45%;
+    }
+
+    .wf-100 {
+        width: 100%;
+    }
+    .miFormulario-enviar{
+        background: #009844;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+    }
+    .miFormulario-enviar:hover{
+        background: #016930;
+
+    }
+</style>
+
+<body>
+    <div class="miFormulario-container">
+        <form id="miFormulario" class="miFormulario">
+            <input class="wf-50" type="text" id="nombre" placeholder="Nombre" required>
+            <input class="wf-50" type="text" id="apellido" placeholder="Apellido" required>
+            <input class="wf-50" type="email" id="email" placeholder="Email" required>
+            <input class="wf-50" type="tel" id="telefono" placeholder="Teléfono" required>
+            <select class="wf-100" id="consulta" required>
+                <option value="">Seleccione una opción...</option>
+                <option value="Consultas generales">Consultas generales</option>
+                <option value="Consultas relacionadas a producto">Consultas relacionadas a producto</option>
+                <option value="Consultas relacionadas a entregas">Consultas relacionadas a entregas</option>
+                <option value="Consultas relacionadas a precios">Consultas relacionadas a precios</option>
+                <option value="Empleabilidad">Empleabilidad</option>
+                <option value="Otros">Otros</option>
+            </select>
+            <textarea class="wf-100" id="comentarios" placeholder="Deja tus comentarios..."></textarea>
+            <input class="miFormulario-enviar" type="button" value="Enviar" onclick="enviarFormulario()">
+        </form>
+
+        <script>
+            function enviarFormulario() {
+                var nombre = document.getElementById('nombre').value;
+                var apellido = document.getElementById('apellido').value;
+                var email = document.getElementById('email').value;
+                var telefono = document.getElementById('telefono').value;
+                var tipoConsulta = document.getElementById('consulta').value;
+                var comentarios = document.getElementById('comentarios').value;
+
+                // Codificar los componentes del correo
+                var asunto = encodeURIComponent("Consulta desde el sitio web");
+                var cuerpo = encodeURIComponent("Nombre: " + nombre + "\nApellido: " + apellido + "\nEmail: " + email + "\nTeléfono: " + telefono + "\nTipo de consulta: " + tipoConsulta + "\nComentarios: " + comentarios);
+
+                // Crear el enlace mailto
+                var enlaceMailto = "mailto:ejemplo@correo.com?subject=" + asunto + "&body=" + cuerpo;
+
+                // Abrir el enlace
+                window.location.href = enlaceMailto;
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+<div class="back-image">
+    <div class="bannercontent">
+    <h1 style="color:#fff; font-weight:700;">
+    CONTACT US
+    </h1><br>
+    <p style="color: #fff; font-size: 1.6rem;">
+    If you want to leave us a message, we invite you to complete the following form to be able to assist you: </p>
+    </div>
+    </div>
+    <br><br>
+    
+    <div class="entry-content">
+        <div class="row">
+            <div class="row-wrapper container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <hr class="tall"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="row-wrapper container">
+                            <div class="row">
+                                <div class="col-lg-12">
+                       
+                                    <!--[if lte IE 8]>
+                                    <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2-legacy.js"></script>
+                                    <![endif]-->
+                                    <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
+                                    <script>
+                                      hbspt.forms.create({
+                                        region: "na1",
+                                        portalId: "20991242",
+                                        formId: "3d4a0904-4edc-46b4-8887-b1e5afb972bc"
+                                    });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                        <div class="container" id="numerosContacto">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="tel:+5067102-9000"><i class="porto-icon-phone"></i>
+                                <p style="display:inline;">+506 7102-9000</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="mailto:ventas@alzugroup.com"><i class="porto-icon-mail-alt"></i>
+                                <p style="display:inline;">ventas@alzugroup.com</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="https://www.facebook.com/tumbissnacks" target="_blank" title="Facebook"><i class="porto-icon-facebook"></i>
+                                <p style="display:inline;">Facebook</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="http://www.instagram.com/tumbissnacks" target="_blank" title="Instagram"><i class="porto-icon-instagram"></i>
+                                <p style="display:inline;">Instagram</p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--
+    <div class="row mt-5 m-auto w-100">
+      <p class="text-center text-white bg-dark">Distribuimos en todos estos lugares</p>
+    </div>
+      <div class="row m-auto w-100">
+        <img src="https://picsum.photos/1920/800" alt="" class="word-map-img mx-auto">
+      </div>
+    -->
+        <div class="row">
+            <div class="row-wrapper container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <hr class="tall"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+    #numerosContacto i{
+        float: left;
+        width: 40px;
+        height: 40px;
+        background-color: #009844;
+        color: #fff;
+        line-height: 43px;
+        text-align: center;
+        font-size: 16px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        margin-right: 5px;
+    }
+    }
+    </style>
+    
+    <style>
+    .back-image{
+         background-image: url('/media/wysiwyg/images/Imagen-contactenos.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /*position: absolute;
+        left: 0;
+        right: 0;*/
+        height: 450px;
+        margin-left: -31%;
+        margin-right: -31%;
+    }
+    .bannercontent{
+        text-align: center;
+        padding-top: 200px;
+        text-shadow: -1px -1px 0 #000, 2px -1px 0 #000, -1px 2px 0 #000, 2px 2px 0 #000;
+        margin: 0 auto;
+    }
+    .word-map-img{
+      width: 80%;
+    }
+    @media (max-width: 1230px){
+    .bannercontent{
+        width: min-content;
+    }
+    .word-map-img{
+      width: 100%;
+    }
+    }
+    </style>
+    

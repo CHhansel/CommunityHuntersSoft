@@ -7,16 +7,17 @@ import { selectUser } from "../../../../../store/authSlice";
 import OrderEditResume from "./OrderEditResume";
 import OrderSelection from "../../CreateOrder/OrderSelection";
 import { useFetchProductsByOrderId } from "../../../../../hooks/orders/useFetchProductsByOrderId";
-import { useFetchOrderWithProducts } from "../../../../../hooks/orders/useFetchOrderWithProducts ";
+import useFetchOrderWithProducts from "../../../../../hooks/orders/useFetchOrderWithProducts";
 
 const EditOrderProducts = () => {
   const { user } = useSelector(selectUser);
   let { ordenId } = useParams();
 
   const [productUniqueId, setProductUniqueId] = useState(0);
-
+  const [order, setOrder] = useState({})
   const [orderDetails, setOrderDetails] = useState({
     company_id: user.company_id,
+    ordenId: ordenId,
     type: "",
     products: [], // Lista de productos con id, cantidad y comentario
   });
@@ -31,6 +32,41 @@ const EditOrderProducts = () => {
     error: productsError,
   } = useFetchProductsByCompanyId(user.company_id, 1, 30, reloadTrigger);
   
+  useEffect(() => {
+    // Suponiendo que actualProducts tiene un campo 'productId' que queremos mapear a 'id'
+    // y otros campos relevantes que también necesitamos mapear.
+    let cont = 0;
+    const transformedProducts = actualProducts.map(product => {
+      cont++;
+      // Encuentra el producto equivalente en el arreglo 'products' usando 'productId'
+      const equivalentProduct = products.find(p => p.id === product.idProducto);
+      
+      // Si no se encuentra un producto equivalente, puedes decidir qué hacer,
+      // por ejemplo, retornar un objeto con campos predeterminados o el propio producto con ajustes.
+      if (!equivalentProduct) {
+        return {
+          uniqueId: cont, // Asume que tienes una forma de generar o incrementar este valor adecuadamente
+          id: product.productId,
+          comment: product.comentarios
+          // Otros campos y valores predeterminados o transformaciones necesarias
+        };
+      }
+      // Si se encuentra un producto equivalente, retorna una nueva estructura
+      // que mapee los campos de 'actualProducts' a los de 'orderDetails.products'
+      return {
+        uniqueId: cont, // Asume que tienes una forma de generar o incrementar este valor adecuadamente
+        id: equivalentProduct.id,
+        comment: product.comentarios
+        // Aquí puedes agregar más campos que necesites mapear, basándote en los campos disponibles en 'equivalentProduct'
+      };
+    });
+    setProductUniqueId(++cont);
+    // Actualiza el estado de orderDetails con los productos transformados
+    setOrderDetails({
+      ...orderDetails,
+      products: transformedProducts,
+    });
+  }, [actualProducts, products]); // Asegúrate de incluir todas las dependencias relevantes
   
   const addProductToOrder = (item, comment = "") => {
     // Crear un nuevo objeto de producto con un comentario opcional y un ID único
@@ -59,7 +95,6 @@ const EditOrderProducts = () => {
     // Actualizar el estado con la lista de productos modificada
     setOrderDetails({
       ...orderDetails,
-
       products: updatedProductsInOrder,
     });
   };

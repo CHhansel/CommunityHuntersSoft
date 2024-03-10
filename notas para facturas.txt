@@ -1,11 +1,675 @@
+[uacf7_step_start uacf7_step_start-682 "first-step"]
+<div class="uacf7-steps steps-form ">
+  <div class="steps-row setup-panel">
+    <div class="steps-step">
+      <a title-id=".step-1" data-form-id="8746" href="#8746step-1" type="button"
+        class="btn btn-circle uacf7-btn-default uacf7-btn-cafsa-actual disabled">1</a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-2" data-form-id="8746" href="#8746step-2" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">2  </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-3" data-form-id="8746" href="#8746step-3" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">3  </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-4" data-form-id="8746" href="#8746step-4" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">4 </a>
+      <p>4</p>
+    </div>
+  </div>
+</div>
+<div style="margin:30px 0 30px 0; display:flex; justify-content: center; width: 100%;font-weight: 700; ">Seleccione el
+    producto de su interés</div>
+<label>Producto de interés
+    [select* menu-producto-interes "Purdy Renting" "Crédito prendario" "Financiamiento de motos" "Plan 0% prima" "Purdy Cuotas" "Toyota al rescate" "Crédito SBD"
+    "Certificados de inversión a plazos" "Arrendamiento Operativo en Función Financiera"
+    "Arrendamiento Básico" "Leasing SBD" "Purdy Card"]</label>
 
-https://apis.gometa.org/
+[conditional conditional-tipoDeMoneda]
+<label> Tipo de moneda
+    [select* menu-tipo-moneda "Dólares" "Colones"] </label>
+[/conditional]
 
-https://github.com/CRLibre/API_Hacienda?fbclid=IwAR2kQHmbdAmoSfHZmKmalzq9xbiA_6yy41yxU1n4VXD0xOjjt_rySTEmYAE
+
+[conditional conditional-condicionDelBien]
+<label>Condición del bien
+    [select* menu-condicion-bien "Nuevo" "Usado"]</label>
+[/conditional]
+
+[conditional conditional-servicioFinanciar]
+<label>Servicio a Financiar
+    [select* menu-condicion-servicioFinanciar "Reparación" "Mantenimiento" "Repuestos" "Accesorios"]</label>
+[/conditional]
+
+[conditional conditional-valorVehiculo]
+<label> Valor del vehículo
+    <div class="dollar-input">
+        [number_format vehicle-value format]
+    </div>
+</label>
+[/conditional]
+
+[conditional conditional-cotizar]
+<label> Valor a cotizar
+    <div class="dollar-input">
+        [number_format cotizar-value format]
+    </div>
+</label>
+[/conditional]
+
+[conditional conditional-prima]
+<div class="range-container">
+    <div style=" margin-bottom: 20px;">
+        <p class="label-minimo"> Prima mínima (mín 20%)</p>
+        [range range-141 min:20 max:90 value="20"]
+    </div>
+    <div class="range-labels">
+        <span>20%</span>
+        <span>90%</span>
+    </div>
+    <span class="range-current-value">20%</span>
+</div>
+<div class="dollar-input" style="margin: 50px 0 10px 0;">
+ <p id="simbolo-moneda-prima"> Prima: $</p>
+
+    
+    [conditional conditional-valorVehiculo]
+    [calculated calculated-prima-car cf7_label cf7_hide format  "vehicle-value / 100 * range-141"]
+
+    [/conditional]
+    [conditional conditional-cotizar]
+    [calculated calculated-prima-coti format  cf7_label cf7_hide format  "cotizar-value / 100 * range-141"]
+    [/conditional]
+</div>
+
+<div class="dollar-input">
+    <p id="simbolo-moneda-monto-financiar"> Monto a financiar: $</p>
+     [conditional conditional-valorVehiculo]
+    [calculated calculated-fina-car cf7_label cf7_hide format   "vehicle-value - vehicle-value / 100 * range-141"]
+    [/conditional]
+
+    [conditional conditional-cotizar]
+    [calculated calculated-fina-coti cf7_label cf7_hide format   "cotizar-value - cotizar-value / 100 * range-141"]
+    [/conditional]
+
+    <div style="display:none">
+        [email email-destino "leasing@cafsa.fi.cr"]
+        [calculated calculated-476 cf7_label cf7_hide "vehicle-value - vehicle-value / 100 * range-141"]</label>
+        [date date-533 "today"]
+    </div>
+
+</div>
+[/conditional]
+[conditional conditional-plazo]
+    [conditional conditional-plazofijo]
+        <label class="desactivado"> Plazo: [text text-plazoFinal class:inputDesactivado "96 meses" ]</label> 
+        <p class="plazolabel "></p>
+    [/conditional]
+    [conditional conditional-plazoSelect]
+        <label> Plazo: 
+        [select* menu-913 "3 meses" "6 meses" "12 meses" "24 meses" "36 meses"]</label>
+    [/conditional]
+[/conditional]
+[conditional conditional-aviso-plan-0-prima]
+<p style="
+    font-size: 14px;
+    font-weight: 700;
+">
+*El solicitante debe de tener como mínimo 12 meses de ser cliente del Grupo Financiero CAFSA mostrando buen comportamiento en sus pagos.
+</p>
+[/conditional]
+[uacf7_step_end end]
 
 
-token (clave criptografica)
-firmar documento (buscar como se firma)
-barrios usar codigo y no nombre https://github.com/CRLibre/fe-hacienda-cr-misc/blob/master/Codificacionubicacion_V4.2.pdf
 
-otro diagrama mas simple que el de gometa https://raw.githubusercontent.com/CRLibre/docs-fe-hacienda-cr/master/diagrama-flujo/Diagrama%20de%20Flujo%20para%20Factura%20Electronica%20Costa%20Rica.png
+
+
+[uacf7_step_start uacf7_step_start-970]
+<div class="uacf7-steps steps-form ">
+  <div class="steps-row setup-panel">
+    <div class="steps-step">
+      <a title-id=".step-1" data-form-id="8746" href="#8746step-1" type="button"
+        class="btn btn-circle uacf7-btn-cafsa-complete disabled">1 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-2" data-form-id="8746" href="#8746step-2" type="button"
+        class="btn btn-circle uacf7-btn-default uacf7-btn-cafsa-actual disabled">2  </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-3" data-form-id="8746" href="#8746step-3" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">3 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-4" data-form-id="8746" href="#8746step-4" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">4 </a>
+    </div>
+  </div>
+</div>
+
+<div style="margin:30px 0 30px 0; display:flex; justify-content: center; width: 100%; font-weight: 700;">Información personal</div>
+<label> Nombre Completo
+  [text* your-name autocomplete:name] </label>
+[conditional conditional-cedulas]
+<label> Tipo de identificación
+  [select* menu-tipo-cedula "Jurídica" "Física" "Extranjera (Dimex)"]</label>
+[/conditional]
+[conditional conditional-solo-juridica]
+<label> Tipo de identificación
+  [select* menu-cedula-juridica "Jurídica"]</label>
+[/conditional]
+<label> Número de identificación
+  [number number-identificacion]</label>
+[uacf7_step_end end]
+
+
+[uacf7_step_start uacf7_step_start-419]
+<div class="uacf7-steps steps-form ">
+  <div class="steps-row setup-panel">
+    <div class="steps-step">
+      <a title-id=".step-1" data-form-id="8746" href="#8746step-1" type="button"
+        class="btn btn-circle uacf7-btn-cafsa-complete disabled">1 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-2" data-form-id="8746" href="#8746step-2" type="button"
+        class="btn btn-circle uacf7-btn-cafsa-complete disabled">2  </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-3" data-form-id="8746" href="#8746step-3" type="button"
+        class="btn btn-circle  uacf7-btn-default uacf7-btn-cafsa-actual disabled">3 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-4" data-form-id="8746" href="#8746step-4" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-inc disabled">4 </a>
+    </div>
+  </div>
+</div>
+[conditional conditional-inf-empleo]
+<div style="margin:30px 0 30px 0; display:flex; justify-content: center; width: 100%;font-weight: 700;">Información de empleo</div>
+<label> Condición laboral
+  [select* menu-condicion-laboral "Asalariado" "Independiente" "Pensionado"] </label>
+
+[conditional conditional-laboral]
+<label> Ocupación
+[text text-ocupacion]</label>
+
+[conditional conditional-no-independiente]
+<label> Lugar de trabajo
+[text text-lugar-trabajo]</label>
+[/conditional]
+
+
+<label> Tiempo en su empleo actual (años)
+  [number number-tiempo-empleo]</label>
+
+<label> Moneda ingreso mensual
+  [select menu-moneda-ingreso "Colones" "Dólares"]</label>
+
+[/conditional]
+<label> Ingreso mensual
+[number_format* number-cant-ingreso format]
+
+
+[conditional conditional-purdy-card]
+<label> Subir foto/documento de la cédula por ambos lados
+[file file-357 filetypes:jpg|png|pdf]
+[file file-970 filetypes:jpg|png|pdf]
+<p class="terminos-archivos">Yo Cliente otorgo la autorización a Financiera CAFSA para que estos obtengan, verifiquen, utilicen y compartan la información general, de carácter personal y de crédito facilita da al Grupo, así como brindar, transferir e intercambiar la información proporcionada y recopilada con el objeto de que se incluya dentro de las bases de datos públicas o privadas del Grupo Financiero Cafsa y del Sistema Financiero Nacional.</p>
+[acceptance acceptance-869 class:aceptacion optional] Acepto los términos. [/acceptance]
+[/conditional]
+
+[/conditional]
+
+
+[conditional conditional-inf-empresa]
+<div style="margin:30px 0 30px 0; display:flex; justify-content: center; width: 100%;font-weight: 700;">Información de Empresa</div>
+<label> Actividad o sector en el mercado
+[text text-actividad-sector]</label>
+<label> Productos o servicios (favor incluir marcas)
+[text text-productos-servicios]</label>
+
+
+<label> Clientes
+[text text-empresa-clientes]</label>
+
+<label> Plazo de ventas en días
+  [number number-plazo ventas]</label>
+
+<label> Moneda de las ventas
+  [select menu-moneda-ventas "Colones" "Dólares"]</label>
+
+<label> Años de permanecer en el mercado
+  [number number-tiempo-en-mercado]</label>
+
+[/conditional]
+
+
+
+[uacf7_step_end end]
+[uacf7_step_start uacf7_step_start-485]
+<div class="uacf7-steps steps-form ">
+  <div class="steps-row setup-panel">
+    <div class="steps-step">
+      <a title-id=".step-1" data-form-id="8746" href="#8746step-1" type="button"
+        class="btn btn-circle uacf7-btn-default uacf7-btn-cafsa-complete disabled">1 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-2" data-form-id="8746" href="#8746step-2" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-complete disabled">2 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-3" data-form-id="8746" href="#8746step-3" type="button"
+        class="btn uacf7-btn-default btn-circle uacf7-btn-cafsa-complete disabled">3 </a>
+    </div>
+    <div class="steps-step">
+      <a title-id=".step-4" data-form-id="8746" href="#8746step-4" type="button"
+        class="btn btn-circle uacf7-btn-default uacf7-btn-cafsa-actual disabled">4  </a>
+    </div>
+  </div>
+</div>
+<div style="margin:30px 0 30px 0; display:flex; justify-content: center; width: 100%; font-weight: 700;">Información de contacto</div>
+<label> Correo electrónico
+  [email* your-email autocomplete:email] </label>
+
+<label> Número de teléfono
+[tel tel-phone]</label>
+
+[conditional conditional-sucursales-disp]
+<label> En cuál sucursal le gustaría ser atendido
+[select menu-sucursal-cartago " Ciudad Toyota La Uruca" "Avenida Escazú" "Purdy Center Cartago" "Purdy Center Grecia" "Liberia" "Purdy Center Escazú" "Pérez Zeledón" "San Carlos" "TerraMall" "Automotriz La Uruca" "Zapote"]</label>
+[/conditional]
+
+[conditional conditional-inf-empleo]
+<label>Medio por el que desea ser contactado
+  [select menu-contacto "Llamada" "Correo" "Mensaje Whatsapp"] </label>
+[/conditional]
+
+[conditional conditional-inf-empresa]
+<label> Nombre de contacto
+[text text-nombre-contacto]</label>
+<label> Dirección de la empresa
+[text text-direccion-empresa]</label>
+[/conditional]
+
+[cf7sr-simple-recaptcha]
+<div class="boton-submit">
+  [submit "Enviar"]
+[uacf7_step_end end]
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rangeValue = document.querySelector('input[name="range-141"]');
+    var currentValueDisplay = document.querySelector('.range-current-value');
+    function updateCurrentValue() {
+      currentValueDisplay.textContent = rangeValue.value + '%';
+    }
+    rangeValue.addEventListener('input', updateCurrentValue);
+    // Llama a la función inicialmente para asegurarte de que el valor se muestre correctamente al cargar la página
+    updateCurrentValue();
+  });
+var botones = document.querySelectorAll('.uacf7-prev');
+botones.forEach(function(boton) {
+  boton.innerHTML = 'Anterior';
+});
+var botonesNext = document.querySelectorAll('.uacf7-next');
+botonesNext .forEach(function(boton) {
+  boton.innerHTML = 'Siguiente';
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Selecciona el elemento del select y el párrafo
+    var selectMoneda = document.querySelector('select[name="menu-tipo-moneda"]');
+    var pSimboloMonedaPrima = document.getElementById('simbolo-moneda-prima');
+    var pSimboloMonedaFinanciar = document.getElementById('simbolo-moneda-monto-financiar');
+    // Verifica si los elementos existen
+   var productInteresSelect = document.querySelector('select[name="menu-producto-interes"]').value;
+   console.log(productInteresSelect);
+    if (selectMoneda && pSimboloMonedaPrima && pSimboloMonedaFinanciar) {
+        // Agrega un event listener para el cambio en el select de moneda
+        selectMoneda.addEventListener('change', function() {
+            // Cambia el contenido del párrafo dependiendo de la selección
+            if (selectMoneda.value === 'Dólaress') {
+                pSimboloMonedaPrima.textContent = (productInteresSelect == "Arrendamiento Básico")? 'Depósito: $' : 'Prima : $';
+                pSimboloMonedaFinanciar.innerHTML = 'Monto a financiar: $';
+            } else if (selectMoneda.value === 'Coloness') {
+                pSimboloMonedaPrima.innerHTML = 'Prima: ₡';
+                pSimboloMonedaPrima.textContent = (productInteresSelect == "Arrendamiento Básico")? 'Depósito: ₡' : 'Prima : ₡';
+                pSimboloMonedaFinanciar.innerHTML = 'Monto a Financiar: ₡';
+            }
+             //pSimboloMonedaPrima.textContent = pSimboloMonedaPrima.textContent.replace("Prima", "Depósito");
+        });
+    }
+});
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener referencias a los elementos del formulario
+        var productoInteresSelect = document.querySelector('select[name="menu-producto-interes"]');
+        var plazoFinalInput = document.querySelector('input[name="text-plazoFinal"]');
+        var plazoMenu913Select = document.querySelector('select[name="menu-913"]');
+        var plazolabel = document.querySelector('.plazo-fijo');
+        // Función para actualizar el valor de text-plazoFinal
+        function updatePlazoFinal() {
+            var selectedProducto = productoInteresSelect.value;
+            var plazoValue = "";
+
+        // Asigna un plazo predeterminado según el producto seleccionado
+        switch (selectedProducto) {
+            case "Crédito prendario":
+                plazoValue = "96 meses"; // Cambia esto al valor que desees
+                break;
+            case "Financiamiento de motos":
+                plazoValue = "60 meses"; // Cambia esto al valor que desees
+                break;
+            case "Plan 0% prima":
+                plazoValue = "96 meses"; // Cambia esto al valor que desees
+                break;
+            case "Purdy Cuotas":
+                plazoValue = "36 meses"; // Cambia esto al valor que desees
+                break;
+            case "Toyota al rescate":
+                plazoValue = "60 meses"; // Cambia esto al valor que desees
+                break;
+            case "Crédito SBD":
+                plazoValue = "96 meses"; // Cambia esto al valor que desees
+                break;
+            case "Arrendamiento Operativo en Función Financiera":
+                plazoValue = "96 meses"; // Cambia esto al valor que desees
+                break;
+            case "Purdy Renting":
+                plazoValue = "60 meses"; // Cambia esto al valor que desees
+                break;
+            case "Arrendamiento Básico":
+                plazoValue = "72 meses"; // Cambia esto al valor que desees
+                break;
+            case "Leasing SBD":
+                plazoValue = "96 meses"; // Cambia esto al valor que desees
+                break;
+            case "Purdy Card":
+                plazoValue = ""; // Cambia esto al valor que desees
+                break;
+            case "Certificados de inversión a plazos":
+                plazoValue = plazoMenu913Select.value; // Tomar el valor del otro select
+                break;
+            default:
+                plazoValue = "36 meses"; // Cambia esto al valor que desees
+        }
+            plazoFinalInput.value = plazoValue;
+        }
+
+        // Escuchar cambios en el select de producto de interés y en el select de menu-913
+        productoInteresSelect.addEventListener('change', updatePlazoFinal);
+        plazoMenu913Select.addEventListener('change', updatePlazoFinal);
+
+        // Llama a la función inicialmente para asegurarte de que el valor se establezca correctamente al cargar la página
+        updatePlazoFinal();
+    });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtener referencias a los elementos del formulario
+    var productoInteresSelect = document.querySelector('select[name="menu-producto-interes"]');
+    
+    // Referencias a los elementos que contienen los textos a cambiar
+    var textosPrima = document.querySelectorAll('.texto-prima');
+    var labelPrimaMinima = document.querySelector('.label-minimo'); // Referencia al nuevo elemento <p>
+    var pSimboloMonedaPrima = document.getElementById('simbolo-moneda-prima');
+    var pSimboloMonedaFinanciar = document.getElementById('simbolo-moneda-monto-financiar');
+    var selectMoneda = document.querySelector('select[name="menu-tipo-moneda"]');
+   
+    function updateTextsBasedOnProduct() {
+     console.log("asdasd");
+        var selectedProducto = productoInteresSelect.value;
+    
+            if (selectMoneda.value === 'Dólares') {
+                pSimboloMonedaPrima.textContent = pSimboloMonedaPrima.textContent.replace("₡", "$");
+                pSimboloMonedaFinanciar.textContent = pSimboloMonedaFinanciar.textContent.replace("₡", "$");
+            } else if (selectMoneda.value === 'Colones') {
+                pSimboloMonedaPrima.textContent = pSimboloMonedaPrima.textContent.replace("$", "₡");
+                pSimboloMonedaFinanciar.textContent = pSimboloMonedaFinanciar.textContent.replace("$", "₡");
+            }
+      
+        // Actualizar el texto del <p> que dice "Prima mínima"
+        if (labelPrimaMinima) {
+            switch (selectedProducto) {
+                case "Arrendamiento Operativo en Función Financiera":
+                case "Purdy Renting":
+                case "Arrendamiento Básico":
+                case "Leasing SBD":
+                    labelPrimaMinima.textContent = "Depósito mínimo (mín 20%)";
+                   pSimboloMonedaPrima.textContent = pSimboloMonedaPrima.textContent.replace("Prima", "Depósito");
+                    break;
+                default:
+                    labelPrimaMinima.textContent = "Prima mínima (mín 20%)";
+                     pSimboloMonedaPrima.textContent = pSimboloMonedaPrima.textContent.replace("Depósito", "Prima");
+            }
+        }
+    }
+
+    // Escuchar cambios en el select de producto de interés
+    productoInteresSelect.addEventListener('change', updateTextsBasedOnProduct);
+    selectMoneda.addEventListener('change', updateTextsBasedOnProduct);
+    // Llama a la función inicialmente para asegurarte de que los textos se establezcan correctamente al cargar la página
+    updateTextsBasedOnProduct();
+});
+document.addEventListener("DOMContentLoaded", function () {
+  // Obtener referencias a los elementos del formulario
+  var productoInteresSelect = document.querySelector(
+    'select[name="menu-producto-interes"]'
+  );
+  var sucursalSelect = document.querySelector(
+    'select[name="menu-sucursal-cartago"]'
+  );
+  var emailDestinoInput = document.querySelector('input[name="email-destino"]');
+
+  // Función para actualizar el valor de email-destino
+  function updateEmailDestino() {
+    var selectedProducto = productoInteresSelect.value;
+    var selectedSucursal = sucursalSelect.value;
+    
+    var emailValue = ""; // Valor por defecto
+    // Productos con correos fijos (no cambian con sucursal)
+    if (
+      selectedProducto === "Purdy Cuotas" ||
+      selectedProducto === "Financiamiento de motos"
+    ) {
+      emailValue = "purdycuotas@cafsa.fi.cr";
+    } else if (selectedProducto === "Purdy Card") {
+      emailValue = "purdycard@cafsa.fi.cr";
+    } else if (selectedProducto === "Certificados de inversión a plazos") {
+      emailValue = "inversiones@cafsa.fi.cr";
+    } else if (selectedProducto === "Factoreo") {
+      emailValue = "factoreo@cafsa.fi.cr";
+    } else if (
+      selectedProducto === "Crédito prendario" ||
+      selectedProducto === "Plan 0% prima" ||
+      selectedProducto === "Toyota al rescate"
+    ) {
+      // Correos para productos de crédito según sucursal
+      switch (selectedSucursal) {
+        case "Avenida Escazú":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Purdy Center Cartago":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Purdy Center Grecia":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Liberia":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Purdy Center Escazú":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Pérez Zeledón":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "San Carlos":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "TerraMall":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Automotriz La Uruca":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Zapote":
+          emailValue = "desarrollo-digital@cafsa.fi.cr";
+          break;
+        case "Ciudad Toyota La Uruca":
+          switch (selectedProducto) {
+            case "Crédito prendario":
+            case "Plan 0% prima":
+            case "Toyota al rescate":
+              emailValue = "desarrollo-digital@cafsa.fi.cr";
+              break;
+            case "Crédito SBD":
+              emailValue = "desarrollo-digital@cafsa.fi.cr";
+              break;
+            case "Arrendamiento Operativo en Función Financiera":
+            case "Arrendamiento Básico":
+              emailValue = "desarrollo-digital@cafsa.fi.cr";
+              break;
+            case "Purdy Renting":
+            case "Leasing SBD":
+              emailValue = "desarrollo-digital@cafsa.fi.cr";
+              break;
+          }
+          break;
+      }
+    } else if (
+      selectedProducto === "Arrendamiento Operativo en Función Financiera" ||
+      selectedProducto === "Arrendamiento Básico" ||
+      selectedProducto === "Purdy Renting" ||
+      selectedProducto === "Leasing SBD"
+    ) {
+      // Correos para productos de arrendamiento según sucursal
+      switch (selectedSucursal) {
+        case "Avenida Escazú":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Purdy Center Cartago":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Purdy Center Grecia":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Liberia":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Pérez Zeledón":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "San Carlos":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "TerraMall":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Automotriz La Uruca":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Zapote":
+          emailValue = "leasing@cafsa.fi.cr";
+          break;
+        case "Ciudad Toyota La Uruca":
+          switch (selectedProducto) {
+            case "leasing@cafsa.fi.cr":
+            case "leasing@cafsa.fi.cr":
+            case "Purdy Renting":
+            case "Leasing SBD":
+              emailValue = "leasing@cafsa.fi.cr";
+              break;
+          }
+          break;
+        // ... (casos para otras sucursales si son necesarios)
+      }
+    }
+
+    emailDestinoInput.value = emailValue;
+   console.log(selectedProducto, " sucursal es ", selectedSucursal,"destino ",emailDestinoInput.value);
+  }
+
+  // Escuchar cambios en los select de producto de interés y sucursal
+  productoInteresSelect.addEventListener("change", updateEmailDestino);
+  sucursalSelect.addEventListener("change", updateEmailDestino);
+
+  // Llama a la función inicialmente para asegurarte de que el valor se establezca correctamente al cargar la página
+  updateEmailDestino();
+});
+</script>
+
+<style>
+    label {
+        margin-top: 10px;
+        display: inline;
+    }
+
+    .block {
+        display: block;
+    }
+
+    .block label span {
+        display: block;
+    }
+     .desactivado{
+       display: flex !important;
+       align-items: center;
+       pointer-events: none;
+     }
+    .wpcf7 form.wpcf7-form p {
+        margin-bottom: 2px;
+        display: flex;
+        flex-direction: row;
+        align-content: flex-start;
+        justify-content: center;
+    }
+
+    .range-container {
+        position: relative;
+    }
+
+    .range-labels {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        width: 100%;
+        bottom: -20px;
+        /* Ajusta esta propiedad según tu diseño */
+    }
+
+    .range-current-value,
+    .range-current-col-value {
+        position: absolute;
+        right: 45%;
+        top: 7px;
+    }
+
+    form.wpcf7-form p {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .dollar-input {
+        position: relative;
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .dollar-symbol {
+        position: absolute;
+        left: 12px;
+        /* Ajustar según tu diseño */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        /* Ajustar según tu diseño */
+        z-index: 1;
+    }
+
+    .dollar-input input {
+        padding-left: 20px;
+        /* Ajustar según tu diseño */
+    }
+</style>

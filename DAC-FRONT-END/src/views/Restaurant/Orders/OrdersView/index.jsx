@@ -48,6 +48,8 @@ const OrdersView = () => {
           <EditOrder
             onClose={togglePopUp}
             order={selectedOrder}
+            onCreated={handleReloadData}
+
           ></EditOrder>
         </PopUp>
       </div>

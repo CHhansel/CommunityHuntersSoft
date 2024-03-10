@@ -17,16 +17,15 @@ export const CustomerCreate = ({updateTable}) => {
     name: "",
     lastname: "",
     dni: "",
-    dni_type: 1,
+    dni_type: '01',
     email: "",
     company_id: user.company_id,
-    note: "",
     province_code: "1",
     canton_code: "",
     district_code: "",
     exact_address: "",
   });
-  const { createCustomer, isLoading, error } = useCreateCustomer();
+  const { createCustomer } = useCreateCustomer();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -153,18 +152,6 @@ export const CustomerCreate = ({updateTable}) => {
             onChange={handleChange}
             required
           />
-        </div>
-        <div className="flex flex-col gap-3 ">
-          <label className="text-xl" htmlFor="note">
-            Nota
-          </label>
-          <textarea
-            className="input-text"
-            name="note"
-            placeholder="Nota"
-            value={formData.note}
-            onChange={handleChange}
-          ></textarea>
         </div>
         <div className="w-full flex justify-end">
           <button className="button-success" type="submit">

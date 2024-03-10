@@ -1,4 +1,3 @@
-import React from 'react';
 
 const FormattedCurrency = ({ amount, styles="" }) => {
   // Función para formatear el número a un formato de moneda específico

@@ -59,9 +59,18 @@ export const invoiceService = {
     createInvoice: async (token, invoiceData) => {
         try {
             const response = await DAC_API.post('atv/create-invoice/', invoiceData, {
-                headers: { 'Authorization': token }
+                headers: { 'Authorization': token },
+                responseType: 'blob' // Indica que esperamos un archivo como respuesta
             });
-            return response.data; // devuelve los datos de la respuesta
+
+            // Crea un nuevo objeto Blob con los datos y lo retorna
+            const pdfBlob = new Blob([response.data], { type: 'application/xml' });
+
+            // Si necesitas una URL para mostrar el PDF en el navegador
+            const pdfUrl = window.URL.createObjectURL(pdfBlob);
+
+            // Retorna un objeto con el blob y la URL para uso posterior
+            return { pdfBlob, pdfUrl };
         } catch (error) {
             console.error(`Error al crear la factura: `, error);
             throw error; // Lanza el error para manejarlo más adelante

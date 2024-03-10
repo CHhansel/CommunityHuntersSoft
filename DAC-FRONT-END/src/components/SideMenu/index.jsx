@@ -87,7 +87,7 @@ const SideMenu = () => {
               <Link
                 key={module.module_id}
                 to={`/${module.module_url}`}
-                className={`flex items-center gap-3 rounded-main ease-out duration-500  my-1 w-full py-[6px] px-[12px]  text-center ${
+                className={`flex items-center gap-3 rounded-main ease-out duration-500   w-full py-[4px] px-[10px]  text-center ${
                   isActive
                     ? "bg-main-blue text-white"
                     : "text-black bg-white hover:bg-main-blue hover:text-black"

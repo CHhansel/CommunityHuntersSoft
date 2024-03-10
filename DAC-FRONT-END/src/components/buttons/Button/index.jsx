@@ -42,6 +42,17 @@ const buttonConfigs = {
         icon: undo_icon, // Reemplaza con el path de tu icono
         className: 'button-cancel'
       },
+      KITCHEN_BACK: {
+        text: 'REGRESAR',
+        icon: undo_icon, // Reemplaza con el path de tu icono
+        className: 'button-kitchen-back'
+      },
+      PAY: {
+        text: 'FACTURAR',
+        icon: kitchen_icon, // Reemplaza con el path de tu icono
+        className: 'button-cancel'
+      },
+      
     // Agrega más tipos y configuraciones según sea necesario
   };
 

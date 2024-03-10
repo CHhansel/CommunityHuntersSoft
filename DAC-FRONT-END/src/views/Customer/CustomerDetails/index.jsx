@@ -185,18 +185,6 @@ export const CustomerDetails = ({ fila, updateTable }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <label className="text-xl" htmlFor="note">
-            Nota:
-          </label>
-          <textarea
-            className={`input-text `}
-            name="note"
-            value={formData.note}
-            onChange={handleInputChange}
-            disabled={!isEditable}
-          />
-        </div>
       </form>
       <div className="flex justify-end gap-8 mt-5">
         {!isEditable ? (

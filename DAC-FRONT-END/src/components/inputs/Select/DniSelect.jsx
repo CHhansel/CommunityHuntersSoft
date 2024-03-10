@@ -25,7 +25,7 @@ export const DniTypeSelect = ({ value, onChange, isEditable = true }) => {
             <select
                 className="input-text"
                 name="dni_type"
-                value={value}
+                value={""+value} // Convertir a string para comparaciones
                 onChange={onChange}
                 disabled={!isEditable}
             >

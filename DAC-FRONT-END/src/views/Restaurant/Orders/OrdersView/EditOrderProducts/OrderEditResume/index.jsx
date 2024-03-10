@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+
 import useCreateOrder from "../../../../../../hooks/orders/useCreateOrder";
 import { useFetchRestaurantTables } from "../../../../../../hooks/tables/fetchRestaurantTables";
 import OrderProductItem from "../../../../../../components/OrderProduct";
 import FormattedCurrency from "../../../../../../components/NumberFormat";
 import Button from "../../../../../../components/buttons/Button";
-import PopUp from "../../../../../../components/popUp";
-import OrderFinalResume from "../../../CreateOrder/OrderResume/OrderFinalResume";
 import { useAlert } from "../../../../../../components/Notifications/MySwalNotification";
+import { useUpdateProductsInOrder } from "../../../../../../hooks/orders/useUpdateProductsInOrder";
+import Swal from "sweetalert2";
 
 const OrderEditResume = ({
   products,
@@ -28,6 +30,9 @@ const OrderEditResume = ({
     phone: "",
     address: "",
   });
+
+  const { updateProducts } = useUpdateProductsInOrder();
+
   const [orderFinal, setOrderFinal] = useState({});
   const company_id = 1; // Asumiendo que tienes un company_id definido, ajusta según tu implementación
   const { tablesData } = useFetchRestaurantTables(company_id, reloadTrigger);
@@ -66,27 +71,24 @@ const OrderEditResume = ({
     setSubtotalPrice(subtotal);
   }, [detailedProducts, orderDetails.products]); // Añade selectedOrderType a las dependencias
 
-  const handleConfirmOrder = () => {
+  const handleUpdateOrder = async () => {
     if (detailedProducts.length <= 0) {
       showToast("warning", "La orden no posee productos!");
       return;
     }
-    setOrderFinal({
-      ...orderDetails,
-      subtotalPrice,
-      total: totalPrice,
-      orderCustomerInfo,
+    const result = await Swal.fire({
+      title: "¿Desea actualizar  la orden?",
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Aceptar",
     });
-    togglePopUp();
-  };
-  const handleSubmitOrder = async () => {
-    togglePopUp();
-    try {
-      const response = await createOrder(orderFinal);
-      showToast("success", "Orden Creada!");
-      navigate("/Ordenes");
-    } catch (err) {
-      console.error(err);
+    if (result.isConfirmed) {
+      // Llama a la función updateProductsInOrder con los parámetros necesarios
+      const response = await updateProducts(
+        orderDetails.ordenId,
+        detailedProducts
+      );
+      navigate(`/Ordenes`);
     }
   };
 
@@ -130,20 +132,11 @@ const OrderEditResume = ({
       </div>
       <div className="mt-5 flex justify-end">
         <Button
-          type={"SEND"}
-          onClick={handleConfirmOrder}
-          text={"PEDIDO A LA COCINA"}
+          type={"UPDATE"}
+          onClick={handleUpdateOrder}
+          text={"PEDIDO"}
         ></Button>
       </div>
-      <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
-        <OrderFinalResume
-          close={togglePopUp}
-          order={orderFinal}
-          products={products}
-          handleSubmitOrder={handleSubmitOrder}
-          tables={tablesData.tables}
-        ></OrderFinalResume>
-      </PopUp>
     </div>
   );
 };

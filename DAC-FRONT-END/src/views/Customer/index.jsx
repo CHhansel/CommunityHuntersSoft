@@ -28,23 +28,8 @@ const Customer = () => {
     10,
     reloadTrigger
   );
+ console.log("total es ", totalCustomers);
 
-  if (loading) {
-    return (
-      <div className="h-80 ">
-        <Loading />
-      </div>
-    );
-  }
-
-  if (error) {
-    showToast("error", error);
-    return (
-      <div className="h-80 ">
-        <Loading />
-      </div>
-    );
-  }
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };
@@ -56,21 +41,21 @@ const Customer = () => {
 
   const customersResume = resumeData(customers,'Customers');
   return (
-    <div className="w-full px-16 flex flex-col justify-start h-full">
-      {loading && <p>Cargando...</p>}
-      {error && <p>Error: {error}</p>}
+    <div className="w-full px-16 flex flex-col justify-start h-full">      
       <div className="w-100 flex justify-end px-8">
+      {loading && <p>Cargando...</p>}
         <button
           onClick={() => {
             setCreateCustomerActive(true);
             setFilaSeleccionada(-1);
           }}
           className="bg-main-blue px-6 py-2 border text-white rounded-full"
-        >
+          >
           AGREGAR
         </button>
       </div>
-      {customers && customers.length > 0 && (
+      {error && <div className="w-full mt-20">No hay Clientes </div>}
+      { customers && totalCustomers > 0 && (
         <>
           <TablaDinamica
             datos={customersResume}

@@ -42,7 +42,7 @@ const ClientData = ({ clientData, setClient }) => {
     const loadDniTypes = async () => {
       try {
         const data = await DniTypeService.getDniTypes(token); // Reemplaza yourAuthToken por tu token
-        setDniTypes(data.dniTypes);
+        setDniTypes(data);
       } catch (error) {
         console.error("Error al cargar los tipos de DNI:", error);
       }
@@ -89,21 +89,7 @@ const ClientData = ({ clientData, setClient }) => {
           }
         })
         .catch((error) => {
-          // Aquí manejas el error
-          if (error.response) {
-            // Errores que vienen con una respuesta del servidor
-            console.error("Error en la respuesta del servidor", error.response);
-          } else if (error.request) {
-            // Errores que ocurrieron al hacer la solicitud pero no se recibió respuesta
-            console.error("La solicitud fue hecha pero no se recibió respuesta", error.request);
-            if (error.code === 'ECONNABORTED') {
-              // Manejo específico para el error de timeout
-              console.error("La solicitud ha excedido el tiempo de espera. La API de Hacienda puede estar caída o muy lenta.");
-            }
-          } else {
-            // Errores generados durante la configuración de la solicitud
-            console.error("Error en la configuración de la solicitud", error.message);
-          }
+          console.log(error);
         });
     }
     
@@ -114,9 +100,9 @@ const ClientData = ({ clientData, setClient }) => {
       <button className="my-5 button-success" onClick={togglePopUp}>
         Buscar Cliente
       </button>
-      <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
+      {/* <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
         <CustomerSearch setCustomer={setFormData}></CustomerSearch>
-      </PopUp>
+      </PopUp> */}
       <form className="flex justify-between flex-wrap items-start gap-5 w-full">
         <div className="flex flex-col gap-3">
           <label>Nombre:</label>

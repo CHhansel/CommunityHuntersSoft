@@ -68,6 +68,111 @@ const insertOrderWithProducts = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+const updateOrder = async (req, res) => {
+  const {
+    id,
+    type,
+    subtotal,
+    total,
+    customer_address,
+    customer_name,
+    customer_phone,
+    beeper_number,
+    order_number,
+    state
+  } = req.body;
+ console.log(req.body);
+  try {
+    // Iniciar una transacción
+    await pool.query("START TRANSACTION");
+
+    // Actualizar la orden en la tabla restaurant_order
+    const updateOrderQuery = `
+      UPDATE restaurant_order
+      SET
+        type = ?,
+        subtotal = ?,
+        total = ?,
+        customer_address = ?,
+        customer_name = ?,
+        customer_phone = ?,
+        beeper_number = ?,
+        order_number = ?,
+        state = ?
+      WHERE id = ?
+    `;
+    await pool.query(updateOrderQuery, [
+      type,
+      subtotal,
+      total,
+      customer_address,
+      customer_name,
+      customer_phone,
+      beeper_number,
+      order_number,
+      state,
+      id,
+    ]);
+
+    // Confirmar la transacción si todo se ejecutó correctamente
+    await pool.query("COMMIT");
+
+    // Enviar una respuesta de éxito
+    res.json({
+      message: "Orden actualizada exitosamente",
+      id,
+    });
+  } catch (err) {
+    // Hacer rollback en caso de error
+    await pool.query("ROLLBACK");
+
+    console.error("Error al actualizar la orden:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+const updateProductsInOrder = async (req, res) => {
+  const { orderId } = req.params; // Obtener el orderId de los parámetros de la solicitud
+  const { products } = req.body; // Obtener todos los productos de la solicitud
+  console.log(req.body);
+  try {
+    // Iniciar una transacción
+    await pool.query("START TRANSACTION");
+
+    // Eliminar todos los productos asociados a la orden
+    await pool.query("DELETE FROM product_per_order WHERE idOrden = ?", [orderId]);
+
+    // Insertar los nuevos productos
+    const insertProductQuery = `
+      INSERT INTO product_per_order (idOrden, idProducto, state, comentarios)
+      VALUES (?, ?, ?, ?)`;
+    for (const product of products) {
+      await pool.query(insertProductQuery, [
+        orderId,
+        product.id,
+        null,
+        product.comment,
+      ]);
+    }
+
+    // Confirmar la transacción si todo se ejecutó correctamente
+    await pool.query("COMMIT");
+
+    // Enviar una respuesta de éxito
+    res.json({
+      message: "Productos asociados a la orden actualizados exitosamente",
+      orderId,
+    });
+  } catch (err) {
+    // Hacer rollback en caso de error
+    await pool.query("ROLLBACK");
+
+    console.error("Error al actualizar los productos asociados a la orden:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+
 const getOrdersPaginated = async (req, res) => {
   const { company_id, page, itemsPerPage } = req.query;
 
@@ -139,7 +244,7 @@ const getUnpaidOrdersWithProducts = async (req, res) => {
   }
 
   const unpaidOrdersQuery =
-    "SELECT * FROM restaurant_order WHERE company_id = ? AND pagado = 0";
+    "SELECT * FROM restaurant_order WHERE company_id = ? AND state != 3";
 
   try {
     const [orders] = await pool.query(unpaidOrdersQuery, [company_id]);
@@ -168,8 +273,6 @@ const getUnpaidOrdersWithProducts = async (req, res) => {
 };
 const getOrderWithProducts = async (req, res) => {
   const { orderId } = req.params;
-  console.log(req.params);
-  console.log(req.query);
   // Valida que el parámetro necesario esté presente
   if (!orderId) {
     return res
@@ -194,7 +297,7 @@ const getOrderWithProducts = async (req, res) => {
     const order = orderResult[0];
 
     // Obtener los productos asociados a la orden
-    const productsQuery = "SELECT * FROM product_per_order WHERE idOrden = ?";
+    const productsQuery = "SELECT * FROM view_product_details_per_order WHERE idOrden = ?";
     const [productsResult] = await pool.query(productsQuery, [orderId]);
     const products = productsResult.map(product => ({
       id: product.idProducto,
@@ -205,7 +308,7 @@ const getOrderWithProducts = async (req, res) => {
     // Combinar la información de la orden y los productos
     const orderWithProducts = {
       ...order,
-      products
+      productsResult
     };
 
     res.json({ order: orderWithProducts });
@@ -221,5 +324,7 @@ module.exports = {
   getOrdersPaginated,
   getProductsByOrderId,
   getUnpaidOrdersWithProducts,
-  getOrderWithProducts
+  getOrderWithProducts,
+  updateProductsInOrder,
+  updateOrder
 };

@@ -8,17 +8,17 @@ import BillData from "./BillData";
 import { selectUser } from "../../store/authSlice";
 import { useSelector } from "react-redux";
 import { invoiceService } from "../../services/billingServices";
+import PropertySearch from "../../components/PropertySelect";
 
 const Billing = () => {
   const { user, token } = useSelector(selectUser);
-  const [lines, setLines] = useState([]);
 
   const [client, setClient] = useState({});
   const [property, setProperty] = useState({});
   //const [billParams, setBillParams] = useState({});
   const [payCondition, setpayCondition] = useState("01");
   const [paymentMethod, setpaymentMethod] = useState("01")
-  const [companyInfo, setCompanyInfo] = useState({});
+
   const [cabys, setCabys] = useState();
   const [isPopUpOpen, setPopUpOpen] = useState(false);
 
@@ -115,7 +115,7 @@ const Billing = () => {
 
       <ClientData clientData={client} setClient={setClient} />
       <h4>2. Lineas de detalle</h4>
-      <PropertyData setProperty={setProperty}></PropertyData>
+      <PropertySearch setProperty={setProperty}></PropertySearch>
       <h4>3. Datos de Factura</h4>
       <BillData products={products} setpayCondition={setpayCondition} setpaymentMethod={setpaymentMethod}></BillData>
       <div>

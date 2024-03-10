@@ -61,7 +61,28 @@ export const OrderService = {
       throw new Error(errorMessage);
     }
   },
-
+  // Método para actualizar los productos asociados a una orden
+  updateProductsInOrder: async (orderId, products) => {
+    try {
+      const response = await DAC_API.patch(`/orders/update-products-order/${orderId}`, { products });
+      return response.data;
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      console.error("Error al actualizar los productos de la orden:", errorMessage);
+      throw new Error(errorMessage);
+    }
+  },
+   // Método para actualizar una orden
+   updateOrder: async (orderId, updatedOrderData) => {
+    try {
+      const response = await DAC_API.patch(`/orders/update-order/`, updatedOrderData);
+      return response.data;
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      console.error("Error al actualizar la orden:", errorMessage);
+      throw new Error(errorMessage);
+    }
+  }
   // Aquí podrías agregar más métodos relacionados con las órdenes si fuese necesario
 };
 

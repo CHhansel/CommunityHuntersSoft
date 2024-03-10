@@ -13,12 +13,11 @@ const createCustomer = (req, res) => {
     exact_address,
     company_name,
     company_id,
-    note,
   } = req.body;
 
   // Ejecutar el procedimiento almacenado para crear un nuevo cliente en la base de datos
   const query =
-    "CALL CreateCustomerWithAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+    "CALL CreateCustomerWithAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
   const values = [
     name,
     lastname,
@@ -31,7 +30,6 @@ const createCustomer = (req, res) => {
     exact_address,
     company_name,
     company_id,
-    note,
   ];
 
   connection.query(query, values, (err, result) => {

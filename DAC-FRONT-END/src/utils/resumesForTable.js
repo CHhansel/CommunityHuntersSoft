@@ -90,7 +90,7 @@ const resumeOrderData = (orders) => {
   };
   return orders.map((order) => ({
     order_number: order.order_number,
-    state: mapStateToDescription(order.pagado),
+    state: mapStateToDescription(order.state),
     // Usamos la función mapTypeToDescription para obtener la descripción del tipo
     type: mapTypeToDescription(order.type),
     customer_address: order.customer_address,

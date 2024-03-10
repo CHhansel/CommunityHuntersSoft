@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Clave>50606012400011693011400100001010000000030151445555</Clave>
+        <Clave>50609032400011693011400100001010000000080157086291</Clave>
         <CodigoActividad>552004</CodigoActividad>
-        <NumeroConsecutivo>00100001010000000030</NumeroConsecutivo>
-        <FechaEmision>2024-01-06T21:46:57.396Z</FechaEmision>
+        <NumeroConsecutivo>00100001010000000080</NumeroConsecutivo>
+        <FechaEmision>2024-03-10T04:41:43.257Z</FechaEmision>
         <Emisor>
             <Nombre>Andrés Francisco Zamora Soto</Nombre>
             <Identificacion>
@@ -24,10 +24,10 @@
             <CorreoElectronico>info@communityhunters.com</CorreoElectronico>
         </Emisor>
         <Receptor>
-            <Nombre>HANSEL MAURICIO CALDERON CALVO</Nombre>
+            <Nombre>Hansel</Nombre>
             <Identificacion>
                 <Tipo>01</Tipo>
-                <Numero>304830937</Numero>
+                <Numero>392332223</Numero>
             </Identificacion>
             <CorreoElectronico>hansel@communityhunters.com</CorreoElectronico>
         </Receptor>
@@ -36,54 +36,37 @@
         <DetalleServicio>
             <LineaDetalle>
                 <NumeroLinea>1</NumeroLinea>
-                <Codigo>0111100009900</Codigo>
+                <Codigo>6331000000000</Codigo>
                 <Cantidad>2</Cantidad>
                 <UnidadMedida>Unid</UnidadMedida>
-                <Detalle>Galleta Maria</Detalle>
-                <PrecioUnitario>1350</PrecioUnitario>
-                <MontoTotal>2700</MontoTotal>
-                <SubTotal>2700</SubTotal>
+                <Detalle>Auténtica pizza italiana con una base crujiente, cubierta con salsa de tomate casera, generosas rodajas de pepperoni picante y mozzarella fresca fundida al horno.</Detalle>
+                <PrecioUnitario>9000.00</PrecioUnitario>
+                <MontoTotal>18000</MontoTotal>
+                <SubTotal>18000</SubTotal>
                 <Impuesto>
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>13.00</Tarifa>
-                    <Monto>351</Monto>
+                    <Monto>2340</Monto>
                 </Impuesto>
-                <MontoTotalLinea>3051</MontoTotalLinea>
+                <MontoTotalLinea>20340</MontoTotalLinea>
             </LineaDetalle>
             <LineaDetalle>
                 <NumeroLinea>2</NumeroLinea>
-                <Codigo>0111100009900</Codigo>
-                <Cantidad>3</Cantidad>
-                <UnidadMedida>Unid</UnidadMedida>
-                <Detalle>Leche Dos pinos 1.5 lts</Detalle>
-                <PrecioUnitario>1545</PrecioUnitario>
-                <MontoTotal>4635</MontoTotal>
-                <SubTotal>4635</SubTotal>
-                <Impuesto>
-                    <Codigo>01</Codigo>
-                    <CodigoTarifa>08</CodigoTarifa>
-                    <Tarifa>13.00</Tarifa>
-                    <Monto>602.5500000000001</Monto>
-                </Impuesto>
-                <MontoTotalLinea>5237.55</MontoTotalLinea>
-            </LineaDetalle>
-            <LineaDetalle>
-                <NumeroLinea>3</NumeroLinea>
-                <Codigo>0111100009900</Codigo>
+                <Codigo>6331000000000</Codigo>
                 <Cantidad>1</Cantidad>
                 <UnidadMedida>Unid</UnidadMedida>
-                <Detalle>Atun Calvo</Detalle>
-                <PrecioUnitario>900</PrecioUnitario>
-                <MontoTotal>900</MontoTotal>
-                <SubTotal>900</SubTotal>
+                <Detalle>pizza</Detalle>
+                <PrecioUnitario>13000.00</PrecioUnitario>
+                <MontoTotal>13000</MontoTotal>
+                <SubTotal>13000</SubTotal>
                 <Impuesto>
                     <Codigo>01</Codigo>
                     <CodigoTarifa>08</CodigoTarifa>
                     <Tarifa>13.00</Tarifa>
-                    <Monto>117</Monto>
+                    <Monto>1690</Monto>
                 </Impuesto>
-                <MontoTotalLinea>1017</MontoTotalLinea>
+                <MontoTotalLinea>14690</MontoTotalLinea>
             </LineaDetalle></DetalleServicio>
     <ResumenFactura>
         <CodigoTipoMoneda>
@@ -91,12 +74,12 @@
             <TipoCambio>1</TipoCambio>
         </CodigoTipoMoneda>
         <TotalServGravados>0</TotalServGravados> <!-- Ajustar según corresponda -->
-        <TotalMercanciasGravadas>8235.00</TotalMercanciasGravadas>
-        <TotalGravado>8235.00</TotalGravado>
-        <TotalVenta>8235.00</TotalVenta>
-        <TotalVentaNeta>8235.00</TotalVentaNeta>
-        <TotalImpuesto>1070.55</TotalImpuesto>
+        <TotalMercanciasGravadas>22000.00</TotalMercanciasGravadas>
+        <TotalGravado>22000.00</TotalGravado>
+        <TotalVenta>22000.00</TotalVenta>
+        <TotalVentaNeta>22000.00</TotalVentaNeta>
+        <TotalImpuesto>2860.00</TotalImpuesto>
         <TotalOtrosCargos>0.00</TotalOtrosCargos>
-        <TotalComprobante>9305.55</TotalComprobante>
+        <TotalComprobante>24860.00</TotalComprobante>
     </ResumenFactura>
 </FacturaElectronica>

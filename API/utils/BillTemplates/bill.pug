@@ -42,8 +42,8 @@ html(lang="es")
               div.td(style="width: 40%;") #{item.internal_code}
             div.tr
               div.td(style="width: 35%;") #{item.price}
-              div.td(style="width: 15%;") x#{item.quantity}
-              div.td(style="width: 35%;") #{(item.quantity * item.price).toFixed(2)}
+              div.td(style="width: 15%;") x#{item.quantityInOrder}
+              div.td(style="width: 35%;") #{(item.quantityInOrder * item.price).toFixed(2)}
               div.td(style="width: 15%;") #{item.tax_rate}%
             div.sep2
           div.total

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { OrderService } from '../../services/OrderServices';
 
-export const useFetchUnpaidOrders = (companyId) => {
+export const useFetchUnpaidOrders = (companyId, reloadOrders) => { // Añadir reloadOrders como segundo parámetro
   const [ordersData, setOrdersData] = useState({
     orders: [],
     totalOrders: 0
@@ -20,11 +20,11 @@ export const useFetchUnpaidOrders = (companyId) => {
     } finally {
       setLoading(false);
     }
-  }, [companyId]);
+  }, [companyId]); // El callback solo depende de companyId
 
   useEffect(() => {
     fetchUnpaidOrders();
-  }, [fetchUnpaidOrders]);
+  }, [fetchUnpaidOrders, reloadOrders]); // Añadir reloadOrders a las dependencias
 
   return { ordersData, loading, error };
 };

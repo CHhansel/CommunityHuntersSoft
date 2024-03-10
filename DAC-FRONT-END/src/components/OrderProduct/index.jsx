@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import delete_icon from "../../assets/delete-icon.svg";
 import FormattedCurrency from "../NumberFormat";
 import note from "../../assets/note.svg";
@@ -6,9 +6,8 @@ import expand from "../../assets/expand-collapse.svg";
 
 const OrderProductItem = ({ product, removeProductFromOrder, addComment }) => {
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState();
   const [isTakeaway, setIsTakeaway] = useState(false); // Nuevo estado para "Para Llevar"
-
   const toggleDescription = () => {
     setIsDescriptionVisible(!isDescriptionVisible);
   };
@@ -22,7 +21,10 @@ const OrderProductItem = ({ product, removeProductFromOrder, addComment }) => {
   const handleTakeawayChange = (event) => {
     setIsTakeaway(event.target.checked); // Actualizar el estado basado en si el checkbox está marcado o no
   };
-
+ useEffect(() => {
+  setComment(product.comment)
+ }, [])
+ 
   return (
     <li className="border rounded-main px-3 mb-1 relative">
       <div className="flex justify-between items-center">
@@ -56,7 +58,7 @@ const OrderProductItem = ({ product, removeProductFromOrder, addComment }) => {
               }`}
             />
           </button>
-          {comment.length > 0 ? (
+          {comment && comment.length > 0 ? (
             <img className="w-6" src={note}></img>
           ) : (
             <div className="w-6"></div>

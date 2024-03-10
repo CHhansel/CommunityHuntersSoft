@@ -296,7 +296,7 @@ export const PropertyDetail = ({ fila, updateTable }) => {
               </button>
             </div>
           ) : (
-            <div className="">
+            <div className="flex">
               <button onClick={handleDelete} className="button-delete">
                 Borrar
               </button>

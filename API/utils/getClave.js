@@ -56,6 +56,8 @@ function getClave(tipoDocumento = "", tipoCedula = "", cedula = "", situacion = 
   // Construir la clave
   const clave = codigoPais + dia + mes + ano + cedula + sucursal + terminal + tipoDocumento + consecutivo + situacion + codigoSeguridad;
   const consecutivoFInal = sucursal + terminal + tipoDocumento + consecutivo
+
+  console.log("clave es ", clave);
   return {
       clave: clave,
       consecutivo: consecutivoFInal,

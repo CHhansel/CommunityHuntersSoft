@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import FormattedCurrency from "../../../../../components/NumberFormat";
 import OrderProductItem from "../../../../../components/OrderProduct";
@@ -27,7 +27,8 @@ const OrderResume = ({
   const [selectedTable, setSelectedTable] = useState(null); // Estado para almacenar la mesa seleccionada
   const [selectedOrderType, setSelectedOrderType] = useState("3"); // Estado para almacenar el tipo de orden seleccionado
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const { createOrder, isLoadingCreateOrder, errorCreateOrder } = useCreateOrder();
+  const { createOrder, isLoadingCreateOrder, errorCreateOrder } =
+    useCreateOrder();
   const [orderCustomerInfo, setOrderCustomerInfo] = useState({
     name: "",
     phone: "",
@@ -64,7 +65,7 @@ const OrderResume = ({
       let totalTax = 0;
       console.log(detailedProducts);
       detailedProducts.forEach((product) => {
-        const productTotalPrice = product.price * 1; 
+        const productTotalPrice = product.price * 1;
         const productTax = (productTotalPrice * product.tax_rate) / 100; // Calcula el impuesto del producto
         subtotal += productTotalPrice - productTax; // Suma al subtotal el precio del producto sin impuestos
         totalTax += productTax; // Acumula el total de impuestos
@@ -101,58 +102,57 @@ const OrderResume = ({
       [name]: value,
     }));
   };
-  const handleConfirmOrder = ()=>{
-    if(selectedOrderType == 3 && selectedTable == null){
+  const handleConfirmOrder = () => {
+    if (selectedOrderType == 3 && selectedTable == null) {
       showToast("warning", "Seleccione una Mesa!");
-      return
+      return;
     }
-    if(selectedEmployee == null){
+    if (selectedEmployee == null) {
       showToast("warning", "Seleccione un empleado!");
-      return
+      return;
     }
-    if(selectedOrderType == 1){
-      if(orderCustomerInfo.name == ""){
+    if (selectedOrderType == 1) {
+      if (orderCustomerInfo.name == "") {
         showToast("warning", "Ingrese nombre de cliente!");
-        return
+        return;
       }
-      if(orderCustomerInfo.phone == ""){
+      if (orderCustomerInfo.phone == "") {
         showToast("warning", "Ingrese teléfono de cliente!");
-        return
+        return;
       }
-      if(orderCustomerInfo.address == ""){
+      if (orderCustomerInfo.address == "") {
         showToast("warning", "Ingrese dirección de cliente!");
-        return
+        return;
       }
     }
-    if(detailedProducts.length <= 0){
+    if (detailedProducts.length <= 0) {
       showToast("warning", "La orden no posee productos!");
-      return
+      return;
     }
     setOrderFinal({
       ...orderDetails,
       table: selectedTable,
       subtotalPrice,
-      
+
       total: totalPrice,
       employee: selectedEmployee,
       type: selectedOrderType,
       orderCustomerInfo,
     });
     togglePopUp();
-  }
+  };
   const handleSubmitOrder = async () => {
-    console.log("la orden final es ",orderFinal);
+    console.log("la orden final es ", orderFinal);
     togglePopUp();
     try {
-        const response = await createOrder(orderFinal);
-        showToast("success", "Orden Creada!");
-        navigate("/Ordenes");        
-        //console.log(response); // Procesar la respuesta como necesites
+      const response = await createOrder(orderFinal);
+      showToast("success", "Orden Creada!");
+      navigate("/Ordenes");
+      //console.log(response); // Procesar la respuesta como necesites
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
   };
-
 
   return (
     <div className="p-8 my-5 rounded-main bg-white border shadow">
@@ -177,7 +177,7 @@ const OrderResume = ({
               value={selectedTable}
               onChange={handleTableSelect}
             >
-               <option value="">Mesas</option>
+              <option value="">Mesas</option>
               {tablesData.tables.map((table) => (
                 <option key={table.id} value={table.id} className="m-5">
                   {table.number}
@@ -212,10 +212,12 @@ const OrderResume = ({
       <h2>Productos en la orden:</h2>
       <ul>
         <li className="border rounded-main px-3 my-2">
-        <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center">
             <p className="w-6/12 text-xs font-semibold ">Plato</p>
             <p className="w-2/12 text-xs font-semibold">Precio + IVA</p>
-            <p className="w-1/12 text-xs text-center font-semibold ">Para llevar?</p>
+            <p className="w-1/12 text-xs text-center font-semibold ">
+              Para llevar?
+            </p>
             <p className="w-1/12 text-xs font-semibold text-center">Remover</p>
             <p className="w-1/12 text-xs font-semibold text-center">Nota</p>
           </div>
@@ -255,11 +257,10 @@ const OrderResume = ({
       </div>
       <div className="flex flex-row justify-between mt-9">
         {selectedOrderType == "1" && (
-          
           <div className="flex flex-col gap-3 ">
             <label htmlFor="">Nombre De Cliente</label>
             <input
-            name="name"
+              name="name"
               type="text"
               className="input-text-sm"
               value={orderCustomerInfo.name}
@@ -268,7 +269,7 @@ const OrderResume = ({
 
             <label htmlFor="">Teléfono</label>
             <input
-            name="phone"
+              name="phone"
               type="number"
               className="input-text-sm"
               value={orderCustomerInfo.phone}
@@ -304,12 +305,16 @@ const OrderResume = ({
         ></Button>
       </div>
       <PopUp isOpen={isPopUpOpen} onClose={togglePopUp}>
-        <OrderFinalResume close={togglePopUp} order={orderFinal} products = {products} handleSubmitOrder={handleSubmitOrder} tables={tablesData.tables}></OrderFinalResume>
+        <OrderFinalResume
+          close={togglePopUp}
+          order={orderFinal}
+          products={products}
+          handleSubmitOrder={handleSubmitOrder}
+          tables={tablesData.tables}
+        ></OrderFinalResume>
       </PopUp>
     </div>
   );
 };
 
 export default OrderResume;
-
-

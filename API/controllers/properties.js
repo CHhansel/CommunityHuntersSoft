@@ -20,7 +20,7 @@ const insertProperty = async (req, res) => {
         state,
         antiquity
     } = req.body;
-
+    console.log(req.body);
     const query = "CALL InsertProperty(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
         internal_code,

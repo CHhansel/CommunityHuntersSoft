@@ -9,6 +9,8 @@ import { setUserFromLocalStorage } from "../store/authSlice";
 import { setAccessibleModulesFromLocalStorage } from "../store/modulesSlice";
 import ResetPasswordRequest from "../views/ResetPassword/ResetPasswordRequest";
 import ResetPasswordUpdate from "../views/ResetPassword/ResetPasswordUpdate";
+import KitchenView from "../views/Restaurant/Kitchen";
+import withProtectedAccess from "../components/HOC/withProtectedAccess";
 
 export const AppRouter = () => {
   const dispatch = useDispatch();
