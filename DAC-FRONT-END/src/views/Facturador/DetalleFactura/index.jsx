@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TablaFactura from "../../../components/TablaFactura";
 import FormattedCurrency from "../../../components/NumberFormat";
 import BuscarCliente from "../../../components/BuscarCliente";
@@ -14,6 +14,9 @@ const DetalleFactura = ({
   facturar,
 }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [changeDue, setChangeDue] = useState(0);
+
   const handlePaymentChange = (paymentMethod) => {
     setData({ ...data, metodoPago: paymentMethod });
   };
@@ -24,9 +27,20 @@ const DetalleFactura = ({
     error: errorEmployees,
   } = useFetchEmployeesByModuleAndCompany(6, 1);
 
-  const handleElectronicInvoiceChange = () => {
-    setData({ ...data, facturaElectronica: !data.facturaElectronica });
+  const handleElectronicInvoiceChange = (invoiceType) => {
+    setData({ ...data, facturaElectronica: invoiceType });
   };
+  const handlePaymentAmountChange = (amount) => {
+    const total = parseFloat(data.total);
+    const payment = parseFloat(amount);
+    setPaymentAmount(amount);
+    if (!isNaN(payment) && payment >= total) {
+      setChangeDue(payment - total);
+    } else {
+      setChangeDue(0);
+    }
+  };
+  
   return (
     <div className="box-style w-full h-full relative">
       <h2 className="font-bold">Resumen de la factura</h2>
@@ -73,17 +87,21 @@ const DetalleFactura = ({
             <div className="flex gap-5 pl-5">
               <label>
                 <input
-                  type="checkbox"
-                  checked={data.facturaElectronica}
-                  onChange={handleElectronicInvoiceChange}
+                  type="radio"
+                  name="facturaElectronica"
+                  value="01"
+                  checked={data.facturaElectronica === "01"}
+                  onChange={() => handleElectronicInvoiceChange("01")}
                 />{" "}
                 Sí
               </label>
               <label>
                 <input
-                  type="checkbox"
-                  checked={!data.facturaElectronica}
-                  onChange={handleElectronicInvoiceChange}
+                  type="radio"
+                  name="facturaElectronica"
+                  value="04"
+                  checked={data.facturaElectronica === "04"}
+                  onChange={() => handleElectronicInvoiceChange("04")}
                 />{" "}
                 No
               </label>
@@ -120,14 +138,32 @@ const DetalleFactura = ({
           <>
             <BuscarCliente setCliente={setCliente}></BuscarCliente>
             {cliente && (
-              <div>
-                <p>{cliente.name}</p>
-                <p>{cliente.dni}</p>
+              <div className="flex gap-5 bg-slate-100 mt-3 justify-center">
+                <p>Nombre: {cliente.name}</p>
+                <p>Cédula: {cliente.dni}</p>
+                <p>Teléfono {cliente.phone_number}</p>
               </div>
             )}
           </>
         )}
       </div>
+      <div className="metodo-pago-inputs">
+    {data.metodoPago === '01' && (
+      <div className="flex flex-col gap-2 mt-5  items-end">
+        <label htmlFor="paymentAmount">Con cuánto paga</label>
+        <input
+          type="number"
+          id="paymentAmount"
+          className="input-text-sm"
+          value={paymentAmount}
+          onChange={(e) => handlePaymentAmountChange(e.target.value)}
+          placeholder="Ingrese la cantidad"
+        />
+        <p>Vuelto: <FormattedCurrency amount={changeDue} /></p>
+      </div>
+    )}
+</div>
+
       <div className="mt-10 ">
         Productos
         <hr className="mb-5" />

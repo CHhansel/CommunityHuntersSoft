@@ -28,7 +28,6 @@ const Customer = () => {
     10,
     reloadTrigger
   );
- console.log("total es ", totalCustomers);
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);

@@ -15,7 +15,6 @@ export const CustomerCreate = ({updateTable}) => {
 
   const [formData, setFormData] = useState({
     name: "",
-    lastname: "",
     dni: "",
     dni_type: '01',
     email: "",
@@ -67,7 +66,7 @@ export const CustomerCreate = ({updateTable}) => {
       >
         <div className="flex flex-col gap-3 ">
           <label className="text-xl" htmlFor="name">
-            Nombre
+            Nombre Completo
           </label>
           <input
             className="input-text"
@@ -75,21 +74,6 @@ export const CustomerCreate = ({updateTable}) => {
             name="name"
             placeholder="Nombre"
             value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="flex flex-col gap-3 ">
-          <label className="text-xl" htmlFor="lastname">
-            Apellido
-          </label>
-          <input
-            className="input-text"
-            type="text"
-            name="lastname"
-            placeholder="Apellido"
-            value={formData.lastname}
             onChange={handleChange}
             required
           />

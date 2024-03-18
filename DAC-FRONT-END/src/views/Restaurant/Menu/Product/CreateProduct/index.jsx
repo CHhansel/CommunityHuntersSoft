@@ -93,7 +93,6 @@ const ProductCreate = ({
       // Aquí asumo que productRelations es una función que determina las opciones seleccionadas
       // basado en el ID del producto actual y las categorías disponibles.
       const newSelectedOptions = productRelations(productData.id, relations);
-      console.log("categorias son", newSelectedOptions);
       setSelectedOptions(newSelectedOptions);
     }
   }, [productData, relations, setSelectedOptions]); // Dependencias del efecto

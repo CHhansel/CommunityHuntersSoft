@@ -9,7 +9,6 @@ import { DniTypeService } from "../../../services/CustomerServices";
 const ClientData = ({ clientData, setClient }) => {
   const [formData, setFormData] = useState({
     name: "",
-    lastname: "",
     dni: "",
     email: "",
     province: "",
@@ -20,7 +19,6 @@ const ClientData = ({ clientData, setClient }) => {
   });
   const [errores, setErrores] = useState({
     name: "",
-    lastname: "",
     dni: "",
     email: "",
     province: "",

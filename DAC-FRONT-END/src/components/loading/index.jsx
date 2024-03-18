@@ -1,10 +1,10 @@
-export const Loading = () => {
+export const Loading = ({ message = "Cargando..." }) => {
   return (
     <div className="w-full flex flex-col justify-center items-center h-full ">
-      <div className=" flex justify-center items-center h-full" role="status">
+      <div className="flex justify-center items-center h-full" role="status">
         <svg
           aria-hidden="true"
-          className="w-8 h-8 text-gray-200 animate-spin  fill-blue-600"
+          className="w-8 h-8 text-gray-200 animate-spin fill-blue-600"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +18,7 @@ export const Loading = () => {
             fill="currentFill"
           />
         </svg>
-        <span className="">Cargando...</span>
+        <span className="ml-2">{message}</span>
       </div>
     </div>
   );

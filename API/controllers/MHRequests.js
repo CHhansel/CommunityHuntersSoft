@@ -206,7 +206,7 @@ const enviarFacturaHacienda = async (
       console.log("factura enviada con exito");
       // Esperar 5 segundos
       // esperar 2 sec pedirla, si retorna procesando, 5 veces
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise((resolve) => setTimeout(resolve, 4000));
       const respuestaConsulta = await verificarRecepcionFactura(
         data.KeyXml,
         token
@@ -256,9 +256,9 @@ const createInvoice = async (req, res) => {
     console.log(invoiceData);
     // Determinar el tipo de documento
     let headDocument, footerDocument;
-    let typeDocument = "01";
-    //let typeDocument = req.body.TypeDoc;
-    switch (typeDocument) {
+
+    let typeDocument = "FE";
+    switch (invoiceData.facturaElectronica) {
       case "01":
         typeDocument = "FE";
         headDocument =
@@ -286,9 +286,9 @@ const createInvoice = async (req, res) => {
     }
     const companyData = await getCompanyData(invoiceData.company_id);
 
-    const invoiceKeyData = await generateInvoiceKey(companyData, "FE");
+    const invoiceKeyData = await generateInvoiceKey(companyData, typeDocument);
 
-    const xmlData = prepareXMLData(companyData, invoiceData, invoiceKeyData);
+    const xmlData = prepareXMLData(companyData, invoiceData, invoiceKeyData, headDocument, footerDocument);
     // Crear la ruta para los directorios
     const dateFolder = formatDate(new Date()); // Asumiendo que invoiceData tiene un campo de fecha
     const routeFiles = path.join(
@@ -347,8 +347,8 @@ const createInvoice = async (req, res) => {
     // Asegúrate de que pdfPath es la ruta absoluta al archivo PDF que quieres enviar
 
     // Asegurarse de que el archivo existe antes de intentar enviarlo
-    if (await fs.existsSync(xmlOutputPath)) {
-      return res.sendFile(xmlOutputPath, (err) => {
+    if (await fs.existsSync(response)) {
+      return res.sendFile(response, (err) => {
         if (err) {
           console.error("Error al enviar el archivo PDF:", err);
           return res.status(500).send("Error al enviar el archivo PDF.");
@@ -357,7 +357,6 @@ const createInvoice = async (req, res) => {
     } else {
       throw new Error("El archivo PDF no se encontró.");
     }
-    res.status(200).json("ok");
   } catch (error) {
     console.error("Error en la creación de la factura:");
     res.status(500).json({ error: error.message });
@@ -437,7 +436,7 @@ const generateInvoiceKey = async (companyData, documentType) => {
   return { clave, consecutivo };
 };
 
-function prepareXMLData(companyData, invoiceData, invoiceKeyData) {
+function prepareXMLData(companyData, invoiceData, invoiceKeyData,headDocument, footerDocument) {
   let fechaActual = new Date();
   let fechaISO = fechaActual.toISOString();
 
@@ -445,8 +444,8 @@ function prepareXMLData(companyData, invoiceData, invoiceKeyData) {
     Emisor: companyData,
     Cliente: invoiceData.Cliente,
     CodigoActividad: "552004", // jalar de algun lao
-    headDocument: "FacturaElectronica",
-    footerDocument: "FacturaElectronica",
+    headDocument: headDocument,
+    footerDocument: footerDocument,
     KeyXml: invoiceKeyData.clave,
     Consecutivo: invoiceKeyData.consecutivo,
     Fecha: fechaISO,

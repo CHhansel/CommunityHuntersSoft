@@ -33,15 +33,15 @@ const getCustomersByUserId = async (req, res) => {
     }
 };
 const createCustomer = async (req, res) => {
-    const { name, lastname, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code } = req.body;
-    console.log(name, lastname, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code);
+    const { name, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code } = req.body;
+
     // Valida que los parámetros necesarios estén presentes
-    if (!name || !lastname || !dni || !dni_type || !email || !company_id || !exact_address || !province_code || !canton_code || !district_code) {
+    if (!name || !dni || !dni_type || !email || !company_id || !exact_address || !province_code || !canton_code || !district_code) {
         return res.status(400).json({ error: "Faltan parámetros requeridos" });
     }
 
-    const query = "CALL InsertCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [name, lastname, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code];
+    const query = "CALL InsertCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [name, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code];
 
     try {
         await pool.query(query, values);
@@ -68,7 +68,6 @@ const updateCustomer = async (req, res) => {
     const { 
         customer_id, // ID del cliente a actualizar
         name, 
-        lastname, 
         dni, 
         dni_type, 
         email, 
@@ -81,12 +80,12 @@ const updateCustomer = async (req, res) => {
     } = req.body;
 
     // Valida que los parámetros necesarios estén presentes
-    if (!customer_id || !name || !lastname || !dni || !dni_type || !email || !company_id || !exact_address || !province_code || !canton_code || !district_code) {
+    if (!customer_id || !name || !dni || !dni_type || !email || !company_id || !exact_address || !province_code || !canton_code || !district_code) {
         return res.status(400).json({ error: "Faltan parámetros requeridos" });
     }
 
-    const query = "CALL UpdateCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [customer_id, name, lastname, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code];
+    const query = "CALL UpdateCustomer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [customer_id, name, dni, dni_type, email, company_id, note, exact_address, province_code, canton_code, district_code];
 
     try {
         await pool.query(query, values);

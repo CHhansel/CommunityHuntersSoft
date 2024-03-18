@@ -17,7 +17,6 @@ function getClave(tipoDocumento = "", tipoCedula = "", cedula = "", situacion = 
   const dia = String(fecha.getDate()).padStart(2, '0');
   const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // +1 porque los meses empiezan en 0
   const ano = fecha.getFullYear().toString().substr(-2);
-
   // Funciones para formatear y validar datos
   function validarYFormatearCedula(tipo, cedula) {
       if (!cedula || !/^\d+$/.test(cedula)) {
@@ -57,7 +56,6 @@ function getClave(tipoDocumento = "", tipoCedula = "", cedula = "", situacion = 
   const clave = codigoPais + dia + mes + ano + cedula + sucursal + terminal + tipoDocumento + consecutivo + situacion + codigoSeguridad;
   const consecutivoFInal = sucursal + terminal + tipoDocumento + consecutivo
 
-  console.log("clave es ", clave);
   return {
       clave: clave,
       consecutivo: consecutivoFInal,

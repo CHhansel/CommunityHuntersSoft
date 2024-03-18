@@ -39,7 +39,7 @@ const createRole = (req, res) => {
 };
 const getAccessibleModulesByRoleId = (req, res) => {
     const { role_id } = req.params;
-
+    console.log("aaaaaaaaaaaaaaaaaaaaaa");
     // Validar que el role_id esté presente
     if (!role_id) {
         return res.status(400).json({ error: 'Falta el role_id en los parámetros' });
@@ -51,6 +51,7 @@ const getAccessibleModulesByRoleId = (req, res) => {
         FROM module AS m
         JOIN role_access_module AS ram ON m.id = ram.module_id
         WHERE ram.company_id = ?
+        ORDER BY m.importance_order;
     `;
 
     // Ejecutar la consulta en la base de datos

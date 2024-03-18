@@ -333,25 +333,8 @@ guardar ordenes en desarrollo, localstorage
 
 
 
+datos de compania, hacienda, recopilar, solo hay front, hay que encriptar igual que .p2
 
-vienes despues de DSU con Carlos   4 horas
-Investigar como imprimir directamente sin cuadro de Dialogo con las tecnologias del proyecto 
-  Se busco la forma de hacerlo con js desde el front o el back
-  Se investigo el codigo de Chang para ver como lo hacer
-  Conclucion solo se podia implementar con "silent printer" posiblemente asi lo maneja Meyjo 
+mejorar Factura pdf  (asume que impuesto no esta incluido en el precio)
 
-Domingo 10 horas
-  Se busco una libreria para imprimir un componente de react,
-  se estubo trabajando con jspdf pero esta genera pdfs y no los imprimia automaticamente, solo los descargaba 
-  o los abria en otra pestaña.
-  se encontro libreria react-to-print, esta si servia para imprimir un componente especifico, 
-  Se tardo en entender porque era complicada de entender y usaba useRef de react que era algo nuevo.
-  Se implemento un componente que muestre los datos de la orden
-  Se instralaron drivers de la impresora para ponerla a funcionar
-  Se hicieron pruebas imprimiendo muchas ordenes ya que el diseño que se imprime varia al que se visualiza en la pantalla
-
-Lunes hasta este resumen 3 horas
-  Se volvio a investigar formas de imprimir directamente, se encontro que se puede hacer si la impresora esta en la misma red que el backend
-  ya que el backend se podria comunicar (la impresora tiene puerto ethernet para conectarse a la red), ahora supongo que esta es la forma que se maneja en Meyjo
-  Se encontro que se puede crear una extension  de chrome para que haga la impresion silenciosa en el DAC.
-  tambien se puede crear una pequeña aplicacion de escritorio que este esuchando la bd para que imprimia cuando le llegue una solicitud.
+crear tiquete, (cambiar encabezado, clave y eliminar receptor)

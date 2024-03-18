@@ -3,7 +3,6 @@ const connection = require("../config/db"); // Ajusta la ruta según la ubicaci�
 const createCustomer = (req, res) => {
   const {
     name,
-    lastname,
     dni,
     dni_type_id,
     email,
@@ -17,10 +16,9 @@ const createCustomer = (req, res) => {
 
   // Ejecutar el procedimiento almacenado para crear un nuevo cliente en la base de datos
   const query =
-    "CALL CreateCustomerWithAddress(?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+    "CALL CreateCustomerWithAddress(?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
   const values = [
     name,
-    lastname,
     dni,
     dni_type_id,
     email,
@@ -85,14 +83,13 @@ const getCustomersByUserId = (req, res) => {
 
 const updateCustomer = (req, res) => {
   const { customerId } = req.params; // Obtiene el ID del cliente a actualizar desde los parámetros de la URL
-  const { name, lastname, dni, dni_type_id, email, note } = req.body; // Obtiene los datos actualizados desde el cuerpo de la solicitud
+  const { name, dni, dni_type_id, email, note } = req.body; // Obtiene los datos actualizados desde el cuerpo de la solicitud
 
   // Crear la consulta SQL para actualizar los datos del cliente en la base de datos
   const updateQuery =
-    "UPDATE customer SET name = ?, lastname = ?, dni = ?, dni_type_id = ?, email = ?, note = ? WHERE id = ?";
+    "UPDATE customer SET name = ?, dni = ?, dni_type_id = ?, email = ?, note = ? WHERE id = ?";
   const updateValues = [
     name,
-    lastname,
     dni,
     dni_type_id,
     email,

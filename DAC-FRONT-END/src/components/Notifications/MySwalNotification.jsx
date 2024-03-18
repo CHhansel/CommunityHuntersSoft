@@ -8,10 +8,10 @@ export const useAlert = () => {
   const showToast = (type, title) => {
     MySwal.fire({
       toast: true,
-      position: 'bottom-end',
+      position: 'bottom',
       showConfirmButton: false,
       showCloseButton: true,
-      timer: 5000,
+      timer: 3000,
       timerProgressBar: true,
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer);

@@ -28,7 +28,7 @@ const getModulesByRoleId = async (req, res) => {
       if (!roleId) {
         return res.status(400).json({ error: 'Falta el ID del rol' });
       }
-  
+      console.log("aaaaaaaaaaaaaaaaaaaaaa");
       // Consulta SQL para obtener todos los módulos a los que un rol tiene acceso
       const query = `
           SELECT m.*
@@ -51,7 +51,7 @@ const getModulesByRoleId = async (req, res) => {
   };
   const getRolesByUserId = async (req, res) => {
     const { company_id, page, itemsPerPage } = req.query;
-  
+
     // Valida que los parámetros necesarios estén presentes
     if (!company_id || !page || !itemsPerPage) {
       return res.status(400).json({ error: 'Faltan parámetros requeridos' });

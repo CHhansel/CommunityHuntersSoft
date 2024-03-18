@@ -4,19 +4,28 @@ export const CompanyCredentialsService = {
   // Obtener credenciales por company_id
   getCredentialsByCompanyId: async (company_id) => {
     try {
-      const response = await DAC_API.get(`/companyCredentials/${company_id}`);
-      return response.data.credentials;
+      const response = await DAC_API.get(`company/get-company-credentials/${company_id}`);
+      // Verificar el status en la respuesta
+      if (response.data.status === 1) {
+        // Si status es 1, las credenciales existen
+        return response.data.status; 
+      } else {
+        // Si status es 0, las credenciales no existen
+        console.log("No se encontraron credenciales para el company_id proporcionado.");
+        return response.data.status; 
+      }
     } catch (error) {
       console.error("Error al obtener las credenciales:", error);
       throw error;
     }
   },
+  
 
   // Crear nuevas credenciales
   createCredentials: async (credentialsData) => {
     try {
       const response = await DAC_API.post(
-        `/companyCredentials`,
+        `company/create-company-credentials`,
         credentialsData
       );
       return response.data;

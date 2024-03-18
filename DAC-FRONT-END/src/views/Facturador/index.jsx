@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { useFetchProductsByCompanyId } from "../../hooks/products/useFetchProducts";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice";
@@ -7,14 +7,19 @@ import ProductsSelector from "../Products/ProductsSelector";
 import DetalleFactura from "./DetalleFactura";
 import { invoiceService } from "../../services/billingServices";
 import Button from "../../components/buttons/Button";
+import { useAlert } from "../../components/Notifications/MySwalNotification";
+import { Loading } from "../../components/loading";
+import Swal from "sweetalert2";
 
 const Facturador = () => {
   const { user, token } = useSelector(selectUser);
-
+  const showToast = useAlert();
   const [reloadTrigger] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [cargandoFactura, setgenerandoFactura] = useState(false);
   const [cliente, setCliente] = useState({});
   const [data, setData] = useState({
+    facturaElectronica: "01",
     CondicionDeVenta: "01",
     metodoPago: "01",
     LineaDeDetalle: [],
@@ -47,6 +52,25 @@ const Facturador = () => {
       }
     });
   };
+  const validateAndInvoice = async () => {
+  // Verificar si hay productos seleccionados
+  if (selectedProducts.length === 0) {
+    showToast('error', 'Debe seleccionar al menos un producto.');
+    return;
+  }
+  
+  // Verificar si la factura es electrónica y si hay un cliente seleccionado
+  if (data.facturaElectronica === "01" && Object.keys(cliente).length === 0) {
+    showToast('error', 'Debe seleccionar un cliente para la factura electrónica.');
+    return;
+  }
+  
+  // Si las validaciones son correctas, proceder a facturar
+  await invoice();
+};
+
+// Y luego cambias la referencia en el botón:
+<Button type="PAY" onClick={validateAndInvoice}></Button>
 
   const updateProductQuantity = (productId, increment = true) => {
     setSelectedProducts((currentProducts) => {
@@ -109,23 +133,34 @@ const Facturador = () => {
       LineaDeDetalle: selectedProducts,
       MedioDePago: data.metodoPago,
       CondicionDeVenta: data.CondicionDeVenta,
+      facturaElectronica: data.facturaElectronica,
     };
 
-    console.log("facturando ", invoiceData);
     return invoiceData;
   };
   const invoice = async () => {
     //e.preventDefault();
     try {
+      const result = await Swal.fire({
+        title: "¿Desea Facturar esta orden?",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Aceptar",
+      });
+      if (!result.isConfirmed){
+        return null;
+      }
       // Prepara los datos de la factura
+      setgenerandoFactura(true);
       const invoiceData = prepareInvoiceData();
-      console.log("facturando ", invoiceData);
+
       // Llama al servicio de facturación y espera por la respuesta
+
       const response = await invoiceService.createInvoice(token, invoiceData);
       // Para descargar el archivo
       const downloadLink = document.createElement("a");
       downloadLink.href = response.pdfUrl;
-      downloadLink.download = "factura.xml"; // El nombre que quieres que tenga el archivo descargado
+      downloadLink.download = "factura.pdf"; // El nombre que quieres que tenga el archivo descargado
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
@@ -133,7 +168,10 @@ const Facturador = () => {
       // O para abrir en una nueva pestaña
       window.open(response.pdfUrl, "_blank");
       console.log("Factura creada con éxito", response);
-
+      setSelectedProducts([]);
+      setCliente({});
+      showToast("success", "Factura generada!");
+      setgenerandoFactura(false);
       // Aquí podrías redirigir al usuario o mostrar un mensaje de éxito
     } catch (error) {
       console.error("Error al crear la factura", error);
@@ -147,20 +185,29 @@ const Facturador = () => {
           <ProductsSelector products={products} selectProduct={addProduct} />
         </div>
         <div className="w-1/2 h-[86vh]">
-          <div className="h-[80vh]">
-            <DetalleFactura
-              selectedProducts={selectedProducts}
-              updateProductQuantity={updateProductQuantity}
-              data={data}
-              setData={setData}
-              cliente={cliente}
-              setCliente={setCliente}
-              facturar={invoice}
-            />
-          </div>
-          <div className="h-[6vh] flex justify-end   items-center">
-            <Button type="PAY" onClick={invoice}></Button>
-          </div>
+        {cargandoFactura && (
+            <>
+            <Loading message="Creando Factura"></Loading>
+            </>
+          )}
+          {!cargandoFactura && (
+            <>
+              <div className="h-[80vh]">
+                <DetalleFactura
+                  selectedProducts={selectedProducts}
+                  updateProductQuantity={updateProductQuantity}
+                  data={data}
+                  setData={setData}
+                  cliente={cliente}
+                  setCliente={setCliente}
+                  facturar={invoice}
+                />
+              </div>
+              <div className="h-[6vh] flex justify-end   items-center">
+                 <Button type="PAY" onClick={validateAndInvoice}></Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

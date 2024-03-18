@@ -2,13 +2,13 @@ const { jsbn } = require("node-forge");
 
 function createXML(datosFactura) {
   // Calcular totales
-  let totalMercanciasGravadas = 0;
+  let totalMercanciasSinIVA = 0;
   let totalImpuesto = 0;
   datosFactura.LineaDeDetalle.forEach((linea) => {
-    const totalLinea = linea.price * linea.quantity;
-    const impuestoLinea = totalLinea * (linea.tax_rate / 100);
-    totalMercanciasGravadas += totalLinea;
-    totalImpuesto += impuestoLinea;
+    const precioSinIVA = linea.price / (1 + linea.tax_rate / 100);
+    const impuestoLinea = linea.price - precioSinIVA;
+    totalMercanciasSinIVA += precioSinIVA * linea.quantityInOrder;
+    totalImpuesto += impuestoLinea * linea.quantityInOrder;
   });
 
   // Calcular otros cargos si existen
@@ -18,12 +18,13 @@ function createXML(datosFactura) {
       totalOtrosCargos += parseFloat(cargo.monto);
     });
   }
-
+  console.log("datos ess ", datosFactura);
   // Total del comprobante
   const totalComprobante =
-    totalMercanciasGravadas + totalImpuesto + totalOtrosCargos;
+    totalMercanciasSinIVA + totalImpuesto + totalOtrosCargos;
+
   let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
-    <FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronica" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <${datosFactura.headDocument}>
         <Clave>${datosFactura.KeyXml}</Clave>
         <CodigoActividad>${datosFactura.CodigoActividad}</CodigoActividad>
         <NumeroConsecutivo>${datosFactura.Consecutivo}</NumeroConsecutivo>
@@ -59,30 +60,36 @@ function createXML(datosFactura) {
         <MedioPago>${datosFactura.MedioDePago}</MedioPago>
         <DetalleServicio>`;
 
-  datosFactura.LineaDeDetalle.forEach((linea, index) => {
+  datosFactura.LineaDeDetalle.forEach((linea,index) => {
+    // Suponiendo que 'linea.price' es el precio con impuesto incluido y 'linea.tax_rate' es la tasa de impuesto.
+    const precioSinImpuesto = linea.price / (1 + linea.tax_rate / 100);
+    const impuestoLinea = linea.price - precioSinImpuesto;
+
     xmlString += `
-            <LineaDetalle>
-                <NumeroLinea>${index + 1}</NumeroLinea>
-                <Codigo>${linea.cabys_code}</Codigo>
-                <Cantidad>${linea.quantityInOrder}</Cantidad>
-                <UnidadMedida>${linea.unit_of_measure}</UnidadMedida>
-                <Detalle>${linea.description}</Detalle>
-                <PrecioUnitario>${linea.price}</PrecioUnitario>
-                <MontoTotal>${linea.price * linea.quantityInOrder}</MontoTotal>
-                <SubTotal>${linea.price * linea.quantityInOrder}</SubTotal>
-                <Impuesto>
-                    <Codigo>01</Codigo>
-                    <CodigoTarifa>08</CodigoTarifa>
-                    <Tarifa>${linea.tax_rate}.00</Tarifa>
-                    <Monto>${
-                      linea.price * linea.quantityInOrder * (linea.tax_rate / 100)
-                    }</Monto>
-                </Impuesto>
-                <MontoTotalLinea>${
-                  linea.price * linea.quantityInOrder +
-                  linea.price * linea.quantityInOrder * (linea.tax_rate / 100)
-                }</MontoTotalLinea>
-            </LineaDetalle>`;
+    <LineaDetalle>
+    <NumeroLinea>${index + 1}</NumeroLinea>
+    <Codigo>${linea.cabys_code}</Codigo>
+    <Cantidad>${linea.quantityInOrder}</Cantidad>
+    <UnidadMedida>${linea.unit_of_measure}</UnidadMedida>
+    <Detalle>${linea.description}</Detalle>
+      <PrecioUnitario>${precioSinImpuesto.toFixed(2)}</PrecioUnitario>
+      <MontoTotal>${(precioSinImpuesto * linea.quantityInOrder).toFixed(
+        2
+      )}</MontoTotal>
+      <SubTotal>${(precioSinImpuesto * linea.quantityInOrder).toFixed(
+        2
+      )}</SubTotal>
+      <Impuesto>
+      <Codigo>01</Codigo>
+      <CodigoTarifa>08</CodigoTarifa>
+        <Tarifa>${linea.tax_rate}</Tarifa>
+        <Monto>${impuestoLinea.toFixed(2)}</Monto>
+      </Impuesto>
+      <MontoTotalLinea>${(linea.price * linea.quantityInOrder).toFixed(
+        2
+      )}</MontoTotalLinea>
+    </LineaDetalle>`;
+    // Nota: Asegúrate de redondear o formatear los números correctamente como se requiere para tu factura.
   });
 
   xmlString += `</DetalleServicio>`;
@@ -105,12 +112,12 @@ function createXML(datosFactura) {
             <TipoCambio>1</TipoCambio>
         </CodigoTipoMoneda>
         <TotalServGravados>0</TotalServGravados> <!-- Ajustar según corresponda -->
-        <TotalMercanciasGravadas>${totalMercanciasGravadas.toFixed(
+        <TotalMercanciasGravadas>${totalMercanciasSinIVA.toFixed(
           2
         )}</TotalMercanciasGravadas>
-        <TotalGravado>${totalMercanciasGravadas.toFixed(2)}</TotalGravado>
-        <TotalVenta>${totalMercanciasGravadas.toFixed(2)}</TotalVenta>
-        <TotalVentaNeta>${totalMercanciasGravadas.toFixed(2)}</TotalVentaNeta>
+        <TotalGravado>${totalMercanciasSinIVA.toFixed(2)}</TotalGravado>
+        <TotalVenta>${totalMercanciasSinIVA.toFixed(2)}</TotalVenta>
+        <TotalVentaNeta>${totalMercanciasSinIVA.toFixed(2)}</TotalVentaNeta>
         <TotalImpuesto>${totalImpuesto.toFixed(2)}</TotalImpuesto>
         <TotalOtrosCargos>${totalOtrosCargos.toFixed(2)}</TotalOtrosCargos>
         <TotalComprobante>${totalComprobante.toFixed(2)}</TotalComprobante>
@@ -123,6 +130,3 @@ function createXML(datosFactura) {
 module.exports = {
   createXML,
 };
-
-
-

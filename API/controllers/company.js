@@ -6,6 +6,8 @@ const nodemailer = require("nodemailer");
 const connection = require("../config/db"); // Ajusta la ruta según la ubicación de tu archivo de conexión
 const pool = require("../config/db2");
 
+const saltRounds = 10; // Número de rondas de sal utilizadas para el hash de la contraseña
+const secretKey = process.env.BCRIPT_KEY; // Clave secreta para el hash de la contraseña y los tokens de autenticación
 
 const getCompanyCredentialsByCompanyId = (req, res) => {
     const { company_id } = req.params; // Obteniendo el company_id desde los parámetros de la ruta
@@ -23,18 +25,16 @@ const getCompanyCredentialsByCompanyId = (req, res) => {
             return res.status(500).json({ error: "Error interno del servidor" });
         }
 
+        // Si no se encuentran resultados, devolvemos status 0
         if (results.length === 0) {
-            return res.status(404).json({ error: "Credenciales no encontradas para el company_id proporcionado" });
+            return res.json({ status: 0 });
         }
 
-        // Devolver las credenciales
-        const credentialsList = results.map(cred => {
-            delete cred.password; // Es importante no devolver la contraseña, incluso si está cifrada
-            return cred;
-        });
-        res.json({ credentials: credentialsList });
+        // Si se encuentran resultados, devolvemos status 1
+        res.json({ status: 1 });
     });
 };
+
 const createCompanyCredentials = (req, res) => {
     const {
         pinCertificado,
@@ -42,9 +42,10 @@ const createCompanyCredentials = (req, res) => {
         password,
         client_id,
         client_secret,
-        company_id
+        company_id,
+        certificateUrl 
     } = req.body;
-
+   console.log(req.body);
     // Verificar si el usuario ya existe en la base de datos
     const checkQuery = "SELECT * FROM company_credentials WHERE usuario = ?";
     const checkValues = [usuario];
@@ -67,14 +68,15 @@ const createCompanyCredentials = (req, res) => {
             }
 
             // Crear la consulta SQL para insertar las credenciales en la tabla
-            const insertQuery = 'INSERT INTO company_credentials (pinCertificado, usuario, password, client_id, client_secret, company_id) VALUES (?, ?, ?, ?, ?, ?)';
+            const insertQuery = 'INSERT INTO company_credentials (pinCertificado, usuario, password, client_id, client_secret, company_id, certificate_url) VALUES (?, ?, ?, ?, ?, ?, ?)';
             const insertValues = [
                 pinCertificado,
                 usuario,
                 hashedPassword,
                 client_id,
                 client_secret,
-                company_id
+                company_id,
+                certificateUrl
             ];
 
             // Ejecutar la consulta en la base de datos

@@ -64,7 +64,7 @@ export const invoiceService = {
             });
 
             // Crea un nuevo objeto Blob con los datos y lo retorna
-            const pdfBlob = new Blob([response.data], { type: 'application/xml' });
+            const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
 
             // Si necesitas una URL para mostrar el PDF en el navegador
             const pdfUrl = window.URL.createObjectURL(pdfBlob);

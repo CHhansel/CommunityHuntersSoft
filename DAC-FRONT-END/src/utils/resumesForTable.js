@@ -40,7 +40,7 @@ const resumePropertyData = (properties) => {
 const resumeCustomerData = (customers) => {
   return customers.map((customer) => ({
     dni: customer.dni,
-    name: customer.name + " " + customer.lastname,
+    name: customer.name,
     email: customer.email,
   }));
 };
